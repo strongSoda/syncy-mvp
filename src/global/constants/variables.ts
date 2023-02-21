@@ -13,7 +13,7 @@ const CSSVARIABLES = {
     PRIMARY_GREEEN_1: '#e6f6f4',
   },
   SIDEBAR: {
-    WIDTH: '16.75em',
+    WIDTH: '12.75em',
     HEIGHT: '100%',
     PADDING_TOP: '20px',
     LINK: {
@@ -25,7 +25,7 @@ const CSSVARIABLES = {
   },
   LAYOUT: {
     PRIMARY: {
-      MARGIN_LEFT: '16.75em',
+      MARGIN_LEFT: '12.75em',
       PADDING: '1em 3em',
     },
   },

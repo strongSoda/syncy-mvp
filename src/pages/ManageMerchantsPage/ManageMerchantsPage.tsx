@@ -7,7 +7,7 @@ import ManageMerchants from 'components/ManageMerchants/ManageMerchants.lazy';
 const ManageMerchantsPage: React.FC = () => (
   <>
     <Helmet>
-      <title>ManageMerchantsPage</title>
+      <title>Campaigns | Syncy</title>
     </Helmet>
     <div data-testid="ManageMerchantsPage">
       <ManageMerchants />

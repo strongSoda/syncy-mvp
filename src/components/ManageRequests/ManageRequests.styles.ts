@@ -61,6 +61,8 @@ const ManageRequestsWrapper = styled.div`
     background-color: ${CSSVARIABLES.COLORS.WHITE_0};
     border-radius: 10px;
 
+    overflow: auto;
+
     z-index: 1000;
 
     /* shadow on the left */

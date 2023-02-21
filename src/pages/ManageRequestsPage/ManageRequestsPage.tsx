@@ -7,7 +7,7 @@ import ManageRequests from 'components/ManageRequests/ManageRequests.lazy';
 const ManageRequestsPage: React.FC = () => (
   <>
     <Helmet>
-      <title>ManageRequestsPage</title>
+      <title>Discover | Syncy</title>
     </Helmet>
     <div data-testid="ManageRequestsPage">
       <ManageRequests />

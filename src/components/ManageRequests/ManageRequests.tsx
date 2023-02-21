@@ -100,6 +100,7 @@ interface IInfluencerProfileProps {
 }
 
 const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setShowInfluencerProfile}: IInfluencerProfileProps) => {
+
   return (
     <div className='influencer-profile'>
       {/* cross icon to close sidebar on click */}
@@ -111,6 +112,7 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
         <h1 className='name'>{influencer?.fullName}</h1>
         <p className='followers'>Followers: {influencer?.followersCount}</p>
         <p className='bio'>{influencer?.bio}</p>
+        {/* <p className='bio'>{influencer?.imageUrl}</p> */}
 
         {/* actions like add to list, book call, reachout */}
         <div className='actions'>
@@ -118,6 +120,7 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
           <Button text="Add to List" backgroundColor={CSSVARIABLES.COLORS.GREEN_0} />
           <Button text="Book Call" backgroundColor={CSSVARIABLES.COLORS.BLUE_0} />
           <Button text="Reachout" backgroundColor={CSSVARIABLES.COLORS.BLACK_0} />
+          {/* <Button text="Fix Profile Pic" backgroundColor={CSSVARIABLES.COLORS.BLACK_0} onClick={fixProfileUrl} /> */}
         </div>
       </div>      
     </div>
@@ -134,6 +137,43 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
   }, [hit]);
 
   const [showInfluencerProfile, setShowInfluencerProfile] = useState(false);
+
+    const fixProfileUrl = async () => {
+    const res = await fetch(`http://127.0.0.1:5000/?imageUrl=${hit?.imageUrl}&username=${hit?.fullName}}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        imageUrl: hit?.imageUrl,
+      }),
+    });
+
+    const data = await res.json();
+
+    console.log(data);
+    
+    const resp = await fetch(`http://127.0.0.1:5000/update-algolia?url=${data?.url}&objectID=${hit?.objectID}}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        influencer: hit
+      }),
+    });
+
+
+
+  }
+
+  useEffect(() => {
+    // check if imageUrl contains 'imgur'
+    if (!hit?.imageUrl?.includes('imgur')) {
+      // fixProfileUrl();
+    }
+  },[])
+
 
   return (
   <CardWrapper data-testid="Card">

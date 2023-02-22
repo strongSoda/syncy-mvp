@@ -27,7 +27,7 @@ import { ClearRefinements, CurrentRefinements, Highlight, Hits, HitsPerPage, Ins
 
 const searchClient = algoliasearch('L7PFECEWC3', 'a953f96171e71bef23ebd1760c7dea10');
 
-const openAiKey = "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"
+const openAiKey = "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";
 
 // declare interface IManageRequestsProps {}
 

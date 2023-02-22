@@ -16,7 +16,7 @@ async function query(apiKey, prompt) {
   return response.data.choices[0].text;
 }
 
-export async function createReachout(apiKey, influencer) {
+export async function createReachout(apiKey="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", influencer) {
   if (!apiKey || apiKey.length === 0) {
     console.warn("No openai key set. Returning precanned response");
 

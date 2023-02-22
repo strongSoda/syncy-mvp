@@ -39,6 +39,10 @@ const ManageRequestsWrapper = styled.div`
           margin-top: 2em;
           /* height: 70vh; */
           /* overflow: auto; */
+
+          /* .profile-img {
+            height: 8vh !important;
+          } */
         }
       }
       .footer {
@@ -61,7 +65,7 @@ const ManageRequestsWrapper = styled.div`
     background-color: ${CSSVARIABLES.COLORS.WHITE_0};
     border-radius: 10px;
 
-    overflow: auto;
+    /* overflow: auto; */
 
     z-index: 1000;
 
@@ -126,10 +130,7 @@ const ManageRequestsWrapper = styled.div`
         }
 
       }
-  }
-
-    
-
+  } 
 `;
 
 const CardWrapper = styled.div`
@@ -142,8 +143,8 @@ const CardWrapper = styled.div`
   margin-bottom: 4vh;
 
   .profile-img {
-    height: 6vh;
-    border-radius: 12em;
+    /* height: 6vh; */
+    /* border-radius: 12em; */
   }
 
   .card-body {
@@ -151,14 +152,40 @@ const CardWrapper = styled.div`
     bottom: 1vh;
     font-size: 16px;
 
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      /* gap: 0.2em; */
+      .card-title {
+        max-width: 50%;
+        font-size: 16px;
+      }
+
+    }
+
+    .actions {
+      display: flex;
+      gap: 1em;
+
+      .icon {
+        height: 1.5em;
+        cursor: pointer;
+      }
+    }
+    .card-desc {
+      font-size: 14px;
+      color: gray;
+      font-weight: 500;
+    }
     .card-footer {
       display: flex;
       justify-content: space-between;
-
+      
       p {
         font-size: 12px;
         flex: 50%;
-        width: 32vw;
+        width: 22vw;
       }
     }
   }

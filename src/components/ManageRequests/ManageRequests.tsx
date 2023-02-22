@@ -7,6 +7,14 @@ import Navbar from 'components/Navbar/Navbar.lazy';
 import SideBar from 'components/SideBar/SideBar.lazy';
 import CSSVARIABLES from 'global/constants/variables';
 
+import { createReachout } from 'global/ai/model';
+import { TypeAnimation } from "react-type-animation";
+
+import EyeIcon from '../../assets/icons/eye.svg';
+import EmailIcon from '../../assets/icons/email.svg';
+import PhoneIcon from '../../assets/icons/phone.svg';
+import SaveIcon from '../../assets/icons/save.svg';
+
 import { CardWrapper, ManageRequestsWrapper } from './ManageRequests.styles';
 import { AgGridReact } from 'ag-grid-react';
 
@@ -18,6 +26,8 @@ import algoliasearch from 'algoliasearch/lite';
 import { ClearRefinements, CurrentRefinements, Highlight, Hits, HitsPerPage, InstantSearch, Pagination, RangeInput, RefinementList, SearchBox, SortBy } from 'react-instantsearch-hooks-web';
 
 const searchClient = algoliasearch('L7PFECEWC3', 'a953f96171e71bef23ebd1760c7dea10');
+
+const openAiKey = "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"
 
 // declare interface IManageRequestsProps {}
 
@@ -108,7 +118,7 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
 
       {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
       <div className='container'>  
-        <Avatar src={influencer?.imageUrl} alt="profile" size={40} name={influencer?.fullName} />
+        <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />
         <h1 className='name'>{influencer?.fullName}</h1>
         <p className='followers'>Followers: {influencer?.followersCount}</p>
         <p className='bio'>{influencer?.bio}</p>
@@ -137,6 +147,8 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
   }, [hit]);
 
   const [showInfluencerProfile, setShowInfluencerProfile] = useState(false);
+  const [showBookCall, setShowBookCall] = useState(false);
+  const [showReachout, setShowReachout] = useState(false);
 
     const fixProfileUrl = async () => {
     const res = await fetch(`http://127.0.0.1:5000/?imageUrl=${hit?.imageUrl}&username=${hit?.fullName}}`, {
@@ -177,19 +189,114 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
 
   return (
   <CardWrapper data-testid="Card">
-    <Avatar src={hit?.imageUrl} alt="profile" size={40} name={hit?.fullName} />
+    <Avatar src={hit?.imageUrl} alt="profile" size={80} name={hit?.fullName} />
     <div className="card-body">
-      <p className="card-title"><Highlight attribute="fullName" hit={hit} /></p>
+      <div className='card-header'>
+        <p className="card-title">
+          <Highlight attribute="fullName" hit={hit} />
+        </p>
+        <div className='actions'>          
+          {hit?.bookCallInfo && <img className='icon' src={PhoneIcon} alt="eye" onClick={() => setShowBookCall(true) } />}
+          <img className='icon' src={EyeIcon} alt="eye" onClick={() => setShowInfluencerProfile(true) } />
+          <img className='icon' src={EmailIcon} alt="eye" onClick={() => setShowReachout(true) } />
+          <img className='icon' src={SaveIcon} alt="eye" />
+        </div>
+      </div>
+      <small>#<Highlight attribute="category" hit={hit} /></small>
       <p className="card-desc"><Highlight attribute="bio" hit={hit} /></p>
       <div className="card-footer">
-        <p><Highlight attribute="category" hit={hit} /></p>
-        <Button text="View" backgroundColor={CSSVARIABLES.COLORS.GREEN_0} onClick={() => setShowInfluencerProfile(true)} />
+        {/* eye icon svg */}
+        {/* <Button text="View" backgroundColor={CSSVARIABLES.COLORS.GREEN_0} onClick={() => setShowInfluencerProfile(true)} /> */}
       </div>
     </div>
 
     {showInfluencerProfile && <InfluencerProfile influencer={hit} setShowInfluencerProfile={setShowInfluencerProfile} />}
+    {showBookCall && <BookCall influencer={hit} setShowBookCall={setShowBookCall} />}
+    {showReachout && <Reachout influencer={hit} setShowReachout={setShowReachout} />}
   </CardWrapper>
 )};
+
+interface IBookCallProps {
+  influencer: any;
+  setShowBookCall: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const BookCall: React.FC<IBookCallProps> = ({influencer, setShowBookCall}: IBookCallProps) => {
+
+  return (
+    <div className='influencer-profile'>
+      {/* cross icon to close sidebar on click */}
+      <img className='cross-icon' src='https://www.svgimages.com/svg-image/s3/close-icon-256x256.png' alt="cross" onClick={() => setShowBookCall(false) } />
+
+      {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
+      <div className='container'>  
+        <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} />
+        <h1 className='name'>{influencer?.fullName}</h1>
+        <p className='followers'>Followers: {influencer?.followersCount}</p>
+        {/* <p className='bio'>{influencer?.bio}</p> */}
+        {/* <p className='bio'>{influencer?.imageUrl}</p> */}
+
+        {/* calednly iframe */}
+      </div>      
+      <iframe src={influencer?.bookCallInfo} width="100%" height="1000px" frameBorder="0"></iframe>
+    </div>
+  );
+}
+
+interface IReachoutProps {
+  influencer: any;
+  setShowReachout: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReachoutProps) => {
+
+  const [message, setMessage] = React.useState<string | undefined>("");
+
+  useEffect(() => {
+    const load = async () => {
+      const msg = await createReachout(openAiKey, influencer);
+      console.log(msg);
+      setMessage(msg);
+    };
+    load();
+  }, [openAiKey, influencer]);
+
+  return (
+    <div className='influencer-profile'>
+      {/* cross icon to close sidebar on click */}
+      <img className='cross-icon' src='https://www.svgimages.com/svg-image/s3/close-icon-256x256.png' alt="cross" onClick={() => setShowReachout(false) } />
+
+      {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
+      <div className='container'>  
+        <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} />
+        <h1 className='name'>{influencer?.fullName}</h1>
+        <p className='followers'>Followers: {influencer?.followersCount}</p>
+        {/* <p className='bio'>{influencer?.bio}</p> */}
+        {/* <p className='bio'>{influencer?.imageUrl}</p> */}
+        {/* calednly iframe */}
+      </div>      
+      
+      <div style={{width: '100%', whiteSpace: 'pre-wrap'}}>
+      {message ?
+      <TypeAnimation
+        sequence={[
+          message as any,
+          1000,
+          () => {
+            console.log("Done typing!"); // Place optional callbacks anywhere in the array
+          },
+        ]}
+        wrapper="p"
+        cursor={true}
+        // repeat={Infinity}
+        style={{ fontSize: "1em" }}
+        speed={75}
+      /> : 'Loading...'}
+      </div>
+      {/* <iframe src={influencer?.bookCallInfo} width="100%" height="1000px" frameBorder="0"></iframe> */}
+    </div>
+  );
+}
 
 function BasicTabsExample() {
   const [selectedIndex, setSelectedIndex] = React.useState(0);

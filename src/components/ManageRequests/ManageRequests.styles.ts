@@ -6,6 +6,9 @@ import CSSVARIABLES from 'global/constants/variables';
 const ManageRequestsWrapper = styled.div`
   margin-left: ${CSSVARIABLES.LAYOUT.PRIMARY.MARGIN_LEFT};
   padding: ${CSSVARIABLES.LAYOUT.PRIMARY.PADDING};
+
+  /* * {outline: 2px solid red;} */
+  /* margin: 0 auto; */
   /* background-color: aqua; */
 
   h1 {
@@ -61,9 +64,15 @@ const ManageRequestsWrapper = styled.div`
     position: fixed;
     top: 0;
     right: 0;
-    width: 30vw;
+    width: 70vw;
     background-color: ${CSSVARIABLES.COLORS.WHITE_0};
     border-radius: 10px;
+
+    overflow: auto;
+
+    * {
+      /* outline: 2px solid red; */
+    }
 
     /* overflow: auto; */
 
@@ -73,6 +82,12 @@ const ManageRequestsWrapper = styled.div`
     box-shadow: -2px 0px 10px 0px rgba(0, 0, 0, 0.2);
 
     padding: 1em;
+
+    iframe {
+      background-image: url("https://media.tenor.com/pgO8hZgOW5AAAAAC/loading-bar.gif");   
+      background-repeat: no-repeat;
+      background-position: center;
+    }
   
     .profile-img {
       height: 16vh;
@@ -99,6 +114,11 @@ const ManageRequestsWrapper = styled.div`
       top: 1em;
       cursor: pointer;
       height: 2em;
+    }
+
+    .icon {
+      height: 1.5em;
+      cursor: pointer;
     }
 
     .container {
@@ -137,11 +157,14 @@ const CardWrapper = styled.div`
   background-color: ${CSSVARIABLES.COLORS.WHITE_0};
   display: flex;
   gap: 1em;
-  padding: 1em;
+  padding: 0.8em;
   width: 50vw;
   border-radius: 10px;
-  margin-bottom: 4vh;
+  margin-bottom: 1vh;
 
+  * {
+    /* outline: 2px solid red; */
+  }
   .profile-img {
     /* height: 6vh; */
     /* border-radius: 12em; */
@@ -149,22 +172,28 @@ const CardWrapper = styled.div`
 
   .card-body {
     position: relative;
-    bottom: 1vh;
+    /* bottom: 1vh; */
     font-size: 16px;
+    width: 100%;
 
     .card-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      /* gap: 0.2em; */
+      /* justify-content: space-evenly; */
+
+      /* gap: 1.2em; */
+
       .card-title {
-        max-width: 50%;
+        width: 50%;
         font-size: 16px;
       }
 
     }
 
     .actions {
+      position: absolute;
+      right: 0;
+
       display: flex;
       gap: 1em;
 

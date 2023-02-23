@@ -113,26 +113,34 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
 
   return (
     <div className='influencer-profile'>
+      
       {/* cross icon to close sidebar on click */}
       <img className='cross-icon' src='https://www.svgimages.com/svg-image/s3/close-icon-256x256.png' alt="cross" onClick={() => setShowInfluencerProfile(false) } />
 
+      {/* actions like add to list, book call, reachout */}
+      {/* <div className='actions'>
+        <a className='link' href={influencer.profileUrl} target='_blank' rel='noreferrer' >View Profile</a>
+        <Button text="Add to List" backgroundColor={CSSVARIABLES.COLORS.GREEN_0} />
+        <Button text="Book Call" backgroundColor={CSSVARIABLES.COLORS.BLUE_0} />
+        <Button text="Reachout" backgroundColor={CSSVARIABLES.COLORS.BLACK_0} />
+      </div> */}
+        {/* <Button text="Fix Profile Pic" backgroundColor={CSSVARIABLES.COLORS.BLACK_0} onClick={fixProfileUrl} /> */}
+
+        {/* <div className='actions'>          
+          {influencer?.bookCallInfo && <img className='icon' src={PhoneIcon} alt="eye" onClick={() => {} } />}
+          <img className='icon' src={EyeIcon} alt="eye" onClick={() => setShowInfluencerProfile(true) } />
+          <img className='icon' src={EmailIcon} alt="eye" />
+          <img className='icon' src={SaveIcon} alt="eye" />
+        </div> */}
+
+      <iframe title={influencer?.fullName} src={`${influencer?.profileUrl}embed`} name="myiFrame" scrolling="yes" frameBorder="0" height="900" width="100%" allowFullScreen={true}></iframe>
       {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
-      <div className='container'>  
+      {/* <div className='container'>  
         <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />
         <h1 className='name'>{influencer?.fullName}</h1>
         <p className='followers'>Followers: {influencer?.followersCount}</p>
         <p className='bio'>{influencer?.bio}</p>
-        {/* <p className='bio'>{influencer?.imageUrl}</p> */}
-
-        {/* actions like add to list, book call, reachout */}
-        <div className='actions'>
-          <a className='link' href={influencer.profileUrl} target='_blank' rel='noreferrer' >View Profile</a>
-          <Button text="Add to List" backgroundColor={CSSVARIABLES.COLORS.GREEN_0} />
-          <Button text="Book Call" backgroundColor={CSSVARIABLES.COLORS.BLUE_0} />
-          <Button text="Reachout" backgroundColor={CSSVARIABLES.COLORS.BLACK_0} />
-          {/* <Button text="Fix Profile Pic" backgroundColor={CSSVARIABLES.COLORS.BLACK_0} onClick={fixProfileUrl} /> */}
-        </div>
-      </div>      
+      </div>       */}
     </div>
   );
 }
@@ -195,6 +203,7 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
         <p className="card-title">
           <Highlight attribute="fullName" hit={hit} />
         </p>
+        <small>{hit?.followersCount} Followers</small>
         <div className='actions'>          
           {hit?.bookCallInfo && <img className='icon' src={PhoneIcon} alt="eye" onClick={() => setShowBookCall(true) } />}
           <img className='icon' src={EyeIcon} alt="eye" onClick={() => setShowInfluencerProfile(true) } />
@@ -360,8 +369,8 @@ const SearchTable: React.FC = () => {
             <Pagination />
             <HitsPerPage
               items={[
-                { label: '8 per page', value: 8, default: true },
-                { label: '16 per page', value: 16 },
+                { label: '8 per page', value: 8 },
+                { label: '16 per page', value: 16, default: true },
               ]}
             />
           </div>

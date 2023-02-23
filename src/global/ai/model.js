@@ -3,7 +3,7 @@ import { Configuration, OpenAIApi } from "openai";
 
 async function query(apiKey, prompt) {
   const configuration = new Configuration({
-    apiKey,
+    apiKey: "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",
   });
   const openai = new OpenAIApi(configuration);
 
@@ -16,7 +16,7 @@ async function query(apiKey, prompt) {
   return response.data.choices[0].text;
 }
 
-export async function createReachout(apiKey="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", influencer) {
+export async function createReachout(apiKey, influencer) {
   if (!apiKey || apiKey.length === 0) {
     console.warn("No openai key set. Returning precanned response");
 

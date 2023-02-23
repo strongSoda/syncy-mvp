@@ -259,7 +259,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
       setMessage(msg);
     };
     load();
-  }, [openAiKey, influencer]);
+  }, []);
 
   return (
     <div className='influencer-profile'>
@@ -271,9 +271,6 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
         <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} />
         <h1 className='name'>{influencer?.fullName}</h1>
         <p className='followers'>Followers: {influencer?.followersCount}</p>
-        {/* <p className='bio'>{influencer?.bio}</p> */}
-        {/* <p className='bio'>{influencer?.imageUrl}</p> */}
-        {/* calednly iframe */}
       </div>      
       
       <div style={{width: '100%', whiteSpace: 'pre-wrap'}}>

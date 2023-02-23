@@ -1,9 +1,9 @@
 import React from "react";
 import { Configuration, OpenAIApi } from "openai";
 
-async function query(apiKey, prompt) {
+async function query(prompt) {
   const configuration = new Configuration({
-    apiKey: "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",
+    apiKey: process.env.REACT_APP_OPENAI_API_KEY,
   });
   const openai = new OpenAIApi(configuration);
 
@@ -16,22 +16,21 @@ async function query(apiKey, prompt) {
   return response.data.choices[0].text;
 }
 
-export async function createReachout(apiKey, influencer) {
-  if (!apiKey || apiKey.length === 0) {
-    console.warn("No openai key set. Returning precanned response");
+export async function createReachout(influencer) {
+//   if (!apiKey || apiKey.length === 0) {
+//     console.warn("No openai key set. Returning precanned response");
 
-    return `Hello ${influencer?.fullName.split(" ")[0]}!,
+//     return `Hello ${influencer?.fullName.split(" ")[0]}!,
 
-It's great to meet you! We're currently in the process of sourcing influencers for our client. 
-We'd be looking to schedule a call with you to discuss a paid collaboration. Would this be of interest?
+// It's great to meet you! We're currently in the process of sourcing influencers for our client. 
+// We'd be looking to schedule a call with you to discuss a paid collaboration. Would this be of interest?
 
-Cheers,
+// Cheers,
 
-`;
-  }
+// `;
+//   }
 
   return await query(
-    apiKey,
     `
     You are a large nerual network trained on a large corpus of text from the internet.
     Your goal is to help a human to reach out to influencers that match a given interest or category.

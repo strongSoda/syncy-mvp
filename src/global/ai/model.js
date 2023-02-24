@@ -46,7 +46,7 @@ export async function createReachout(influencer) {
     Followers: ${influencer?.followers} followers.
     --------------------
 
-    Keep the email short and sweet. The goal is to get the influencer to respond to you. Include the subject line in the response.
+    Keep the email short and sweet. The goal is to get the influencer to respond to you. Include the subject line in the response. Separate the subject line and the body of the email with a newline character \n.
     `
     ,
     200

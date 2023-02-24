@@ -29,7 +29,7 @@ const Links = [
 const SideBar: React.FC<ISideBarProps> = ({ lightColor, darkColor }: ISideBarProps) => (
   <SideBarWrapper data-testid="SideBar" lightColor={lightColor} darkColor={darkColor}>
     <div className="top-section">
-      <p className="title">Tools</p>
+      <p className="title">SYNCY</p>
       {Links.map((Link) => (
         <a key={Link.id} href={Link.path}>
           <img className="icon" src={Link.icon} alt={Link.text} />

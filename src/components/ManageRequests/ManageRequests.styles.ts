@@ -131,6 +131,26 @@ const ManageRequestsWrapper = styled.div`
 
     padding: 1em;
 
+    .send-email-btn {
+      padding: 0.5em 1em;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+
+      border: 1px solid ${CSSVARIABLES.COLORS.GRAY_0};
+
+      text-decoration: none;
+
+      color: ${CSSVARIABLES.COLORS.BLACK_0};
+
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+
+      width: fit-content;
+    }
+
     iframe {
       background-image: url("https://media.tenor.com/wpSo-8CrXqUAAAAi/loading-loading-forever.gif");   
       background-repeat: no-repeat;
@@ -201,6 +221,7 @@ const ManageRequestsWrapper = styled.div`
 
       }
   } 
+}
 `;
 
 const CardWrapper = styled.div`

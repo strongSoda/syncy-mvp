@@ -37,9 +37,13 @@ const ManageRequests: React.FC = () => (
   <ManageRequestsWrapper data-testid="ManageRequests">
     <SideBar lightColor={CSSVARIABLES.COLORS.PRIMARY_GREEEN_1} darkColor={CSSVARIABLES.COLORS.GREEN_0} />
     {/* <Navbar /> */}
-    < SyncyGPT />
-  
-    <h1>Discover Influencers</h1>
+    <SyncyGPT />
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <h1>Syncy | Discover Influencers</h1>
     {/* <p>//TODO: SELECT A ROW & DISPLAY FULL INFLUENCER PROFILE</p> */}
     {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
     {/* <BasicTabsExample /> */}
@@ -264,12 +268,31 @@ interface IReachoutProps {
 const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReachoutProps) => {
 
   const [message, setMessage] = React.useState<string | undefined>("");
+  const [subject, setSubject] = React.useState<string | undefined>("");
+  const [body, setBody] = React.useState<string | undefined>("");
 
   useEffect(() => {
     const load = async () => {
       const msg = await createReachout(influencer);
       console.log(msg);
       setMessage(msg);
+
+      // extract subject and body from msg string
+      const lines = msg?.trim().split('\n') || [];
+      const subject = lines?.shift();
+
+      // collect all lines into an array except first line (subject) and join them with new line character to form body of email message. URLencode the body.
+      const body = lines?.slice(1).join(`%0D%0A`);
+
+      
+
+      console.log(subject);
+      console.log('%%%%%%%%%%%%%%%%');
+      console.log(encodeURI(body));
+      
+      
+      setSubject(subject);
+      setBody(body);
     };
     load();
   }, []);
@@ -308,8 +331,14 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
                 speed={75}
               />
             }
-
             </div>
+            {subject && body && 
+              <a className='send-email-btn' href={`mailto:${influencer?.publicEmail || influencer?.mailFound}?subject=${subject}&body=${body}}`}
+                target="_blank" rel="noopener noreferrer">
+                  <img style={{height: '4vh'}} src='https://cdn.iconscout.com/icon/free/png-256/gmail-2981844-2476484.png' alt='email' />
+                  <span>Send Email</span>
+              </a>
+             }
       </div>
       {/* <iframe src={influencer?.bookCallInfo} width="100%" height="1000px" frameBorder="0"></iframe> */}
     </div>
@@ -450,7 +479,9 @@ const SyncyGPT: React.FC = () => {
     <Popover
       content={
         <div>
+
           <div className='query-input-container'>
+          <h1>SyncyGPT</h1>
             <TextInputField
               label="What are you making?"
               required

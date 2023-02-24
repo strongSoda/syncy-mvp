@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { Avatar, Pane, Paragraph, Popover, Position, Pulsar, Tab, Tablist, TextInputField } from 'evergreen-ui';
+import { Avatar, Badge, Pane, Paragraph, Popover, Position, Pulsar, Tab, Tablist, TextInputField, Tooltip } from 'evergreen-ui';
 
 import Button from 'components/Button/Button.lazy';
 import Navbar from 'components/Navbar/Navbar.lazy';
@@ -106,7 +106,7 @@ const Influencers: React.FC = () => {
          rowSelection='single' onSelectionChanged={onSelectionChanged}
         />
         
-        {showInfluencerProfile && <InfluencerProfile influencer={selectedInfluencer} setShowInfluencerProfile={setShowInfluencerProfile} />}
+        {/* {showInfluencerProfile && <InfluencerProfile influencer={selectedInfluencer} setShowInfluencerProfile={setShowInfluencerProfile} />} */}
       </div>
   );
 }
@@ -115,31 +115,34 @@ const Influencers: React.FC = () => {
 interface IInfluencerProfileProps {
   influencer: any;
   setShowInfluencerProfile: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowBookCall: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowReachout: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setShowInfluencerProfile}: IInfluencerProfileProps) => {
+const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setShowInfluencerProfile, setShowBookCall, setShowReachout}: IInfluencerProfileProps) => {
 
   return (
     <div className='influencer-profile'>
       
+      <div className='profile-header'>
+      <div className='actions'>          
+        {influencer?.bookCallInfo && 
+          <img className='icon' src={PhoneIcon} alt="call" onClick={() => {
+            setShowBookCall(true);
+            setShowInfluencerProfile(false);
+          }} />
+        }
+        {/* <img className='icon' src={EyeIcon} alt="eye" onClick={() => setShowInfluencerProfile(true) } /> */}
+        <img className='icon' src={EmailIcon} alt="email" onClick={() => {
+          setShowReachout(true);
+          setShowInfluencerProfile(false);
+        }} />
+        <img className='icon' src={SaveIcon} alt="save" />
+      </div>
+
       {/* cross icon to close sidebar on click */}
       <img className='cross-icon' src='https://www.svgimages.com/svg-image/s3/close-icon-256x256.png' alt="cross" onClick={() => setShowInfluencerProfile(false) } />
-
-      {/* actions like add to list, book call, reachout */}
-      {/* <div className='actions'>
-        <a className='link' href={influencer.profileUrl} target='_blank' rel='noreferrer' >View Profile</a>
-        <Button text="Add to List" backgroundColor={CSSVARIABLES.COLORS.GREEN_0} />
-        <Button text="Book Call" backgroundColor={CSSVARIABLES.COLORS.BLUE_0} />
-        <Button text="Reachout" backgroundColor={CSSVARIABLES.COLORS.BLACK_0} />
-      </div> */}
-        {/* <Button text="Fix Profile Pic" backgroundColor={CSSVARIABLES.COLORS.BLACK_0} onClick={fixProfileUrl} /> */}
-
-        {/* <div className='actions'>          
-          {influencer?.bookCallInfo && <img className='icon' src={PhoneIcon} alt="eye" onClick={() => {} } />}
-          <img className='icon' src={EyeIcon} alt="eye" onClick={() => setShowInfluencerProfile(true) } />
-          <img className='icon' src={EmailIcon} alt="eye" />
-          <img className='icon' src={SaveIcon} alt="eye" />
-        </div> */}
+      </div>
 
       <iframe title={influencer?.fullName} src={`${influencer?.profileUrl}embed`} name="myiFrame" scrolling="yes" frameBorder="0" height="900" width="100%" allowFullScreen={true}></iframe>
       {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
@@ -202,6 +205,15 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
     }
   },[])
 
+  const formatNumber = (num: number) => {
+    return Intl.NumberFormat('en-US', {
+              notation: "compact",
+              maximumFractionDigits: 1
+            }).format(num);
+  }
+
+
+
 
   return (
   <CardWrapper data-testid="Card">
@@ -211,7 +223,10 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
         <p className="card-title">
           <Highlight attribute="fullName" hit={hit} />
         </p>
-        <small>{hit?.followersCount} Followers</small>
+        <Badge color="neutral">
+          {formatNumber(hit?.followersCount)} Followers
+        </Badge>
+        {/* <small>{formatNumber(hit?.followersCount)} Followers</small>         */}
         <div className='actions'>          
           {hit?.bookCallInfo && <img className='icon' src={PhoneIcon} alt="eye" onClick={() => setShowBookCall(true) } />}
           <img className='icon' src={EyeIcon} alt="eye" onClick={() => setShowInfluencerProfile(true) } />
@@ -227,7 +242,7 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
       </div>
     </div>
 
-    {showInfluencerProfile && <InfluencerProfile influencer={hit} setShowInfluencerProfile={setShowInfluencerProfile} />}
+    {showInfluencerProfile && <InfluencerProfile influencer={hit} setShowInfluencerProfile={setShowInfluencerProfile} setShowBookCall={setShowBookCall} setShowReachout={setShowReachout} />}
     {showBookCall && <BookCall influencer={hit} setShowBookCall={setShowBookCall} />}
     {showReachout && <Reachout influencer={hit} setShowReachout={setShowReachout} />}
   </CardWrapper>

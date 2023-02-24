@@ -131,6 +131,19 @@ const ManageRequestsWrapper = styled.div`
 
     padding: 1em;
 
+    .profile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .actions {
+        display: flex;
+        gap: 2em;
+      }
+
+      margin-bottom: 1em;
+    }
+
     .send-email-btn {
       padding: 0.5em 1em;
       border-radius: 5px;

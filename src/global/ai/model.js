@@ -1,7 +1,7 @@
 import React from "react";
 import { Configuration, OpenAIApi } from "openai";
 
-async function query(prompt) {
+async function query(prompt, maxTokens = 200) {
   const configuration = new Configuration({
     apiKey: process.env.REACT_APP_OPENAI_API_KEY,
   });
@@ -10,7 +10,7 @@ async function query(prompt) {
   const response = await openai.createCompletion({
     model: "text-davinci-003",
     prompt,
-    max_tokens: 200,
+    max_tokens: maxTokens,
     temperature: 0,
   });
   return response.data.choices[0].text;
@@ -32,7 +32,7 @@ export async function createReachout(influencer) {
 
   return await query(
     `
-    You are a large nerual network trained on a large corpus of text from the internet.
+    You are a large neural network trained on a large corpus of text from the internet.
     Your goal is to help a human to reach out to influencers that match a given interest or category.
     You are creating an initial reach out message with the goal of getting the influencer to respond to you about getting on a call to discuss about running an influencer marketing campaign.
     Be kind and sincere in the message. Personalise the message.
@@ -48,31 +48,36 @@ export async function createReachout(influencer) {
 
     Keep the email short and sweet. The goal is to get the influencer to respond to you. Include the subject line in the response.
     `
+    ,
+    200
   );
 }
 
-export async function getCategories(apiKey, keyword) {
-  if (!apiKey || apiKey.length === 0) {
-    console.warn("No openai key set. Returning precanned response");
-    return [
-      "Mom Influencers",
-      "Baby Toys Influencers",
-      "Lifestyle Influencers",
-    ];
-  }
+export async function getCategories(keyword, allCategories) {
+  // if (!apiKey || apiKey.length === 0) {
+  //   console.warn("No openai key set. Returning precanned response");
+  //   return [
+  //     "Mom Influencers",
+  //     "Baby Toys Influencers",
+  //     "Lifestyle Influencers",
+  //   ];
+  // }
 
   const raw = await query(
-    apiKey,
     `
-    You are a large nerual network trained on a large corpus of text from the internet.
-    Your goal is to help a human to find influencers that match a given keyword. You are aiming to return the right category of incluencer.
+    You are a large neural network trained on a large corpus of text from the internet.
+    Your goal is to help a human to find influencers that match a given keyword. You are aiming to return the right category of influencer.
     Please return a list of categories with up to 3 categories. The answer should be in the format:
     ["category1", "category2", "category3"]
+    
+    The categories returned should only be from the list of categories below and should be relevant to the keyword.:
+    ${allCategories}
 
-    Plaese ensure the answer is a valid json array. If you cannot return a valid JSON array, please return an empty array.
+    Please ensure the answer is a valid json array. If you cannot return a valid JSON array, please return an empty array.
 
     Please return a list of categories for the keyword "${keyword}".
-    `
+    `,
+    100
   );
 
   try {

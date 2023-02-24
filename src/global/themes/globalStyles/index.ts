@@ -27,6 +27,29 @@ ${({ theme }) => css`
   html {
     font-size: '100%';
   }
+
+  .query-input-container {
+    width: 450px;
+    padding: 2em;
+  }
+
+  .ai-result {
+  width: 100%;
+  margin: 2% auto;
+  background-color: #282c34;
+  color: white;
+  padding: 1em;
+  text-align: left;
+
+  display: flex;
+  align-items: center;
+}
+.ai-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: inline;
+}
 `}
 `;
 

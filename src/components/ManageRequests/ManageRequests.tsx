@@ -1,19 +1,21 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { Avatar, Pane, Paragraph, Tab, Tablist } from 'evergreen-ui';
+import { Avatar, Pane, Paragraph, Popover, Position, Pulsar, Tab, Tablist, TextInputField } from 'evergreen-ui';
 
 import Button from 'components/Button/Button.lazy';
 import Navbar from 'components/Navbar/Navbar.lazy';
 import SideBar from 'components/SideBar/SideBar.lazy';
 import CSSVARIABLES from 'global/constants/variables';
 
-import { createReachout } from 'global/ai/model';
+import { createReachout, getCategories } from 'global/ai/model';
 import { TypeAnimation } from "react-type-animation";
 
 import EyeIcon from '../../assets/icons/eye.svg';
 import EmailIcon from '../../assets/icons/email.svg';
 import PhoneIcon from '../../assets/icons/phone.svg';
 import SaveIcon from '../../assets/icons/save.svg';
+import loadingGif from '../../assets/images/loading.gif';
+import Syncy from '../../assets/images/syncy.png';
 
 import { CardWrapper, ManageRequestsWrapper } from './ManageRequests.styles';
 import { AgGridReact } from 'ag-grid-react';
@@ -35,6 +37,8 @@ const ManageRequests: React.FC = () => (
   <ManageRequestsWrapper data-testid="ManageRequests">
     <SideBar lightColor={CSSVARIABLES.COLORS.PRIMARY_GREEEN_1} darkColor={CSSVARIABLES.COLORS.GREEN_0} />
     {/* <Navbar /> */}
+    < SyncyGPT />
+  
     <h1>Discover Influencers</h1>
     {/* <p>//TODO: SELECT A ROW & DISPLAY FULL INFLUENCER PROFILE</p> */}
     {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
@@ -283,21 +287,29 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
       </div>      
       
       <div style={{width: '100%', whiteSpace: 'pre-wrap'}}>
-      {message ?
-      <TypeAnimation
-        sequence={[
-          message as any,
-          1000,
-          () => {
-            console.log("Done typing!"); // Place optional callbacks anywhere in the array
-          },
-        ]}
-        wrapper="p"
-        cursor={true}
-        // repeat={Infinity}
-        style={{ fontSize: "1em" }}
-        speed={75}
-      /> : 'Loading...'}
+            <div className="ai-result">
+              <img className="ai-avatar" src={Syncy} alt='logo'/>
+              {!message ? 
+               <img src={loadingGif} alt="Loading" style={{height: '2vh'}} />
+              : 
+              <TypeAnimation
+                sequence={[
+                  message as any,
+                  1000,
+                  () => {
+                    // setDoneTyping(true);
+                    console.log("Done typing!"); // Place optional callbacks anywhere in the array
+                  },
+                ]}
+                wrapper="p"
+                cursor={true}
+                // repeat={Infinity}
+                style={{ fontSize: "1em" }}
+                speed={75}
+              />
+            }
+
+            </div>
       </div>
       {/* <iframe src={influencer?.bookCallInfo} width="100%" height="1000px" frameBorder="0"></iframe> */}
     </div>
@@ -369,14 +381,140 @@ const SearchTable: React.FC = () => {
             <Pagination />
             <HitsPerPage
               items={[
-                { label: '8 per page', value: 8 },
-                { label: '16 per page', value: 16, default: true },
+                { label: '10 per page', value: 10 },
+                { label: '20 per page', value: 20, default: true },
               ]}
             />
           </div>
         </div>
       </div>
     </InstantSearch>
+  )
+}
+
+const SyncyGPT: React.FC = () => {
+  const [query, setQuery] = React.useState<string | undefined>("");
+
+    const [message, setMessage] = React.useState<string | undefined>("");
+    const [allCategories, setAllCategories] = React.useState<string[]>([]);
+    const [categories, setCategories] = React.useState<string[]>([]);
+
+    const [showAI, setShowAI] = React.useState<boolean>(false);
+
+    const [loading, setLoading] = React.useState<boolean>(false);
+
+    const [doneTyping, setDoneTyping] = React.useState<boolean>(false);
+
+    const load = async () => {
+
+      setMessage("");
+      setCategories([]);
+      setDoneTyping(false);
+
+      if (!query) return;
+      setShowAI(true);
+      setLoading(true);
+      const msg = await getCategories(query, allCategories);
+      console.log(msg);
+      setCategories(msg);
+      setMessage(`The influencers best suited for your product are: \n\n\n * ${msg[0]}\n * ${msg[1]}\n * ${msg[2]}`);
+      setLoading(false);
+    };
+
+    const find = async () => {
+      setQuery("");
+      const query_params = `?influencers%5BrefinementList%5D%5Bcategory%5D%5B0%5D=${categories[0].replace('Influencers','')}&influencers%5BrefinementList%5D%5Bcategory%5D%5B1%5D=${categories[1].replace('Influencers','')}&influencers%5BrefinementList%5D%5Bcategory%5D%5B2%5D=${categories[2].replace('Influencers','')}`
+    
+      const url = `${window.location.origin}${window.location.pathname}${query_params}`;
+      window.location.href = url;
+    }
+
+  useEffect(() => {
+    const index = searchClient.initIndex('influencers');
+    index.search('', {
+      facets: ['*'],
+      
+    }).then(({ facets }) => {
+      console.log('here', facets);
+      // iterate through hits and collect the values for category in an array
+      // const categories = hits.map((hit: any) => hit.category);
+      // collect all keys of an object into an array
+      const allCategories = facets ? Object.keys(facets.category) : {} ;
+      setAllCategories(allCategories as any);
+      console.log(allCategories);
+    });
+  }, []);
+
+  return (
+    <div className='syncy-gpt'>
+    <Popover
+      content={
+        <div>
+          <div className='query-input-container'>
+            <TextInputField
+              label="What are you making?"
+              required
+              description="Enter a product name or description"
+              value={query}
+              onChange={(e:any) => setQuery(e.target.value)}
+              placeholder="e.g. a t-shirt, mba course, marketing SaaS, etc."
+            />
+          { allCategories.length > 0 && (
+            <div style={{textAlign: 'center'}}>
+              <Button text="Suggest Ideas" backgroundColor={CSSVARIABLES.COLORS.BLACK_0} onClick={load} disabled />
+            </div>
+            )
+          }
+          </div>
+        {/* <Button onClick={load}  intent="success" disabled={!query}>Suggest Ideas</Button> */}
+        {/* <button onClick={load}>Suggest Ideas</button> */}
+        <div style={{width: '100%', whiteSpace: 'pre-wrap'}}>
+          {showAI ?
+          <>
+            <div className="ai-result">
+              <img className="ai-avatar" src={Syncy} alt='logo'/>
+              {loading ? 
+               <img src={loadingGif} alt="Loading" style={{height: '2vh'}} />
+              : ''
+              }
+
+              {message && !loading ?
+              <TypeAnimation
+                sequence={[
+                  message as any,
+                  1000,
+                  () => {
+                    setDoneTyping(true);
+                    console.log("Done typing!"); // Place optional callbacks anywhere in the array
+                  },
+                ]}
+                wrapper="p"
+                cursor={true}
+                // repeat={Infinity}
+                style={{ fontSize: "1em" }}
+                speed={75}
+              />
+            : ''}
+
+            </div>
+          </>
+           : ''}
+          <div style={{display: 'block', textAlign: 'center', marginBottom: '2vh'}}>
+          {doneTyping && <Button style={{margin: '0 auto'}} text="Find Influencers" backgroundColor={CSSVARIABLES.COLORS.GREEN_0} onClick={find} />}
+          </div>
+        </div>
+        </div>
+      }
+      position={Position.TOP_RIGHT}
+    >
+      <div className='syncy-avatar-container'>
+        <div className="blob purple">
+          <img className='syncy-avatar' src={Syncy} alt="SyncyGPT Logo" />
+        </div>
+        </div>
+    </Popover>
+
+    </div>
   )
 }
 

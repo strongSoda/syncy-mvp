@@ -18,18 +18,18 @@ const Links = [
     id: 0,
     path: '/discover',
   },
-  {
-    icon: Shop,
-    text: 'Campaigns',
-    id: 1,
-    path: '/campaigns',
-  },
+  // {
+  //   icon: Shop,
+  //   text: 'Campaigns',
+  //   id: 1,
+  //   path: '/campaigns',
+  // },
 ];
 
 const SideBar: React.FC<ISideBarProps> = ({ lightColor, darkColor }: ISideBarProps) => (
   <SideBarWrapper data-testid="SideBar" lightColor={lightColor} darkColor={darkColor}>
     <div className="top-section">
-      <p className="title">Admin Tools</p>
+      <p className="title">Tools</p>
       {Links.map((Link) => (
         <a key={Link.id} href={Link.path}>
           <img className="icon" src={Link.icon} alt={Link.text} />

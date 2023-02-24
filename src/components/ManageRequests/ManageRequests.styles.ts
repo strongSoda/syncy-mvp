@@ -16,6 +16,54 @@ const ManageRequestsWrapper = styled.div`
     font-size: 36px;
   }
 
+  .syncy-gpt {
+
+    .syncy-avatar-container {
+      cursor: pointer;
+      position: absolute;
+      top: 1vh;
+      right: 3vw;
+    }
+    .syncy-avatar {
+      height: 8vh;
+    }
+  }
+
+    .blob {
+      background: black;
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+      margin: 10px;
+      height: 20px;
+      width: 20px;
+      transform: scale(1);
+      animation: pulse-black 2s infinite;
+    }
+
+    .blob.purple {
+      background: rgba(142, 68, 173, 1);
+      box-shadow: 0 0 0 0 rgba(142, 68, 173, 1);
+      animation: pulse-purple 2s infinite;
+    }
+
+    @keyframes pulse-purple {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(142, 68, 173, 0.7);
+      }
+      
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(142, 68, 173, 0);
+      }
+      
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(142, 68, 173, 0);
+      }
+    }
+
+
   .ais-Hits-item {
     list-style: none !important;
     background: none;
@@ -84,8 +132,10 @@ const ManageRequestsWrapper = styled.div`
     padding: 1em;
 
     iframe {
-      background-image: url("https://media.tenor.com/pgO8hZgOW5AAAAAC/loading-bar.gif");   
+      background-image: url("https://media.tenor.com/wpSo-8CrXqUAAAAi/loading-loading-forever.gif");   
       background-repeat: no-repeat;
+      background-size: 10%;
+      margin: 0 auto;
       background-position: center;
     }
   

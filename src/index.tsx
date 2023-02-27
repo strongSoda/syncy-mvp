@@ -10,17 +10,18 @@ import { store } from 'store';
 import { MoralisProvider } from "react-moralis";
 
 import reportWebVitals from './reportWebVitals';
+import { AuthProvider } from 'global/provider/AuthProvider';
 
 ReactDOM.render(
   <React.StrictMode>
-    <MoralisProvider appId="SKcRuCB4ephX0xK6bfNFcQHfXW7zaT2pDQlSX7cO" serverUrl="https://1oopowkgzugo.usemoralis.com:2053/server">
+    <AuthProvider>
     <ThemeProvider>
       <GlobalStyles />
       <Provider store={store}>
         <AppRouter />
       </Provider>
     </ThemeProvider>
-    </MoralisProvider>
+    </AuthProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -3,7 +3,7 @@ import CSSVARIABLES from 'global/constants/variables';
 import styled from 'styled-components';
 
 const BrandCompleteProfileWrapper = styled.div`
-    margin-left: ${CSSVARIABLES.LAYOUT.PRIMARY.MARGIN_LEFT};
+    /* margin-left: ${CSSVARIABLES.LAYOUT.PRIMARY.MARGIN_LEFT}; */
 
     .container {
         width: 40vw;

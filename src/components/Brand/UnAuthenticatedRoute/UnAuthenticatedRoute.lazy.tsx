@@ -4,7 +4,7 @@ const LazyUnAuthenticatedRoute = lazy(() => import('./UnAuthenticatedRoute'));
 
 const UnAuthenticatedRoute = (props: any) => (
   <Suspense fallback={null}>
-    <LazyUnAuthenticatedRoute {...props} />
+    {/* <LazyUnAuthenticatedRoute {...props} /> */}
   </Suspense>
 );
 

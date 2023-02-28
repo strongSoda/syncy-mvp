@@ -14,15 +14,12 @@ import SideBar from 'components/SideBar/SideBar.lazy';
 import CSSVARIABLES from 'global/constants/variables';
 
 import { AddCardBtnWrapper, AddMenuPromptWrapper, AddStoreModalWrapper, ManageMerchantsWrapper, MerchantDetailsWrapper, StoreCardWrapper } from './ManageMerchants.styles';
-import { AuthContext } from 'global/context/AuthContext';
-import { auth } from 'global/constants/firebase';
-import { createUserWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 
 // declare interface IManageMerchantsProps {}
 
 const ManageMerchants: React.FC = () => (
   <ManageMerchantsWrapper data-testid="ManageMerchants">
-    <SideBar lightColor={CSSVARIABLES.COLORS.BLUE_1} darkColor={CSSVARIABLES.COLORS.BLUE_0} />
+    {/* <SideBar lightColor={CSSVARIABLES.COLORS.BLUE_1} darkColor={CSSVARIABLES.COLORS.BLUE_0} /> */}
     {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
     <MerchantsBar />
     <div className="content">
@@ -38,41 +35,9 @@ const MerchantDetails: React.FC = () => {
   const [ShowStores, setShowStores] = useState<boolean>(false);
   const [NumberOfStores, setNumberOfStores] = useState<number>(1);
 
-  const emailRef = useRef<HTMLInputElement>(null);
-  const resetPasswordEmailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-
-  const user = useContext(AuthContext);
-
-  const [showPasswordReset, setShowPasswordReset] = useState<boolean>(false);
-      
-
   return (
     <MerchantDetailsWrapper>
       <div className="owner-name">
-        {user ? (
-          <div>
-        <h1>Welcome {user?.email}</h1>
-          <p>Account: {!user.emailVerified && 'Not'} Verified</p>
-          {/* <Button text="Sign Out" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={logOut} /> */}
-        </div>
-        ): (
-        <>
-          <input type="text" placeholder="Name"  />
-          <input type="text" placeholder="Email" ref={emailRef} />
-          <input type="text" placeholder="Password" ref={passwordRef} />
-
-          <Button text="Forgot Password?" backgroundColor={CSSVARIABLES.COLORS.BLACK_0} onClick={() => setShowPasswordReset(!showPasswordReset)} />
-
-          {showPasswordReset && (
-            <div>
-              <input type="text" placeholder="Email" ref={resetPasswordEmailRef} />
-              {/* <Button text="Reset Password" backgroundColor={CSSVARIABLES.COLORS.BLACK_0} onClick={sendPasswordReset} /> */}
-            </div>
-          )}
-        </>
-        )}
-        
         {/* <img
           className="profile-img"
           src="https://ph-avatars.imgix.net/2429667/b98d457a-ff12-4ffd-a85a-c7da09f645ec?auto=format&auto=compress&codec=mozjpeg&cs=strip&w=170&h=170&fit=crop&dpr=2"

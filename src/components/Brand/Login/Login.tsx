@@ -1,3 +1,4 @@
+import { login, setUser } from 'features/user/userSlice';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useFormik } from 'formik';
 import { auth } from 'global/constants/firebase';
@@ -52,6 +53,8 @@ const Login: React.FC = () => {
       values?.password,
     );
 
+    // dispatch(setUser());
+    dispatch(login());
     history.push(ROUTES.BRAND.DISCOVER);
     setLoading(false);
 

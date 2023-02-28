@@ -12,6 +12,8 @@ import { useHistory } from 'react-router';
 import ROUTES from 'global/constants/routes';
 import CSSVARIABLES from 'global/constants/variables';
 import { AuthContext } from 'global/context/AuthContext';
+import { logout } from 'features/user/userSlice';
+import { useAppDispatch } from 'hooks/storeHooks';
 
 declare interface ISideBarProps {
   lightColor: string;
@@ -35,11 +37,13 @@ const Links = [
 
 const SideBar: React.FC<ISideBarProps> = ({ lightColor, darkColor }: ISideBarProps) => {
   const history = useHistory();
+  const dispatch = useAppDispatch()
 
   const user = useContext(AuthContext);
 
   const logOut = async () => {
     await signOut(auth);
+    dispatch(logout())
     history.push(ROUTES.BRAND.LOGIN);
   };
   return (

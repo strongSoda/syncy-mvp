@@ -12,10 +12,14 @@ import ManageRequestsPage from 'pages/ManageRequestsPage/ManageRequestsPage.lazy
 import NotFoundPage from 'pages/notfound';
 import MenuPage from 'pages/MenuPage/MenuPage.lazy';
 import { AuthContext } from 'global/context/AuthContext';
-import UnAuthenticatedRoute from 'components/Brand/UnAuthenticatedRoute/UnAuthenticatedRoute.lazy';
+// import UnAuthenticatedRoute from 'components/Brand/UnAuthenticatedRoute/UnAuthenticatedRoute.lazy';
 import LoginPage from 'pages/Brand/LoginPage/LoginPage.lazy';
-import SignupPage from 'pages/Brand/SignupPage/SignupPage.lazy';import AuthenticatedRoute from 'components/Brand/AuthenticatedRoute/AuthenticatedRoute.lazy';
+import SignupPage from 'pages/Brand/SignupPage/SignupPage.lazy';
+// import AuthenticatedRoute from 'components/Brand/AuthenticatedRoute/AuthenticatedRoute.lazy';
 import ForgotPasswordPage from 'pages/Brand/ForgotPasswordPage/ForgotPasswordPage.lazy';
+import { useAppSelector } from 'hooks/storeHooks';
+import UnAuthenticatedRoute from 'components/Brand/UnAuthenticatedRoute';
+import AuthenticatedRoute from 'components/Brand/AuthenticatedRoute';
 ;
 
 const StyledNav = styled.nav`
@@ -33,34 +37,38 @@ const StyledLink = styled(Link)`
 const AppRouterSwitch: React.FC = () => {
   usePageViews();
 
-  const user = useContext(AuthContext);
-  const [loggedin, setLoggedin] = useState(false);
+  const loggedin = useAppSelector((state) => state.user.loggedin);
+  // const user = useContext(AuthContext);
+  // const [loggedin, setLoggedin] = useState(() => false);
 
-  useEffect(() => {
-    if (user) {
-      console.log(user);
-      setLoggedin(true);
-    } else {
-      setLoggedin(false);
-    }
-  }, [user]);
+
+  // useEffect(() => {
+  //   if (user) {
+  //     console.log(user);
+  //     setLoggedin(true);
+  //   } else {
+  //     setLoggedin(false);
+  //   }
+  // }, [user]);
 
   return (
     <div>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/counter" component={Counter} />
-        <Route path={ROUTES.BRAND.DISCOVER} component={ManageRequestsPage} />
+        {/* <Route exact path={ROUTES.BRAND.DISCOVER} component={ManageRequestsPage} /> */}
         {/* <Route path={`${ROUTES.GENERAL.MANAGE_MERCHANTS}/:id`} component={ManageMerchantsPage} /> */}
         {/* <Route path={`${ROUTES.GENERAL.MANAGE_MENU}/:id`} component={MenuPage} /> */}
         {/* <Route path={ROUTES.GENERAL.CAMPAIGNS} component={ManageMerchantsPage} /> */}
 
         {/* Brand */}
+        <AuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.DISCOVER} component={ManageRequestsPage} />
         <AuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.GENERAL.CAMPAIGNS} component={ManageMerchantsPage} />
 
         <UnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.REGISTER} component={SignupPage} />
         <UnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.LOGIN} component={LoginPage} />
         <UnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.GENERAL.FORGOT_PASSWORD} component={ForgotPasswordPage} />
+
 
         <Route path="/404" component={NotFoundPage} />
         <Redirect to="/404" />

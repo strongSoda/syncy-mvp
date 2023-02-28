@@ -1,4 +1,5 @@
 // import { registerUser } from 'features/user/userSlice';
+import { login } from 'features/user/userSlice';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { useFormik } from 'formik';
 import { auth } from 'global/constants/firebase';
@@ -13,7 +14,7 @@ import SignupWrapper from './Signup.styles';
 
 const Signup: React.FC = () => {
   const [Error, setCustomError] = useState('');
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const history = useHistory();
   // const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -60,6 +61,7 @@ const Signup: React.FC = () => {
       const user = userCredential.user;
       await sendEmailVerification(user)
 
+      dispatch(login());
       history.push(ROUTES.BRAND.DISCOVER);
 
     } catch (error: any) {

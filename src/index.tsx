@@ -11,6 +11,12 @@ import { MoralisProvider } from "react-moralis";
 
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from 'global/provider/AuthProvider';
+import { PersistGate } from 'redux-persist/integration/react';
+import {
+  persistStore,
+} from 'redux-persist'
+
+let persistor = persistStore(store)
 
 ReactDOM.render(
   <React.StrictMode>
@@ -18,7 +24,9 @@ ReactDOM.render(
     <ThemeProvider>
       <GlobalStyles />
       <Provider store={store}>
-        <AppRouter />
+        <PersistGate loading={null} persistor={persistor}>
+          <AppRouter />
+        </PersistGate>
       </Provider>
     </ThemeProvider>
     </AuthProvider>

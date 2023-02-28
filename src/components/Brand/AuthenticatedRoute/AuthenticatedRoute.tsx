@@ -1,5 +1,5 @@
 import ROUTES from 'global/constants/routes';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Redirect, Route } from 'react-router';
 
 import AuthenticatedRouteWrapper from './AuthenticatedRoute.styles';
@@ -15,6 +15,10 @@ const AuthenticatedRoute: React.FC<IAuthenticatedRouteProps> = (props: IAuthenti
   const C = props.component;
   const { isAuthenticated } = props;
   const { componentProps } = props;
+
+  useEffect(() => {
+    console.log('AuthenticatedRoute', props);
+  }, [props]);
 
   return (
     <AuthenticatedRouteWrapper data-testid="AuthenticatedRoute">

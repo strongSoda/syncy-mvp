@@ -1,6 +1,7 @@
 import SideBar from 'components/SideBar/SideBar.lazy';
 import { Alert, Button, FormField, TextInputField, toaster } from 'evergreen-ui';
 import { useFormik } from 'formik';
+import API from 'global/constants/api';
 import CSSVARIABLES from 'global/constants/variables';
 import { AuthContext } from 'global/context/AuthContext';
 import React, { useContext, useEffect, useState } from 'react';
@@ -95,7 +96,7 @@ const BrandCompleteProfile: React.FC = () => {
   const saveProfile = async (values: any) => {
     // e.preventDefault();
     try {
-      const res = await fetch('http://localhost:8000/brand_user_profile', {
+      const res = await fetch(`${API}/brand_user_profile`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -125,7 +126,7 @@ const BrandCompleteProfile: React.FC = () => {
   const getProfile = async () => {
     setFetchingProfile(true);
     try {
-      const res = await fetch('http://localhost:8000/brand_user_profile?email=' + user?.email, {
+      const res = await fetch(`${API}/brand_user_profile?email=${user?.email}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

@@ -1,5 +1,5 @@
 import SideBar from 'components/SideBar/SideBar.lazy';
-import { Alert, Button, FormField, TextInputField, toaster } from 'evergreen-ui';
+import { Alert, Button, FormField, Pane, Spinner, TextInputField, toaster } from 'evergreen-ui';
 import { useFormik } from 'formik';
 import API from 'global/constants/api';
 import CSSVARIABLES from 'global/constants/variables';
@@ -167,7 +167,7 @@ const BrandCompleteProfile: React.FC = () => {
   return (
   <BrandCompleteProfileWrapper data-testid="BrandCompleteProfile">
 
-    {!fetchingProfile && 
+    {!fetchingProfile ?
     <>
       {firstName ?       
       <>
@@ -481,6 +481,10 @@ const BrandCompleteProfile: React.FC = () => {
       </>
       }
     </>
+    :
+    <Pane display="flex" alignItems="center" justifyContent="center" height={400}>
+      <Spinner />
+    </Pane>
   }
   </BrandCompleteProfileWrapper>
 )};

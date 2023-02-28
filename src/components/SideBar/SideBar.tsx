@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import reactangleImg from 'assets/images/rectangle.png';
 
 import LightChat from '../../assets/icons/Chat.svg';
 import Shop from '../../assets/icons/shop.svg';
+import ProfileIcon from '../../assets/icons/profile.svg';
 import SideBarWrapper from './SideBar.styles';
 import { signOut } from 'firebase/auth';
 import { auth } from 'global/constants/firebase';
@@ -25,14 +26,20 @@ const Links = [
     icon: LightChat,
     text: 'Discover',
     id: 0,
-    path: '/discover',
+    path: ROUTES.BRAND.DISCOVER,
   },
-  // {
-  //   icon: Shop,
-  //   text: 'Campaigns',
-  //   id: 1,
-  //   path: '/campaigns',
-  // },
+  {
+    icon: Shop,
+    text: 'Campaigns',
+    id: 1,
+    path: ROUTES.BRAND.CAMPAIGNS,
+  },
+  {
+    icon: ProfileIcon,
+    text: 'Profile',
+    id: 2,
+    path: ROUTES.BRAND.COMPLETE_PROFILE,
+  },
 ];
 
 const SideBar: React.FC<ISideBarProps> = ({ lightColor, darkColor }: ISideBarProps) => {
@@ -46,12 +53,23 @@ const SideBar: React.FC<ISideBarProps> = ({ lightColor, darkColor }: ISideBarPro
     dispatch(logout())
     history.push(ROUTES.BRAND.LOGIN);
   };
+
+  useEffect(() => {
+    const url = window.location.pathname
+    const activeLink = document.getElementById(url)
+    if(activeLink) {
+      activeLink.style.background = darkColor;
+      activeLink.style.color = lightColor;
+      activeLink.style.borderRadius = '10px';
+    }
+  }, [])
+
   return (
   <SideBarWrapper data-testid="SideBar" lightColor={lightColor} darkColor={darkColor}>
     <div className="top-section">
       <p className="title">SYNCY</p>
       {Links.map((Link) => (
-        <a key={Link.id} href={Link.path}>
+        <a key={Link.id} href={Link.path} id={Link.path as any}>
           <img className="icon" src={Link.icon} alt={Link.text} />
           {Link.text}
         </a>

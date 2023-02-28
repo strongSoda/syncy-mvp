@@ -2,7 +2,6 @@ const ROUTES = {
   GENERAL: {
     LOGIN: '/login',
     DISCOVER: '/discover',
-    CAMPAIGNS: '/campaigns',
     MANAGE_MENU: '/menu',
     FORGOT_PASSWORD: '/forgot-password',
   },
@@ -10,6 +9,8 @@ const ROUTES = {
     LOGIN: '/brand/login',
     REGISTER: '/brand/register',
     DISCOVER: '/brand/discover',
+    CAMPAIGNS: '/brand/campaigns',
+    COMPLETE_PROFILE: '/brand/complete-profile',
   }
 };
 

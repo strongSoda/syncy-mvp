@@ -19,7 +19,7 @@ import { AddCardBtnWrapper, AddMenuPromptWrapper, AddStoreModalWrapper, ManageMe
 
 const ManageMerchants: React.FC = () => (
   <ManageMerchantsWrapper data-testid="ManageMerchants">
-    {/* <SideBar lightColor={CSSVARIABLES.COLORS.BLUE_1} darkColor={CSSVARIABLES.COLORS.BLUE_0} /> */}
+    <SideBar lightColor={CSSVARIABLES.COLORS.BLUE_1} darkColor={CSSVARIABLES.COLORS.BLUE_0} />
     {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
     <MerchantsBar />
     <div className="content">

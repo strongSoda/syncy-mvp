@@ -11,9 +11,13 @@ const CSSVARIABLES = {
     WHITE_0: '#FFF',
     WHITE_1: '#f7f7f7',
     PRIMARY_GREEEN_1: '#e6f6f4',
+    PURPLE_1: '#eee5f8',
+    PURPLE_2: '#8a47d5',
+    YELLOW_GREEN_1: '#f4f6e6',
+    YELLOW_GREEN_0: '#b2c642',
   },
   SIDEBAR: {
-    WIDTH: '12.75em',
+    WIDTH: '16.75em',
     HEIGHT: '100%',
     PADDING_TOP: '20px',
     LINK: {
@@ -25,7 +29,7 @@ const CSSVARIABLES = {
   },
   LAYOUT: {
     PRIMARY: {
-      MARGIN_LEFT: '12.75em',
+      MARGIN_LEFT: '16.75em',
       PADDING: '1em 3em',
     },
   },
@@ -63,6 +67,11 @@ const CSSVARIABLES = {
       },
     },
   },
+  BADGE_COLOR: {
+    'PENDING': 'blue',
+    'SUCCESS': 'green',
+    'CANCELLED': 'yellow'
+  }
 };
 
 export default CSSVARIABLES;

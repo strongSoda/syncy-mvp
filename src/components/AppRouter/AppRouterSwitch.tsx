@@ -20,6 +20,7 @@ import ForgotPasswordPage from 'pages/Brand/ForgotPasswordPage/ForgotPasswordPag
 import { useAppSelector } from 'hooks/storeHooks';
 import UnAuthenticatedRoute from 'components/Brand/UnAuthenticatedRoute';
 import AuthenticatedRoute from 'components/Brand/AuthenticatedRoute';
+import BrandCompleteProfilePage from 'pages/Brand/CompleteProfilePage/CompleteProfilePage.lazy';
 ;
 
 const StyledNav = styled.nav`
@@ -63,7 +64,8 @@ const AppRouterSwitch: React.FC = () => {
 
         {/* Brand */}
         <AuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.DISCOVER} component={ManageRequestsPage} />
-        <AuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.GENERAL.CAMPAIGNS} component={ManageMerchantsPage} />
+        <AuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.CAMPAIGNS} component={ManageMerchantsPage} />
+        <AuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.COMPLETE_PROFILE} component={BrandCompleteProfilePage} />
 
         <UnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.REGISTER} component={SignupPage} />
         <UnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.LOGIN} component={LoginPage} />

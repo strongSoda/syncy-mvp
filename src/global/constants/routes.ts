@@ -3,7 +3,6 @@ const ROUTES = {
     LOGIN: '/login',
     DISCOVER: '/discover',
     MANAGE_MENU: '/menu',
-    FORGOT_PASSWORD: '/forgot-password',
   },
   BRAND: {
     LOGIN: '/brand/login',
@@ -11,6 +10,15 @@ const ROUTES = {
     DISCOVER: '/brand/discover',
     CAMPAIGNS: '/brand/campaigns',
     COMPLETE_PROFILE: '/brand/complete-profile',
+    FORGOT_PASSWORD: '/brand/forgot-password',
+  },
+  INFLUENCER: {
+    LOGIN: '/influencer/login',
+    REGISTER: '/influencer/register',
+    DISCOVER: '/influencer/discover',
+    CAMPAIGNS: '/influencer/campaigns',
+    COMPLETE_PROFILE: '/influencer/complete-profile',
+    FORGOT_PASSWORD: '/influencer/forgot-password',
   }
 };
 

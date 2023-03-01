@@ -12,15 +12,19 @@ import ManageRequestsPage from 'pages/ManageRequestsPage/ManageRequestsPage.lazy
 import NotFoundPage from 'pages/notfound';
 import MenuPage from 'pages/MenuPage/MenuPage.lazy';
 import { AuthContext } from 'global/context/AuthContext';
-// import UnAuthenticatedRoute from 'components/Brand/UnAuthenticatedRoute/UnAuthenticatedRoute.lazy';
 import LoginPage from 'pages/Brand/LoginPage/LoginPage.lazy';
+import InfluencerLoginPage from 'pages/Influencer/LoginPage/LoginPage.lazy';
 import SignupPage from 'pages/Brand/SignupPage/SignupPage.lazy';
-// import AuthenticatedRoute from 'components/Brand/AuthenticatedRoute/AuthenticatedRoute.lazy';
+import InfluencerSignupPage from 'pages/Influencer/SignupPage/SignupPage.lazy';
 import ForgotPasswordPage from 'pages/Brand/ForgotPasswordPage/ForgotPasswordPage.lazy';
+import InfluencerForgotPasswordPage from 'pages/Influencer/ForgotPasswordPage/ForgotPasswordPage.lazy';
 import { useAppSelector } from 'hooks/storeHooks';
+import BrandCompleteProfilePage from 'pages/Brand/CompleteProfilePage/CompleteProfilePage.lazy';
 import UnAuthenticatedRoute from 'components/Brand/UnAuthenticatedRoute';
 import AuthenticatedRoute from 'components/Brand/AuthenticatedRoute';
-import BrandCompleteProfilePage from 'pages/Brand/CompleteProfilePage/CompleteProfilePage.lazy';
+import InfluencerUnAuthenticatedRoute from 'components/Influencer/UnAuthenticatedRoute';
+import InfluencerAuthenticatedRoute from 'components/Influencer/AuthenticatedRoute';
+import InfluencerCompleteProfilePage from 'pages/Influencer/CompleteProfilePage/CompleteProfilePage.lazy';
 ;
 
 const StyledNav = styled.nav`
@@ -69,8 +73,17 @@ const AppRouterSwitch: React.FC = () => {
 
         <UnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.REGISTER} component={SignupPage} />
         <UnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.LOGIN} component={LoginPage} />
-        <UnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.GENERAL.FORGOT_PASSWORD} component={ForgotPasswordPage} />
+        <UnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.FORGOT_PASSWORD} component={ForgotPasswordPage} />
 
+
+        {/* Influencer */}
+        <InfluencerAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.DISCOVER} component={ManageRequestsPage} />
+        <InfluencerAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.CAMPAIGNS} component={ManageMerchantsPage} />
+        <InfluencerAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.COMPLETE_PROFILE} component={InfluencerCompleteProfilePage} />
+
+        <InfluencerUnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.REGISTER} component={InfluencerSignupPage} />
+        <InfluencerUnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.LOGIN} component={InfluencerLoginPage} />
+        <InfluencerUnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.FORGOT_PASSWORD} component={InfluencerForgotPasswordPage} />
 
         <Route path="/404" component={NotFoundPage} />
         <Redirect to="/404" />

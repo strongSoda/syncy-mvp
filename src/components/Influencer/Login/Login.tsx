@@ -72,7 +72,7 @@ const Login: React.FC = () => {
   <LoginWrapper data-testid="Login">
     <header>
         <h3 className="brand">SYNCY</h3>
-        <a href={ROUTES.BRAND.REGISTER}>
+        <a href={ROUTES.INFLUENCER.REGISTER}>
           <button className="login_btn">register</button>
         </a>
     </header>
@@ -102,10 +102,10 @@ const Login: React.FC = () => {
           <br />
           <input type="submit" value={loading ? 'loading...' : 'Log In'} />
           <p>
-            Don't have an account? <a href={ROUTES.BRAND.REGISTER}>Register!</a>
+            Don't have an account? <a href={ROUTES.INFLUENCER.REGISTER}>Register!</a>
           </p>
           <p>
-            Forgot Password? <a href={ROUTES.BRAND.FORGOT_PASSWORD}>Reset!</a>
+            Forgot Password? <a href={ROUTES.INFLUENCER.FORGOT_PASSWORD}>Reset!</a>
           </p>
         </form>
       </div>

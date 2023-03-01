@@ -86,7 +86,7 @@ const BrandCompleteProfile: React.FC = () => {
       setCustomError('');
       setLoading(true);
 
-      // todo: save to database
+      // save to database
       await saveProfile(values);
 
       setLoading(false);

@@ -1,5 +1,5 @@
 import SideBar from 'components/SideBar/SideBar.lazy';
-import { Alert, Button, FormField, Pane, Spinner, TextInputField, toaster } from 'evergreen-ui';
+import { Alert, Button, FormField, Pane, Paragraph, Spinner, Tab, Tablist, TextInputField, toaster } from 'evergreen-ui';
 import { useFormik } from 'formik';
 import API from 'global/constants/api';
 import ROUTES from 'global/constants/routes';
@@ -14,71 +14,299 @@ import InfluencerCompleteProfileWrapper from './CompleteProfile.styles'
 // declare interface IBrandCompleteProfileProps {}
 
 const InfluencerCompleteProfile: React.FC = () => {
-  // const [fris, setValue] = useState('')
+  // const dispatch = useAppDispatch();
+
+  return (
+  <InfluencerCompleteProfileWrapper data-testid="BrandCompleteProfile">
+    <div className='container'>
+      <ProfileTabs />
+    </div>
+  </InfluencerCompleteProfileWrapper>
+)};
+
+function ProfileTabs() {
+  const [selectedIndex, setSelectedIndex] = React.useState(0)
+  const [tabs] = React.useState(['Personal', 'Instagram'])
+
+  return (
+    <Pane height={120}>
+      <h2 className='title'>Complete your profile</h2>
+
+      <Tablist marginBottom={16} flexBasis={240} marginRight={24}>
+        {tabs.map((tab, index) => (
+          <Tab
+            aria-controls={`panel-${tab}`}
+            isSelected={index === selectedIndex}
+            key={tab}
+            onSelect={() => setSelectedIndex(index)}
+          >
+            {tab}
+          </Tab>
+        ))}
+      </Tablist>
+      <Pane padding={16} background="tint1" flex="1">
+        <Pane
+            aria-labelledby="Personal"
+            aria-hidden={0 !== selectedIndex}
+            display={0 === selectedIndex ? 'block' : 'none'}
+            key="Personal"
+            role="tabpanel"
+          >
+          <PersonalDetails setSelectedIndex={setSelectedIndex} />
+        </Pane>
+
+        <Pane
+            aria-labelledby="Instagram"
+            aria-hidden={1 !== selectedIndex}
+            display={1 === selectedIndex ? 'block' : 'none'}
+            key="Instagram"
+            role="Instagram"
+          >
+          <InstagramDetails setSelectedIndex={setSelectedIndex} />
+        </Pane>
+
+
+        {/* <Pane
+            aria-labelledby="Audience"
+            aria-hidden={2 !== selectedIndex}
+            display={2 === selectedIndex ? 'block' : 'none'}
+            key="Audience"
+            role="Audience"
+          >
+            <Paragraph>Panel Personal</Paragraph>
+        </Pane> */}
+
+      </Pane>
+    </Pane>
+  )
+}
+
+interface IProfileDetailsProps {
+  setSelectedIndex: any
+}
+
+const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex}: IProfileDetailsProps) => {
+  const user = useContext(AuthContext);
+
   const [Error, setCustomError] = useState('');
   const [loading, setLoading] = useState(false);
   const [fetchingProfile, setFetchingProfile] = useState(false);
 
-
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [jobTitle, setJobTitle] = useState('');
-  const [companyName, setCompanyName] = useState('');
-  const [companyWebsite, setCompanyWebsite] = useState('');
-  const [companyLogo, setCompanyLogo] = useState('');
-  const [companyDescription, setCompanyDescription] = useState('');
-  const [companyAddress, setCompanyAddress] = useState('');
-  const [companyEmail, setCompanyEmail] = useState('');
-  const [companyInstagram, setCompanyInstagram] = useState('');
-  const [companyLinkedin, setCompanyLinkedin] = useState('');
+  const [bio, setBio] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [city, setCity] = useState('');
+  const [bookCallInfo, setBookCallInfo] = useState('');
 
-  const user = useContext(AuthContext);
-  
-  // const dispatch = useAppDispatch();
-  const history = useHistory();
 
-    const formik = useFormik({
+  const formik = useFormik({
     enableReinitialize: true,
     // Form to enter First Name, Last Name, job title, company name, company website, company logo, company description, company address, company phone number, company email, company social media links
     initialValues: {
       firstName: firstName,
       lastName: lastName,
-      jobTitle: jobTitle,
-      companyName: companyName,
-      companyWebsite: companyWebsite,
-      companyLogo: companyLogo,
-      companyDescription: companyDescription,
-      companyAddress: companyAddress,
-      companyEmail: companyEmail,
-      companyInstagram: companyInstagram,
-      companyLinkedin: companyLinkedin,
+      bio: bio,
+      city: city,
+      imageUrl: imageUrl,
       email: user?.email,
-      // companySocialMediaLinks: '',
+      bookCallInfo: bookCallInfo,
     },
     validationSchema: Yup.object({
       firstName: Yup.string().required('Required'),
       lastName: Yup.string().required('Required'),
-      jobTitle: Yup.string().required('Required'),
-      companyName: Yup.string().required('Required'),
-      companyWebsite: Yup.string()
-        .matches(
-            /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-            'Invalid url!'
-        ).required('Required'),
-      companyLogo: Yup.string().required('Required'),
-      companyDescription: Yup.string().required('Required'),
-      companyAddress: Yup.string().required('Required'),
-      companyEmail: Yup.string().email('Invalid email address').required('Required'),
-      companyInstagram: Yup.string()
-        .matches(
-            /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-            'Invalid url!'
-        ).required('Required'),
-      companyLinkedin: Yup.string()
-        .matches(
-            /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-            'Invalid url!'
-        ).required('Required'),
+      bio: Yup.string().required('Required'),
+      city: Yup.string().required('Required'),
+      imageUrl: Yup.string().required('Required'),
+      email: Yup.string().email('Invalid email address'),
+      bookCallInfo: Yup.string().required('Required'),
+    }),
+
+    onSubmit: async (values: any) => {
+      console.log('values: ', values);
+      
+      setCustomError('');
+      setLoading(true);
+
+      // save to database
+      await saveProfile(values);
+
+      setLoading(false);
+    },
+  });
+
+  const saveProfile = async (values: any) => {
+    console.log('here');
+    
+    try {
+      console.log('now here');
+      
+      const res = await fetch(`${API}/influencer-profile-personal`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+      const data = await res.json();
+      console.log(data);
+      
+      if(data?.status === 'success') {
+        toaster.success(data?.message);
+        // change to next tab
+        setSelectedIndex(1);
+      } else {
+        toaster.danger(data?.message);
+      }
+      
+      setLoading(false);
+    } catch (error: any) {
+      console.error(error);
+      const errorCode = error?.code;
+      const errorMessage = error?.message;
+      console.log(error);
+      
+      toaster.danger(errorMessage);
+    }
+  }
+
+  return (
+    <form id="PersonalDetails" onSubmit={formik.handleSubmit}>
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.firstName && formik.errors.firstName ? ( <div>{formik.errors.firstName}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='firstName'
+          label="First Name"
+          required
+          // description="This is a description."
+          value={formik.values.firstName}
+          onChange={(e: any) => formik.setFieldValue('firstName', e.target.value)}
+        />
+      </FormField>
+
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.lastName && formik.errors.lastName ? ( <div>{formik.errors.lastName}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='lastName'
+          label="Last Name"
+          required
+          // description="This is a description."
+          value={formik.values.lastName}
+          onChange={(e: any) => formik.setFieldValue('lastName', e.target.value)}
+        />
+      </FormField>
+
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.bio && formik.errors.bio ? ( <div>{formik.errors.bio}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='bio'
+          label="Bio"
+          required
+          // description="This is a description."
+          value={formik.values.bio}
+          onChange={(e: any) => formik.setFieldValue('bio', e.target.value)}
+        />
+      </FormField>
+
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.city && formik.errors.city ? ( <div>{formik.errors.city}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='city'
+          label="City"
+          required
+          // description="This is a description."
+          value={formik.values.city}
+          onChange={(e: any) => formik.setFieldValue('city', e.target.value)}
+        />
+      </FormField>
+
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.imageUrl && formik.errors.imageUrl ? ( <div>{formik.errors.imageUrl}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='imageUrl'
+          label="Profile Image Url"
+          required
+          // description="This is a description."
+          value={formik.values.imageUrl}
+          onChange={(e: any) => formik.setFieldValue('imageUrl', e.target.value)}
+        />
+      </FormField>
+
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.bookCallInfo && formik.errors.bookCallInfo ? ( <div>{formik.errors.bookCallInfo}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='bookCallInfo'
+          label="Link to book a 30-minute call with you (Calendly etc.)"
+          required
+          // description="This is a description."
+          value={formik.values.bookCallInfo}
+          onChange={(e: any) => formik.setFieldValue('bookCallInfo', e.target.value)}
+        />
+      </FormField>
+
+      {/* Submit Button */}
+      <input type="submit" value={loading ? 'loading...' : 'Save 👉'} />
+    </form>
+  )
+};
+
+const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex }: IProfileDetailsProps) => {
+  const [Error, setCustomError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [fetchingProfile, setFetchingProfile] = useState(false);
+
+  const [username, setUsername] = useState('');
+  const [followersCount, setFollowersCount] = useState('');
+  const [rate, setRate] = useState('');
+  const [category, setCategory] = useState('');
+  const [hashtags, setHashtags] = useState('');
+  const [topPostUrl1, setTopPostUrl1] = useState('');
+  const [topPostUrl2, setTopPostUrl2] = useState('');
+  const [topPostUrl3, setTopPostUrl3] = useState('');
+  const [sponsoredPostUrl1, setSponsoredPostUrl1] = useState('');
+  const [sponsoredPostUrl2, setSponsoredPostUrl2] = useState('');
+  const [sponsoredPostUrl3, setSponsoredPostUrl3] = useState('');
+
+  const history = useHistory();
+
+  const user = useContext(AuthContext);
+
+
+  const formik = useFormik({
+    enableReinitialize: true,
+    // Form to enter First Name, Last Name, job title, company name, company website, company logo, company description, company address, company phone number, company email, company social media links
+    initialValues: {
+      email: user?.email,
+      username: username,
+      followersCount: followersCount,
+      rate: rate,
+      category: category,
+      hashtags: hashtags,
+      topPostUrl1: topPostUrl1,
+      topPostUrl2: topPostUrl2,
+      topPostUrl3: topPostUrl3,
+      sponsoredPostUrl1: sponsoredPostUrl1,
+      sponsoredPostUrl2: sponsoredPostUrl2,
+      sponsoredPostUrl3: sponsoredPostUrl3,
+    },
+    validationSchema: Yup.object({
+      username: Yup.string().required('Required'),
+      followersCount: Yup.string().required('Required'),
+      rate: Yup.number().required('Required'),
+      category: Yup.string().required('Required'),
+      hashtags: Yup.string().required('Required'),
+      topPostUrl1: Yup.string().required('Required'),
+      topPostUrl2: Yup.string().required('Required'),
+      topPostUrl3: Yup.string().required('Required'),
+      sponsoredPostUrl1: Yup.string().required('Required'),
+      sponsoredPostUrl2: Yup.string().required('Required'),
+      sponsoredPostUrl3: Yup.string().required('Required'),
     }),
 
     onSubmit: async (values: any) => {
@@ -97,7 +325,7 @@ const InfluencerCompleteProfile: React.FC = () => {
   const saveProfile = async (values: any) => {
     // e.preventDefault();
     try {
-      const res = await fetch(`${API}/influencer_user_profile`, {
+      const res = await fetch(`${API}/influencer-profile-instagram`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,7 +337,10 @@ const InfluencerCompleteProfile: React.FC = () => {
       
       if(data.status === 'success') {
         toaster.success(data.message);
+        
         history.push(ROUTES.INFLUENCER.CAMPAIGNS);
+        // todo: change tab
+
       } else {
         toaster.danger(data.message);
       }
@@ -123,371 +354,322 @@ const InfluencerCompleteProfile: React.FC = () => {
       toaster.danger(errorMessage);
     }
   }
-  
-  const getProfile = async () => {
-    setFetchingProfile(true);
-    try {
-      const res = await fetch(`${API}/brand_user_profile?email=${user?.email}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await res.json();
-      console.log(data);
-      const profile = data?.data
-
-      setFirstName(profile?.first_name);
-      setLastName(profile?.last_name);
-      setJobTitle(profile?.job_title);
-      setCompanyName(profile?.company_name);
-      setCompanyWebsite(profile?.company_website);
-      setCompanyLogo(profile?.company_logo);
-      setCompanyDescription(profile?.company_description);
-      setCompanyAddress(profile?.company_address);
-      setCompanyEmail(profile?.company_email);
-      setCompanyInstagram(profile?.company_instagram);
-      setCompanyLinkedin(profile?.company_linkedin);
-
-      // setLoading(false);
-      setFetchingProfile(false);
-    } catch (error: any) {
-      console.error(error);
-      const errorCode = error?.code;
-      const errorMessage = error?.message;
-      setFetchingProfile(false);
-    }      
-  }
-
-  useEffect(() => {
-    if(user) {
-      getProfile();
-    }
-  }, [user]);
 
   return (
-  <InfluencerCompleteProfileWrapper data-testid="BrandCompleteProfile">
+    <form id="form" onSubmit={formik.handleSubmit}>
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.username && formik.errors.username ? ( <div>{formik.errors.username}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='username'
+          label="Username"
+          required
+          // description="This is a description."
+          value={formik.values.username}
+          onChange={(e: any) => formik.setFieldValue('username', e.target.value)}
+        />
+      </FormField>
 
-    {!fetchingProfile ?
-    <>
-      {firstName ?       
-      <>
-        <SideBar lightColor={CSSVARIABLES.COLORS.PURPLE_1} darkColor={CSSVARIABLES.COLORS.PURPLE_2} />
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.followersCount && formik.errors.followersCount ? ( <div>{formik.errors.followersCount}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='followersCount'
+          label="Followers Count"
+          required
+          // description="This is a description."
+          value={formik.values.followersCount}
+          onChange={(e: any) => formik.setFieldValue('followersCount', e.target.value)}
+        />
+      </FormField>
 
-        <div className='container'>
-          <form id="form" onSubmit={formik.handleSubmit}>
-          <h2 className='title'>Complete your profile</h2>
-            {Error && <p className="error">{Error}</p>}
-            {formik.touched.firstName && formik.errors.firstName ? ( <div>{formik.errors.firstName}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='firstName'
-              label="First Name"
-              required
-              // description="This is a description."
-              value={formik.values.firstName}
-              onChange={(e: any) => formik.setFieldValue('firstName', e.target.value)}
-            />
-          </FormField>
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.rate && formik.errors.rate ? ( <div>{formik.errors.rate}</div> ) : null}
+      <FormField>
+        <TextInputField
+          type="number"
+          name='rate'
+          label="Rate Per Post ($)"
+          required
+          // description="This is a description."
+          value={formik.values.rate}
+          onChange={(e: any) => formik.setFieldValue('rate', e.target.value)}
+        />
+      </FormField>
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.lastName && formik.errors.lastName ? ( <div>{formik.errors.lastName}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='lastName'
-              label="Last Name"
-              required
-              // description="This is a description."
-              value={formik.values.lastName}
-              onChange={(e: any) => formik.setFieldValue('lastName', e.target.value)}
-            />
-          </FormField>
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.category && formik.errors.category ? ( <div>{formik.errors.category}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='category'
+          label="Category"
+          required
+          // description="This is a description."
+          value={formik.values.category}
+          onChange={(e: any) => formik.setFieldValue('category', e.target.value)}
+        />
+      </FormField>
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.jobTitle && formik.errors.jobTitle ? ( <div>{formik.errors.jobTitle}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='jobTitle'
-              label="Job Title"
-              required
-              // description="This is a description."
-              value={formik.values.jobTitle}
-              onChange={(e: any) => formik.setFieldValue('jobTitle', e.target.value)}
-            />
-          </FormField>
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.hashtags && formik.errors.hashtags ? ( <div>{formik.errors.hashtags}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='hashtags'
+          label="Top Hashtags (comma separated)"
+          required
+          // description="This is a description."
+          value={formik.values.hashtags}
+          onChange={(e: any) => formik.setFieldValue('hashtags', e.target.value)}
+        />
+      </FormField>
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyName && formik.errors.companyName ? ( <div>{formik.errors.companyName}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyName'
-              label="Company Name"
-              required
-              // description="This is a description."
-              value={formik.values.companyName}
-              onChange={(e: any) => formik.setFieldValue('companyName', e.target.value)}
-            />
-          </FormField>
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.topPostUrl1 && formik.errors.topPostUrl1 ? ( <div>{formik.errors.topPostUrl1}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='topPostUrl1'
+          label="Top Post Url 1"
+          required
+          // description="This is a description."
+          value={formik.values.topPostUrl1}
+          onChange={(e: any) => formik.setFieldValue('topPostUrl1', e.target.value)}
+        />
+      </FormField>
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyWebsite && formik.errors.companyWebsite ? ( <div>{formik.errors.companyWebsite}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyWebsite'
-              label="Company Website"
-              required
-              // description="This is a description."
-              value={formik.values.companyWebsite}
-              onChange={(e: any) => formik.setFieldValue('companyWebsite', e.target.value)}
-            />
-          </FormField>
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.topPostUrl2 && formik.errors.topPostUrl2 ? ( <div>{formik.errors.topPostUrl2}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='topPostUrl2'
+          label="Top Post Url 2"
+          required
+          // description="This is a description."
+          value={formik.values.topPostUrl2}
+          onChange={(e: any) => formik.setFieldValue('topPostUrl2', e.target.value)}
+        />
+      </FormField>
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyLogo && formik.errors.companyLogo ? ( <div>{formik.errors.companyLogo}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyLogo'
-              label="Company Logo"
-              required
-              // description="This is a description."
-              value={formik.values.companyLogo}
-              onChange={(e: any) => formik.setFieldValue('companyLogo', e.target.value)}
-            />
-          </FormField>
-          
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyDescription && formik.errors.companyDescription ? ( <div>{formik.errors.companyDescription}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyDescription'
-              label="Company Description"
-              required
-              // description="This is a description."
-              value={formik.values.companyDescription}
-              onChange={(e: any) => formik.setFieldValue('companyDescription', e.target.value)}
-            />
-          </FormField>
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyAddress && formik.errors.companyAddress ? ( <div>{formik.errors.companyAddress}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyAddress'
-              label="Company Address"
-              required
-              // description="This is a description."
-              value={formik.values.companyAddress}
-              onChange={(e: any) => formik.setFieldValue('companyAddress', e.target.value)}
-            />
-          </FormField>
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.topPostUrl3 && formik.errors.topPostUrl3 ? ( <div>{formik.errors.topPostUrl3}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='topPostUrl3'
+          label="Top Post Url 3"
+          required
+          // description="This is a description."
+          value={formik.values.topPostUrl3}
+          onChange={(e: any) => formik.setFieldValue('topPostUrl3', e.target.value)}
+        />
+      </FormField>
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyEmail && formik.errors.companyEmail ? ( <div>{formik.errors.companyEmail}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyEmail'
-              label="Company Email"
-              required
-              // description="This is a description."
-              value={formik.values.companyEmail}
-              onChange={(e: any) => formik.setFieldValue('companyEmail', e.target.value)}
-            />
-          </FormField>
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyInstagram && formik.errors.companyInstagram ? ( <div>{formik.errors.companyInstagram}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyInstagram'
-              label="Company Instagram"
-              required
-              // description="This is a description."
-              value={formik.values.companyInstagram}
-              onChange={(e: any) => formik.setFieldValue('companyInstagram', e.target.value)}
-            />
-          </FormField>
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.sponsoredPostUrl1 && formik.errors.sponsoredPostUrl1 ? ( <div>{formik.errors.sponsoredPostUrl1}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='sponsoredPostUrl1'
+          label="Sponsored Post Url 1"
+          required
+          // description="This is a description."
+          value={formik.values.sponsoredPostUrl1}
+          onChange={(e: any) => formik.setFieldValue('sponsoredPostUrl1', e.target.value)}
+        />
+      </FormField>
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyLinkedin && formik.errors.companyLinkedin ? ( <div>{formik.errors.companyLinkedin}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyLinkedin'
-              label="Company LinkedIn"
-              required
-              // description="This is a description."
-              value={formik.values.companyLinkedin}
-              onChange={(e: any) => formik.setFieldValue('companyLinkedin', e.target.value)}
-            />
-          </FormField>
-          
 
-          {/* Submit Button */}
-          <input type="submit" value={loading ? 'loading...' : 'Submit'} />
-          </form>
-        </div>
-      </>
-      :
-      <>
-        <div className='container'>
-          <form id="form" onSubmit={formik.handleSubmit}>
-          <h2 className='title'>Complete your profile</h2>
-            {Error && <p className="error">{Error}</p>}
-            {formik.touched.firstName && formik.errors.firstName ? ( <div>{formik.errors.firstName}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='firstName'
-              label="First Name"
-              required
-              // description="This is a description."
-              value={formik.values.firstName}
-              onChange={(e: any) => formik.setFieldValue('firstName', e.target.value)}
-            />
-          </FormField>
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.sponsoredPostUrl2 && formik.errors.sponsoredPostUrl2 ? ( <div>{formik.errors.sponsoredPostUrl2}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='sponsoredPostUrl2'
+          label="Sponsored Post Url 2"
+          required
+          // description="This is a description."
+          value={formik.values.sponsoredPostUrl2}
+          onChange={(e: any) => formik.setFieldValue('sponsoredPostUrl2', e.target.value)}
+        />
+      </FormField>
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.lastName && formik.errors.lastName ? ( <div>{formik.errors.lastName}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='lastName'
-              label="Last Name"
-              required
-              // description="This is a description."
-              value={formik.values.lastName}
-              onChange={(e: any) => formik.setFieldValue('lastName', e.target.value)}
-            />
-          </FormField>
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.jobTitle && formik.errors.jobTitle ? ( <div>{formik.errors.jobTitle}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='jobTitle'
-              label="Job Title"
-              required
-              // description="This is a description."
-              value={formik.values.jobTitle}
-              onChange={(e: any) => formik.setFieldValue('jobTitle', e.target.value)}
-            />
-          </FormField>
+      {Error && <p className="error">{Error}</p>}
+      {formik.touched.sponsoredPostUrl3 && formik.errors.sponsoredPostUrl3 ? ( <div>{formik.errors.sponsoredPostUrl3}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='sponsoredPostUrl3'
+          label="Sponsored Post Url 3"
+          required
+          // description="This is a description."
+          value={formik.values.sponsoredPostUrl3}
+          onChange={(e: any) => formik.setFieldValue('sponsoredPostUrl3', e.target.value)}
+        />
+      </FormField>
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyName && formik.errors.companyName ? ( <div>{formik.errors.companyName}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyName'
-              label="Company Name"
-              required
-              // description="This is a description."
-              value={formik.values.companyName}
-              onChange={(e: any) => formik.setFieldValue('companyName', e.target.value)}
-            />
-          </FormField>
+    {/* Submit Button */}
+    <input type="submit" value={loading ? 'loading...' : 'Submit'} />
+    </form>
+  )
+}
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyWebsite && formik.errors.companyWebsite ? ( <div>{formik.errors.companyWebsite}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyWebsite'
-              label="Company Website"
-              required
-              // description="This is a description."
-              value={formik.values.companyWebsite}
-              onChange={(e: any) => formik.setFieldValue('companyWebsite', e.target.value)}
-            />
-          </FormField>
+// const AudienceDetails: React.FC = () => {
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyLogo && formik.errors.companyLogo ? ( <div>{formik.errors.companyLogo}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyLogo'
-              label="Company Logo"
-              required
-              // description="This is a description."
-              value={formik.values.companyLogo}
-              onChange={(e: any) => formik.setFieldValue('companyLogo', e.target.value)}
-            />
-          </FormField>
-          
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyDescription && formik.errors.companyDescription ? ( <div>{formik.errors.companyDescription}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyDescription'
-              label="Company Description"
-              required
-              // description="This is a description."
-              value={formik.values.companyDescription}
-              onChange={(e: any) => formik.setFieldValue('companyDescription', e.target.value)}
-            />
-          </FormField>
+//    const [Error, setCustomError] = useState('');
+//   const [loading, setLoading] = useState(false);
+//   const [fetchingProfile, setFetchingProfile] = useState(false);
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyAddress && formik.errors.companyAddress ? ( <div>{formik.errors.companyAddress}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyAddress'
-              label="Company Address"
-              required
-              // description="This is a description."
-              value={formik.values.companyAddress}
-              onChange={(e: any) => formik.setFieldValue('companyAddress', e.target.value)}
-            />
-          </FormField>
+//   const [city1, setCity1] = useState('');
+//   const [city2, setCity2] = useState('');
+//   const [city3, setCity3] = useState('');
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyEmail && formik.errors.companyEmail ? ( <div>{formik.errors.companyEmail}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyEmail'
-              label="Company Email"
-              required
-              // description="This is a description."
-              value={formik.values.companyEmail}
-              onChange={(e: any) => formik.setFieldValue('companyEmail', e.target.value)}
-            />
-          </FormField>
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyInstagram && formik.errors.companyInstagram ? ( <div>{formik.errors.companyInstagram}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyInstagram'
-              label="Company Instagram"
-              required
-              // description="This is a description."
-              value={formik.values.companyInstagram}
-              onChange={(e: any) => formik.setFieldValue('companyInstagram', e.target.value)}
-            />
-          </FormField>
 
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyLinkedin && formik.errors.companyLinkedin ? ( <div>{formik.errors.companyLinkedin}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyLinkedin'
-              label="Company LinkedIn"
-              required
-              // description="This is a description."
-              value={formik.values.companyLinkedin}
-              onChange={(e: any) => formik.setFieldValue('companyLinkedin', e.target.value)}
-            />
-          </FormField>
-          
+//   const [lastName, setLastName] = useState('');
+//   const [bio, setBio] = useState('');
+//   const [imageUrl, setImageUrl] = useState('');
+//   const [city, setCity] = useState('');
 
-          {/* Submit Button */}
-          <input type="submit" value={loading ? 'loading...' : 'Submit'} />
-          </form>
-        </div>
-      </>
-      }
-    </>
-    :
-    <Pane display="flex" alignItems="center" justifyContent="center" height={400}>
-      <Spinner />
-    </Pane>
-  }
-  </InfluencerCompleteProfileWrapper>
-)};
+//   const history = useHistory();
+
+//   const formik = useFormik({
+//     enableReinitialize: true,
+//     // Form to enter First Name, Last Name, job title, company name, company website, company logo, company description, company address, company phone number, company email, company social media links
+//     initialValues: {
+//       firstName: firstName,
+//       lastName: lastName,
+//       bio: bio,
+//       city: city,
+//       imageUrl: imageUrl,
+//     },
+//     validationSchema: Yup.object({
+//       firstName: Yup.string().required('Required'),
+//       lastName: Yup.string().required('Required'),
+//       bio: Yup.string().required('Required'),
+//       city: Yup.string().required('Required'),
+//       imageUrl: Yup.string()
+//         .matches(
+//             /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+//             'Invalid url!'
+//         ).required('Required'),
+//     }),
+
+//     onSubmit: async (values: any) => {
+//       console.log('values: ', values);
+      
+//       setCustomError('');
+//       setLoading(true);
+
+//       // todo: save to database
+//       await saveProfile(values);
+
+//       setLoading(false);
+//     },
+//   });
+
+//   const saveProfile = async (values: any) => {
+//     // e.preventDefault();
+//     try {
+//       const res = await fetch(`${API}/influencer_user_profile_personal`, {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(values),
+//       });
+//       const data = await res.json();
+//       console.log(data);
+      
+//       if(data.status === 'success') {
+//         toaster.success(data.message);
+//         // history.push('/brand/discover');
+
+//         // todo: change to next tab
+//       } else {
+//         toaster.danger(data.message);
+//       }
+      
+//       setLoading(false);
+//     } catch (error: any) {
+//       console.error(error);
+//       const errorCode = error?.code;
+//       const errorMessage = error?.message;
+
+//       toaster.danger(errorMessage);
+//     }
+//   }
+
+//   return (
+//     <>
+//     <form id="form" onSubmit={formik.handleSubmit}>
+//       {Error && <p className="error">{Error}</p>}
+//       {formik.touched.city1 && formik.errors.city1 ? ( <div>{formik.errors.firstName}</div> ) : null}
+//       <FormField>
+//         <TextInputField
+//           name='firstName'
+//           label="First Name"
+//           required
+//           // description="This is a description."
+//           value={formik.values.firstName}
+//           onChange={(e: any) => formik.setFieldValue('firstName', e.target.value)}
+//         />
+//       </FormField>
+
+//       {Error && <p className="error">{Error}</p>}
+//       {formik.touched.lastName && formik.errors.lastName ? ( <div>{formik.errors.lastName}</div> ) : null}
+//       <FormField>
+//         <TextInputField
+//           name='lastName'
+//           label="Last Name"
+//           required
+//           // description="This is a description."
+//           value={formik.values.lastName}
+//           onChange={(e: any) => formik.setFieldValue('lastName', e.target.value)}
+//         />
+//       </FormField>
+
+//       {Error && <p className="error">{Error}</p>}
+//       {formik.touched.bio && formik.errors.bio ? ( <div>{formik.errors.bio}</div> ) : null}
+//       <FormField>
+//         <TextInputField
+//           name='bio'
+//           label="Bio"
+//           required
+//           // description="This is a description."
+//           value={formik.values.bio}
+//           onChange={(e: any) => formik.setFieldValue('bio', e.target.value)}
+//         />
+//       </FormField>
+
+//       {Error && <p className="error">{Error}</p>}
+//       {formik.touched.city && formik.errors.city ? ( <div>{formik.errors.city}</div> ) : null}
+//       <FormField>
+//         <TextInputField
+//           name='city'
+//           label="City"
+//           required
+//           // description="This is a description."
+//           value={formik.values.city}
+//           onChange={(e: any) => formik.setFieldValue('city', e.target.value)}
+//         />
+//       </FormField>
+
+//       {Error && <p className="error">{Error}</p>}
+//       {formik.touched.imageUrl && formik.errors.imageUrl ? ( <div>{formik.errors.imageUrl}</div> ) : null}
+//       <FormField>
+//         <TextInputField
+//           name='imageUrl'
+//           label="Profile Image Url"
+//           required
+//           // description="This is a description."
+//           value={formik.values.imageUrl}
+//           onChange={(e: any) => formik.setFieldValue('imageUrl', e.target.value)}
+//         />
+//       </FormField>
+
+//       {/* Submit Button */}
+//       <input type="submit" value={loading ? 'loading...' : 'Submit'} />
+//     </form>
+//     </>
+//   )
+// };
 
 export default InfluencerCompleteProfile;

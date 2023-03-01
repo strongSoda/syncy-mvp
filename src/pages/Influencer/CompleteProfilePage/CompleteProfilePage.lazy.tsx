@@ -4,7 +4,7 @@ const LazyInfluencerCompleteProfilePage = lazy(() => import('./CompleteProfilePa
 
 const InfluencerCompleteProfilePage = (props: JSX.IntrinsicAttributes & { children?: React.ReactNode; }) => (
   <Suspense fallback={null}>
-    <InfluencerCompleteProfilePage {...props} />
+    <LazyInfluencerCompleteProfilePage {...props} />
   </Suspense>
 );
 

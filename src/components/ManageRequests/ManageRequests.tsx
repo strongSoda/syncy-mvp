@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { Avatar, Badge, Pane, Paragraph, Popover, Position, Pulsar, Tab, Tablist, TextInputField, Tooltip } from 'evergreen-ui';
+import { Avatar, Badge, Pane, Paragraph, Popover, Position, Pulsar, Tab, Tablist, TextInputField, toaster, Tooltip } from 'evergreen-ui';
 
 import Button from 'components/Button/Button.lazy';
 import Navbar from 'components/Navbar/Navbar.lazy';
@@ -26,6 +26,7 @@ import INFLUENCERS from 'global/constants/infleuncers';
 
 import algoliasearch from 'algoliasearch/lite';
 import { ClearRefinements, CurrentRefinements, Highlight, Hits, HitsPerPage, InstantSearch, Pagination, RangeInput, RefinementList, SearchBox, SortBy } from 'react-instantsearch-hooks-web';
+import emailjs from '@emailjs/browser';
 
 const searchClient = algoliasearch('L7PFECEWC3', 'a953f96171e71bef23ebd1760c7dea10');
 
@@ -286,30 +287,56 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
   const [subject, setSubject] = React.useState<string | undefined>("");
   const [body, setBody] = React.useState<string | undefined>("");
 
-  useEffect(() => {
-    const load = async () => {
-      const msg = await createReachout(influencer);
-      console.log(msg);
-      setMessage(msg);
 
-      // extract subject and body from msg string
-      const lines = msg?.trim().split('\n') || [];
-      const subject = lines?.shift();
+  const load = async () => {
+    const msg = await createReachout(influencer);
+    console.log(msg);
+    setMessage(msg);
 
-      // collect all lines into an array except first line (subject) and join them with new line character to form body of email message. URLencode the body.
-      const body = lines?.slice(1).join(`%0D%0A`);
+    // extract subject and body from msg string
+    const lines = msg?.trim().split('\n') || [];
+    const subject = lines?.shift();
 
-      
+    // collect all lines into an array except first line (subject) and join them with new line character to form body of email message. URLencode the body.
+    const body = lines?.slice(1).join(`%0D%0A`);
 
-      console.log(subject);
-      console.log('%%%%%%%%%%%%%%%%');
-      console.log(encodeURI(body));
-      
-      
-      setSubject(subject);
-      setBody(body);
+    
+
+    console.log(subject);
+    console.log('%%%%%%%%%%%%%%%%');
+    console.log(encodeURI(body));
+    
+    
+    setSubject(subject);
+    setBody(body);
+  };
+
+  const sendEmail = () => {
+    // emailjs send email
+
+    const templateParams = {
+      to_name: influencer?.fullName,
+      to_email: 'imran@syncy.net',
     };
-    load();
+
+    emailjs.send('service_p835il9', 'template_adclu1d', templateParams, 'wo1FnANWwcN5Nav88')
+    .then(function(response) {
+       console.log('SUCCESS!', response.status, response.text);
+       toaster.success('Email sent successfully');
+    }, function(error) {
+       console.log('FAILED...', error);
+       toaster.danger('Something went wrong. Try again later.');
+    });
+  }
+
+  const reachout = async () => {
+    console.log('reachout');
+    sendEmail();
+    // load()
+  }
+
+  useEffect(() => {
+    // load();
   }, []);
 
   return (
@@ -322,6 +349,8 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
         <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} />
         <h1 className='name'>{influencer?.fullName}</h1>
         <p className='followers'>Followers: {influencer?.followersCount}</p>
+        {/* Button to load */}
+        <Button text="Reachout" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={reachout} />
       </div>      
       
       <div style={{width: '100%', whiteSpace: 'pre-wrap'}}>

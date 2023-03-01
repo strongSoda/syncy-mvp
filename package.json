@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/preset-typescript": "^7.15.0",
+    "@emailjs/browser": "^3.10.0",
     "@reduxjs/toolkit": "^1.6.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",

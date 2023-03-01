@@ -316,12 +316,14 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
 
     const templateParams = {
       to_name: influencer?.fullName,
+      // todo: use email of influencer
       to_email: 'imran@syncy.net',
     };
 
     emailjs.send('service_p835il9', 'template_adclu1d', templateParams, 'wo1FnANWwcN5Nav88')
     .then(function(response) {
        console.log('SUCCESS!', response.status, response.text);
+       setShowReachout(false);
        toaster.success('Email sent successfully');
     }, function(error) {
        console.log('FAILED...', error);

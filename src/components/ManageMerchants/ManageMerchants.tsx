@@ -16,8 +16,8 @@ import CSSVARIABLES from 'global/constants/variables';
 import { AddCardBtnWrapper, AddMenuPromptWrapper, AddStoreModalWrapper, ManageMerchantsWrapper, MerchantDetailsWrapper, StoreCardWrapper } from './ManageMerchants.styles';
 import API from 'global/constants/api';
 import { AuthContext } from 'global/context/AuthContext';
-import createChat from 'global/functions/create-chat';
-import { Channel, ChannelHeader, Chat, MessageInput, MessageList, Thread, Window } from 'stream-chat-react';
+import createChat, { getChannels } from 'global/functions/create-chat';
+import { Channel, ChannelHeader, Chat, getChannel, MessageInput, MessageList, Thread, Window } from 'stream-chat-react';
 import "stream-chat-react/dist/css/v2/index.css";
 
 // declare interface IManageMerchantsProps {}
@@ -75,12 +75,22 @@ const MerchantDetails: React.FC = () => {
 
   const updateChannelMembers = async () => {
     // /stream-chat-update-channel-members
-    const response = await fetch(`${API}/stream-chat-update-channel-members?userId=${user?.uid}&channelId=channelimransyncynetinfluencerimransyncynet`)
+    const response = await fetch(`${API}/stream-chat-update-channel-members?email=${user?.email}&userId=${user?.uid}&channelId=channelimransyncynetinfluencerimransyncynet`)
     const data = await response.json();
     console.log(data, data?.data?.token);
   }
 
-  const getUserToken = async () => {
+  // get brandInfluencerChannel map from db
+  const getBrandInfluencerChannelMap = async () => {
+    // /stream-chat-get-brand-influencer-channel-map
+    const response = await fetch(`${API}/brand-influencer-channel-map?influencerEmail=${user?.email}&brandEmail=imran@syncy.net`)
+    const data = await response.json();
+    console.log('channelMapping', data?.data?.channelId);
+
+    getUserToken(data?.data?.channelId);
+  }
+
+  const getUserToken = async (channelId: string) => {
     await updateChannelMembers();
     // /stream-chat-token
     const response = await fetch(`${API}/stream-chat-token?uid=${user?.uid}`)
@@ -89,18 +99,24 @@ const MerchantDetails: React.FC = () => {
 
     // setUserToken(data?.data?.token);
     
-    const {channel, chatClient} = createChat(data?.data?.token, user, brand, "channelimransyncynetinfluencerimransyncynet");
+    const {channel, chatClient} = createChat(data?.data?.token, user, brand, channelId);
     setChannel(channel);
     setChatClient(chatClient);
   }
 
   useEffect(() => {
     // load();
-    console.log(user, brand);
+    console.log(user);
+
     if(user) {
-      getUserToken();
+      getBrandInfluencerChannelMap()
     }
   }, [user]);
+
+  // useEffect(() => {
+  //   console.log(channel, chatClient);
+  //     getChannels(user?.uid);
+  // }, [channel, chatClient, user]);
 
   // channelimransyncynetinfluencerimransyncynet
 

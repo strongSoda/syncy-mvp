@@ -42,6 +42,7 @@ import "stream-chat-react/dist/css/v2/index.css";
 import { AuthContext } from 'global/context/AuthContext';
 import API from 'global/constants/api';
 import createChat from 'global/functions/create-chat';
+import { removeSpecialChar } from 'global/functions/remove-special-char';
 
 const searchClient = algoliasearch('L7PFECEWC3', 'a953f96171e71bef23ebd1760c7dea10');
 
@@ -358,7 +359,28 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     // load()
   }
 
-  const getUserToken = async () => {
+  // create brandInfluencerChannel mapping
+  const createBrandInfluencerChannel = async () => {
+    const channelId = removeSpecialChar(`channel${user?.email}${influencer?.email || influencer?.publicEmail || influencer?.mailFound}`);
+
+    const response = await fetch(`${API}/brand-influencer-channel-map`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        brandEmail: user?.email,
+        influencerEmail: influencer?.email || influencer?.publicEmail || influencer?.mailFound,
+        channelId: channelId,
+      }),
+    });
+    const data = await response.json();
+    console.log('mapping', data);
+
+    getUserToken(channelId);
+  }
+  
+  const getUserToken = async (channelId: string) => {
     // /stream-chat-token
     const response = await fetch(`${API}/stream-chat-token?uid=${user?.uid}`)
     const data = await response.json();
@@ -366,7 +388,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
 
     setUserToken(data?.data?.token);
     
-    const {channel, chatClient} = createChat(data?.data?.token, user, influencer, "channelimransyncynetinfluencerimransyncynet");
+    const {channel, chatClient} = createChat(data?.data?.token, user, influencer, channelId);
     setChannel(channel);
     setChatClient(chatClient);
   }
@@ -375,7 +397,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     // load();
     console.log(user, influencer);
     if(user) {
-      getUserToken();
+      createBrandInfluencerChannel();
     }
   }, [user]);
 
@@ -394,7 +416,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
       </div>      
       
       {channel && chatClient &&
-      <Chat client={chatClient} theme="str-chat__theme-dark">
+      <Chat client={chatClient} theme="str-chat__theme-light">
       <Channel channel={channel}>
         <Window>
           <ChannelHeader />

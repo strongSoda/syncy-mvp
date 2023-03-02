@@ -43,6 +43,7 @@ import { AuthContext } from 'global/context/AuthContext';
 import API from 'global/constants/api';
 import createChat from 'global/functions/create-chat';
 import { removeSpecialChar } from 'global/functions/remove-special-char';
+import sendChatMessage from 'global/functions/send-chat-message';
 
 const searchClient = algoliasearch('L7PFECEWC3', 'a953f96171e71bef23ebd1760c7dea10');
 
@@ -303,17 +304,26 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
   const [subject, setSubject] = React.useState<string | undefined>("");
   const [body, setBody] = React.useState<string | undefined>("");
 
-  const user = useContext(AuthContext)
+  const [messageGenerated, setMessageGenerated] = React.useState<boolean>(false);
+  const [messageGenerating, setMessageGenerating] = React.useState<boolean>(false);
+  const [sendingMessage, setSendingMessage] = React.useState<boolean>(false);
+  
+    const user = useContext(AuthContext)
 
   const [userToken, setUserToken] = useState<string | null>(null);
 
   const [channel, setChannel] = useState<any>(null);
   const [chatClient, setChatClient] = useState<any>(null);
 
+  const [channelMapping, setChannelMapping] = useState<any>(null);
+  
   const load = async () => {
+    setMessageGenerating(true);
     const msg = await createReachout(influencer);
     console.log(msg);
     setMessage(msg);
+    setMessageGenerated(true);
+    setMessageGenerating(false);
 
     // extract subject and body from msg string
     const lines = msg?.trim().split('\n') || [];
@@ -345,7 +355,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     emailjs.send('service_p835il9', 'template_adclu1d', templateParams, 'wo1FnANWwcN5Nav88')
     .then(function(response) {
        console.log('SUCCESS!', response.status, response.text);
-       setShowReachout(false);
+      //  setShowReachout(false);
        toaster.success('Email sent successfully');
     }, function(error) {
        console.log('FAILED...', error);
@@ -354,9 +364,27 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
   }
 
   const reachout = async () => {
+    setSendingMessage(true);
     console.log('reachout');
     sendEmail();
+    await createBrandInfluencerChannel();
+    setSendingMessage(false);
     // load()
+  }
+
+  // check mapping exists
+  const checkMapping = async () => {
+    const response = await fetch(`${API}/brand-influencer-channel-map?brandEmail=${user?.email}&influencerEmail=${influencer?.email || influencer?.publicEmail || influencer?.mailFound}`);
+    const data = await response.json();
+    console.log('mapping', data);
+    
+    if (data?.status === 'success') {
+      setChannelMapping(true);
+      getUserToken(data?.data?.channelId);
+    } else {
+      // createBrandInfluencerChannel();
+      setChannelMapping(false);
+    }
   }
 
   // create brandInfluencerChannel mapping
@@ -377,10 +405,15 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     const data = await response.json();
     console.log('mapping', data);
 
-    getUserToken(channelId);
+    setChannelMapping(true);
+
+    await getUserToken(channelId);
   }
   
   const getUserToken = async (channelId: string) => {
+    console.log('getUserToken', channelId);
+    
+
     // /stream-chat-token
     const response = await fetch(`${API}/stream-chat-token?uid=${user?.uid}`)
     const data = await response.json();
@@ -391,47 +424,52 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     const {channel, chatClient} = createChat(data?.data?.token, user, influencer, channelId);
     setChannel(channel);
     setChatClient(chatClient);
+
+    await sendChatMessage(channelId, user?.uid, message);
   }
 
   useEffect(() => {
     // load();
     console.log(user, influencer);
     if(user) {
-      createBrandInfluencerChannel();
+      checkMapping();
     }
   }, [user]);
 
   return (
-    <div className='influencer-profile'>
+    <div className='influencer-profile' style={{marginBottom: '2em'}}>
       {/* cross icon to close sidebar on click */}
       <img className='cross-icon' src='https://www.svgimages.com/svg-image/s3/close-icon-256x256.png' alt="cross" onClick={() => setShowReachout(false) } />
-
-      {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
-      <div className='container'>  
-        <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} />
-        <h1 className='name'>{influencer?.fullName}</h1>
-        <p className='followers'>Followers: {influencer?.followersCount}</p>
-        {/* Button to load */}
-        <Button text="Reachout" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={reachout} />
-      </div>      
       
-      {channel && chatClient &&
-      <Chat client={chatClient} theme="str-chat__theme-light">
-      <Channel channel={channel}>
-        <Window>
-          <ChannelHeader />
-          <MessageList />
-          <MessageInput />
-        </Window>
-        <Thread />
-      </Channel>
-      </Chat>
-      }
-      <div style={{width: '100%', whiteSpace: 'pre-wrap'}}>
+      {channelMapping ?
+       <>
+        {channel && chatClient &&
+        <Chat client={chatClient} theme="str-chat__theme-dark">
+        <Channel channel={channel}>
+          <Window>
+            <ChannelHeader />
+            <MessageList />
+            <MessageInput message={{text: message} as any} />
+          </Window>
+          <Thread />
+        </Channel>
+        </Chat>
+        }
+      </>
+      : 
+      <>    
+        {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
+        <div className='container'>  
+          <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} />
+          <h1 className='name'>{influencer?.fullName}</h1>
+          <p className='followers'>Followers: {influencer?.followersCount}</p>
+
+          {messageGenerated ? 
+          <div style={{width: '100%', whiteSpace: 'pre-wrap'}}>
             <div className="ai-result">
               <img className="ai-avatar" src={Syncy} alt='logo'/>
               {!message ? 
-               <img src={loadingGif} alt="Loading" style={{height: '2vh'}} />
+              <img src={loadingGif} alt="Loading" style={{height: '2vh'}} />
               : 
               <TypeAnimation
                 sequence={[
@@ -450,14 +488,34 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
               />
             }
             </div>
-            {subject && body && 
+            
+            <Button text={sendingMessage ? "Sending...": "Send Message"} backgroundColor={CSSVARIABLES.COLORS.GREEN_0} onClick={reachout} />
+
+            {/* {subject && body && 
               <a className='send-email-btn' href={`mailto:${influencer?.publicEmail || influencer?.mailFound}?subject=${subject}&body=${body}}`}
                 target="_blank" rel="noopener noreferrer">
                   <img style={{height: '4vh'}} src='https://cdn.iconscout.com/icon/free/png-256/gmail-2981844-2476484.png' alt='email' />
                   <span>Send Email</span>
               </a>
-             }
-      </div>
+            } */}
+        </div>
+        :
+        <>
+          {messageGenerating ? 
+          <div style={{width: '100%', whiteSpace: 'pre-wrap'}}>
+            <div className="ai-result">
+              <img className="ai-avatar" src={Syncy} alt='logo'/>
+            <img src={loadingGif} alt="Loading" style={{height: '2vh'}} />
+            </div>
+          </div>
+          : <Button text="Reachout" backgroundColor={CSSVARIABLES.COLORS.PURPLE_2} onClick={load} />}
+        </>
+        }
+
+        </div>      
+      </>
+      }
+
       {/* <iframe src={influencer?.bookCallInfo} width="100%" height="1000px" frameBorder="0"></iframe> */}
     </div>
   );

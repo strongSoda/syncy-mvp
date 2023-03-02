@@ -144,6 +144,10 @@ const ManageRequestsWrapper = styled.div`
       margin-bottom: 1em;
     }
 
+    .str-chat {
+      height: 80%;
+    }
+
     .send-email-btn {
       padding: 0.5em 1em;
       border-radius: 5px;

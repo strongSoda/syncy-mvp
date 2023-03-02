@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Avatar, Badge, Pane, Paragraph, Popover, Position, Pulsar, Tab, Tablist, TextInputField, toaster, Tooltip } from 'evergreen-ui';
 
@@ -27,6 +27,21 @@ import INFLUENCERS from 'global/constants/infleuncers';
 import algoliasearch from 'algoliasearch/lite';
 import { ClearRefinements, CurrentRefinements, Highlight, Hits, HitsPerPage, InstantSearch, Pagination, RangeInput, RefinementList, SearchBox, SortBy } from 'react-instantsearch-hooks-web';
 import emailjs from '@emailjs/browser';
+
+import {
+  Chat,
+  Channel,
+  ChannelHeader,
+  MessageInput,
+  MessageList,
+  Thread,
+  Window
+} from "stream-chat-react";
+
+import "stream-chat-react/dist/css/v2/index.css";
+import { AuthContext } from 'global/context/AuthContext';
+import API from 'global/constants/api';
+import createChat from 'global/functions/create-chat';
 
 const searchClient = algoliasearch('L7PFECEWC3', 'a953f96171e71bef23ebd1760c7dea10');
 
@@ -287,6 +302,12 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
   const [subject, setSubject] = React.useState<string | undefined>("");
   const [body, setBody] = React.useState<string | undefined>("");
 
+  const user = useContext(AuthContext)
+
+  const [userToken, setUserToken] = useState<string | null>(null);
+
+  const [channel, setChannel] = useState<any>(null);
+  const [chatClient, setChatClient] = useState<any>(null);
 
   const load = async () => {
     const msg = await createReachout(influencer);
@@ -337,9 +358,26 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     // load()
   }
 
+  const getUserToken = async () => {
+    // /stream-chat-token
+    const response = await fetch(`${API}/stream-chat-token?uid=${user?.uid}`)
+    const data = await response.json();
+    console.log(data, data?.data?.token);
+
+    setUserToken(data?.data?.token);
+    
+    const {channel, chatClient} = createChat(data?.data?.token, user, influencer, "channelimransyncynetinfluencerimransyncynet");
+    setChannel(channel);
+    setChatClient(chatClient);
+  }
+
   useEffect(() => {
     // load();
-  }, []);
+    console.log(user, influencer);
+    if(user) {
+      getUserToken();
+    }
+  }, [user]);
 
   return (
     <div className='influencer-profile'>
@@ -355,6 +393,18 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
         <Button text="Reachout" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={reachout} />
       </div>      
       
+      {channel && chatClient &&
+      <Chat client={chatClient} theme="str-chat__theme-dark">
+      <Channel channel={channel}>
+        <Window>
+          <ChannelHeader />
+          <MessageList />
+          <MessageInput />
+        </Window>
+        <Thread />
+      </Channel>
+      </Chat>
+      }
       <div style={{width: '100%', whiteSpace: 'pre-wrap'}}>
             <div className="ai-result">
               <img className="ai-avatar" src={Syncy} alt='logo'/>

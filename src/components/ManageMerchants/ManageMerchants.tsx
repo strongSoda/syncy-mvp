@@ -70,10 +70,13 @@ const MerchantDetails: React.FC = () => {
   // get brandInfluencerChannel map from db
   const getBrandInfluencerChannelMap = async () => {
     // /stream-chat-get-brand-influencer-channel-map
-    const response = await fetch(`${API}/brand-influencer-channel-map?influencerEmail=${user?.email}&brandEmail=imran@syncy.net`)
+    const response = await fetch(`${API}/brand-influencer-channel-map-by-influencer?influencerEmail=${user?.email}`)
     const data = await response.json();
     console.log('channelMapping', data?.data?.channelId);
-
+    
+    if(data?.status === 'success') {
+      getUserToken()
+    }
     // getUserToken(data?.data?.channelId);
   }
 
@@ -117,8 +120,8 @@ const MerchantDetails: React.FC = () => {
     console.log(user);
 
     if(user) {
-      // getBrandInfluencerChannelMap()
-      getUserToken()
+      getBrandInfluencerChannelMap()
+      // getUserToken()
     }
   }, [user]);
 

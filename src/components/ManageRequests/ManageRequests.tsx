@@ -529,7 +529,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
           <Window>
             <ChannelHeader />
             <MessageList />
-            <MessageInput message={{text: message} as any} />
+            <MessageInput />
           </Window>
           <Thread />
         </Channel>

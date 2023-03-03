@@ -441,7 +441,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
 
     setUserToken(data?.data?.token);
 
-    const user1 = {email: user?.email, id: user?.uid, fullName: brandUserProfile?.first_name + ' ' + brandUserProfile?.last_name, imageUrl: brandUserProfile?.company_logo}
+    const user1 = {email: user?.email, id: user?.uid, fullName: brandUserProfile?.company_name, imageUrl: brandUserProfile?.company_logo}
     const user2 = {fullName: influencer?.fullName, imageUrl: influencer?.imageUrl}
     
     const {channel, chatClient} = createChat(data?.data?.token, user1, user2, channelId);

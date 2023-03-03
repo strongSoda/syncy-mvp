@@ -18,7 +18,7 @@ const createChat = (userToken: string, user1: any, user2: any, channelId: string
     const channel = chatClient.channel("messaging", channelId, {
       // add as many custom fields as you'd like
       image: user2?.imageUrl,
-      name: user2?.fullName,
+      name: `${user2?.fullName} x ${user1?.fullName}`,
       members: [user1?.id],
     });
 

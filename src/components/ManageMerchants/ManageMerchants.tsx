@@ -61,6 +61,7 @@ const MerchantDetails: React.FC = () => {
   
 
   const updateChannelMembers = async (channelId: string) => {
+    console.log('updateChannelMembers', channelId);
     // /stream-chat-update-channel-members
     const response = await fetch(`${API}/stream-chat-update-channel-members?email=${user?.email}&userId=${user?.uid}&channelId=${channelId}`)
     const data = await response.json();
@@ -72,14 +73,15 @@ const MerchantDetails: React.FC = () => {
     // /stream-chat-get-brand-influencer-channel-map
     const response = await fetch(`${API}/brand-influencer-channel-map-by-influencer?influencerEmail=${user?.email}`)
     const data = await response.json();
-    console.log('channelMapping', data);
+    console.log('channelMapping', data?.data?.mappings);
     
     if(data?.status === 'success') {
       const mappings = data?.data?.mappings;
       
       // map through mappings and update channel members
       mappings?.map(async (mapping: any) => {
-        await updateChannelMembers(mapping?.channelId)
+        console.log('mapping...', mapping);
+        await updateChannelMembers(mapping?.channel_id)
       })
       
       getUserToken(data?.data?.channelId)

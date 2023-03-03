@@ -35,7 +35,8 @@ import {
   MessageInput,
   MessageList,
   Thread,
-  Window
+  Window,
+  ChannelList
 } from "stream-chat-react";
 
 import "stream-chat-react/dist/css/v2/index.css";
@@ -44,6 +45,9 @@ import API from 'global/constants/api';
 import createChat from 'global/functions/create-chat';
 import { removeSpecialChar } from 'global/functions/remove-special-char';
 import sendChatMessage from 'global/functions/send-chat-message';
+
+
+import { ChannelPreviewUIComponentProps, useChatContext } from 'stream-chat-react';
 
 const searchClient = algoliasearch('L7PFECEWC3', 'a953f96171e71bef23ebd1760c7dea10');
 
@@ -315,6 +319,9 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
 
   const [channel, setChannel] = useState<any>(null);
   const [chatClient, setChatClient] = useState<any>(null);
+  const [filters, setFilters] = useState<any>(null);
+  const [sort, setSort] = useState<any>(null);
+  const [options, setOptions] = useState<any>(null);
 
   const [channelMapping, setChannelMapping] = useState<any>(null);
   
@@ -441,6 +448,14 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     setChannel(channel);
     setChatClient(chatClient);
 
+    const filters = { members: { $in: [ user1?.id ] } }
+    const sort = { last_message_at: -1 };
+    const options = { limit: 10 }
+
+    setFilters(filters);
+    setSort(sort);
+    setOptions(options);
+
     await sendChatMessage(channelId, user?.uid, message);
   }
 
@@ -452,6 +467,54 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     }
   }, [user]);
 
+
+  const CustomPreview = (props: ChannelPreviewUIComponentProps) => {
+    const { channel, setActiveChannel } = props;
+
+    const { channel: activeChannel } = useChatContext();
+
+    const selected = channel?.id === activeChannel?.id;
+
+    const renderMessageText = () => {
+      const lastMessageText = channel.state.messages[channel.state.messages.length - 1].text;
+
+      const text = lastMessageText || 'message text';
+
+      return text.length < 60 ? lastMessageText : `${text.slice(0, 70)}...`;
+    };
+
+    if (!channel.state.messages.length) return null;
+
+    return (
+      <>
+      <button aria-label={`Select Channel: ${channel.data?.name || 'Channel'}`} aria-selected={selected} 
+        className="str-chat__channel-preview-messenger str-chat__channel-preview" 
+        data-testid="channel-preview-button" role="option"
+        onClick={() => setChannel(channel)}
+      >
+        
+        <div className="str-chat__channel-preview-messenger--left">
+          <div className="str-chat__avatar str-chat__avatar--circle str-chat__message-sender-avatar" 
+            data-testid="avatar" title={`${channel.data?.name || 'Channel'}`} 
+            style={{flexBasis: "40px", fontSize: "20px", height: "40px", lineHeight: "40px", width: "40px"}}>
+              <img alt="J" className="str-chat__avatar-image str-chat__avatar-image--loaded" data-testid="avatar-img" 
+                src={channel?.data?.image} style={{flexBasis: "40px", height: "40px", objectFit: "cover", width: "40px",}} />
+          </div>
+        </div>
+          <div className="str-chat__channel-preview-messenger--right str-chat__channel-preview-end">
+            <div className="str-chat__channel-preview-end-first-row">
+              <div className="str-chat__channel-preview-messenger--name">
+                <span>{channel.data?.name || 'Channel'}</span>
+              </div>
+            </div>
+            <div className="str-chat__channel-preview-messenger--last-message">{renderMessageText()}</div>
+          </div>
+
+        </button>
+      </>
+    );
+  };
+
   return (
     <div className='influencer-profile' style={{marginBottom: '2em'}}>
       {/* cross icon to close sidebar on click */}
@@ -459,8 +522,9 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
       
       {channelMapping ?
        <>
-        {channel && chatClient &&
+        {channel && chatClient && filters && sort && options &&
         <Chat client={chatClient} theme="str-chat__theme-dark">
+        {/* <ChannelList showChannelSearch filters={filters} sort={sort} options={options} Preview={CustomPreview} /> */}
         <Channel channel={channel}>
           <Window>
             <ChannelHeader />
@@ -749,7 +813,5 @@ const SyncyGPT: React.FC = () => {
     </div>
   )
 }
-
-
 
 export default ManageRequests;

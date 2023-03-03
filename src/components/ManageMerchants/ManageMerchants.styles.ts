@@ -5,7 +5,8 @@ import CSSVARIABLES from 'global/constants/variables';
 
 const ManageMerchantsWrapper = styled.div`
   margin-left: ${CSSVARIABLES.LAYOUT.PRIMARY.MARGIN_LEFT};
-  /* background-color: aqua; */
+  background-color: #17191c;
+  height: 100vh;
 
   h1 {
     font-weight: bold;
@@ -13,19 +14,34 @@ const ManageMerchantsWrapper = styled.div`
   }
 
   .content {
-    padding: ${CSSVARIABLES.LAYOUT.PRIMARY.PADDING};
+    /* padding: ${CSSVARIABLES.LAYOUT.PRIMARY.PADDING}; */
     padding-left: 22.35em;
-    width: fit-content;
+    /* width: fit-content; */
+    /* background-color: #17191c; */
   }
 `;
 
 const MerchantDetailsWrapper = styled.div`
   background-color: ${CSSVARIABLES.COLORS.WHITE_0};
-  width: 700px;
+  /* width: 700px; */
   height: fit-content;
-  margin: 2vh auto;
-  padding: 2em;
+  /* margin: 2vh auto; */
+  /* padding: 2em; */
   border-radius: 12px;
+
+  /* select parent of .str-chat */
+  *! > .str-chat-channel-list {
+    display: flex !important;
+    flex-direction: column !important;
+    background: yellow !important;
+  }
+
+  .str-chat-channel-list {
+    width: 25%;
+    position: fixed;
+    /* top: 12vh; */
+    /* background: #f7f7f7; */
+  }
 
   .owner-name {
     display: flex;

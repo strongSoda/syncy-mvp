@@ -16,51 +16,24 @@ import CSSVARIABLES from 'global/constants/variables';
 import { AddCardBtnWrapper, AddMenuPromptWrapper, AddStoreModalWrapper, ManageMerchantsWrapper, MerchantDetailsWrapper, StoreCardWrapper } from './ManageMerchants.styles';
 import API from 'global/constants/api';
 import { AuthContext } from 'global/context/AuthContext';
-import createChat, { getChannels } from 'global/functions/create-chat';
-import { Channel, ChannelHeader, Chat, getChannel, MessageInput, MessageList, Thread, Window } from 'stream-chat-react';
+import createChat, { chatClient, getChannels } from 'global/functions/create-chat';
+import { Channel, ChannelHeader, ChannelList, ChannelPreviewUIComponentProps, Chat, getChannel, MessageInput, MessageList, Thread, useChatContext, Window } from 'stream-chat-react';
 import "stream-chat-react/dist/css/v2/index.css";
 
 // declare interface IManageMerchantsProps {}
 
 const ManageMerchants: React.FC = () => (
   <ManageMerchantsWrapper data-testid="ManageMerchants">
-    {/* <SideBar lightColor={CSSVARIABLES.COLORS.BLUE_1} darkColor={CSSVARIABLES.COLORS.BLUE_0} /> */}
+    <SideBar lightColor={CSSVARIABLES.COLORS.BLUE_1} darkColor={CSSVARIABLES.COLORS.BLUE_0} />
     {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
     {/* <MerchantsBar /> */}
-    <div className="content">
-      <Navbar />
+    {/* <div className="content"> */}
+      {/* <Navbar /> */}
       {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
       <MerchantDetails />
-    </div>
+    {/* </div> */}
   </ManageMerchantsWrapper>
 );
-
-const brand = {
-    "uid": "YxvfViOBSdOWZnAsDfr77qwjl1e2",
-    "email": "imran@syncy.net",
-    "fullName": "Pewdiepie",
-    "emailVerified": true,
-    "isAnonymous": false,
-    "providerData": [
-        {
-            "providerId": "password",
-            "uid": "imran@syncy.net",
-            "displayName": null,
-            "email": "imran@syncy.net",
-            "phoneNumber": null,
-            "photoURL": null
-        }
-    ],
-    "stsTokenManager": {
-        "refreshToken": "APJWN8d21R7A8kIQ3c1RYfWBEcjbn2VOWi1NYamD_jG0TKqVb2QweUt3K1md0taptVvgeUjhdM-0vy900_kYgCxWEZjZljoBxo4NYL1GW_s1oZc7IvVWg2182K-Z5_vL2Grn-zsPgeJCkUmsN22Q9MpM6M6rDf57dbPjhct2S7zh2tlchXfpPGnDA3YDWtVAT71rDRqEKzwU",
-        "accessToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImY4NzZiNzIxNDAwYmZhZmEyOWQ0MTFmZTYwODE2YmRhZWMyM2IzODIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vc3luY3ktNzUxNTIiLCJhdWQiOiJzeW5jeS03NTE1MiIsImF1dGhfdGltZSI6MTY3NzczNzI1MywidXNlcl9pZCI6Ill4dmZWaU9CU2RPV1puQXNEZnI3N3F3amwxZTIiLCJzdWIiOiJZeHZmVmlPQlNkT1dabkFzRGZyNzdxd2psMWUyIiwiaWF0IjoxNjc3NzQzNzMxLCJleHAiOjE2Nzc3NDczMzEsImVtYWlsIjoiaW1yYW5Ac3luY3kubmV0IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsiaW1yYW5Ac3luY3kubmV0Il19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.DwtPCJLBq5c2W8dKOcvmD2gLY367q17LPiKn2-sRCjVxKbbeH0_tsOxJPf2cBWBTfwXzW20ihQbXXn610qM9UWcHvMkc0JZHSmFK1rsMbRwUKoo-wYiI629OeJcDn41ZtAFB0yLGn8tBBF8XEXKnP9A8bQhnzrhksOEGhfIl0GW0V8_ZlTifQzJjHvjMO4HRV0riXuSnk9azOvNJtJ9C6SqxrpDcBhwTEAHAAA-xPuVPHHoBKnntDfNDKlI4NZvco3aPaDsSvECXmQHXINcAmbNpNlYjFvpnKfduQlzz6zH86lv9qHSMeKvFbMX37R8VLrJM_Z8elit7RPmkVJJXLQ",
-        "expirationTime": 1677747331926
-    },
-    "createdAt": "1677602064637",
-    "lastLoginAt": "1677737253388",
-    "apiKey": "AIzaSyAmINvpQDTBrE90Uw4DJjdsYxTX_GbP-Sk",
-    "appName": "[DEFAULT]"
-}
 
 const MerchantDetails: React.FC = () => {
   const [ShowAddStoreForm, setShowAddStoreForm] = useState<boolean>(false);
@@ -70,8 +43,22 @@ const MerchantDetails: React.FC = () => {
   const user = useContext(AuthContext)
 
   const [channel, setChannel] = useState<any>(null);
-  const [chatClient, setChatClient] = useState<any>(null);
+  // const [chatClient, setChatClient] = useState<any>(null);
+  const [filters, setFilters] = useState<any>(null);
+  const [sort, setSort] = useState<any>(null);
+  const [options, setOptions] = useState<any>(null);
 
+  
+  // get influencer profile
+  const getInfluencerProfile = async () => {
+    // /influencer-profile-personal
+    const response = await fetch(`${API}/influencer-profile-personal?email=${user?.email}`)
+    const data = await response.json();
+    console.log('influencerProfile', data?.data);
+
+    return data?.data;
+  }
+  
 
   const updateChannelMembers = async () => {
     // /stream-chat-update-channel-members
@@ -87,10 +74,12 @@ const MerchantDetails: React.FC = () => {
     const data = await response.json();
     console.log('channelMapping', data?.data?.channelId);
 
-    getUserToken(data?.data?.channelId);
+    // getUserToken(data?.data?.channelId);
   }
 
-  const getUserToken = async (channelId: string) => {
+  const getUserToken = async () => {
+    const influencerProfile = await getInfluencerProfile();
+
     await updateChannelMembers();
     // /stream-chat-token
     const response = await fetch(`${API}/stream-chat-token?uid=${user?.uid}`)
@@ -99,9 +88,28 @@ const MerchantDetails: React.FC = () => {
 
     // setUserToken(data?.data?.token);
     
-    const {channel, chatClient} = createChat(data?.data?.token, user, brand, channelId);
-    setChannel(channel);
-    setChatClient(chatClient);
+    const user1 = {email: user?.email, id: user?.uid, fullName: influencerProfile?.first_name + ' ' + influencerProfile?.last_name, imageUrl: influencerProfile?.imageUrl}
+    // const user2 = {fullName: influencer?.fullName, imageUrl: influencer?.imageUrl}
+
+    // setChannel(channel);
+    // setChatClient(chatClient);
+    chatClient.connectUser(
+      {
+        id: user1?.id as string,
+        name: user1?.fullName,
+        image:
+          user1?.imageUrl,
+      },
+      data?.data?.token
+    );
+
+    const filters = { members: { $in: [ user?.uid ] } }
+    const sort = { last_message_at: -1 };
+    const options = { limit: 10 }
+
+    setFilters(filters);
+    setSort(sort);
+    setOptions(options);
   }
 
   useEffect(() => {
@@ -109,7 +117,8 @@ const MerchantDetails: React.FC = () => {
     console.log(user);
 
     if(user) {
-      getBrandInfluencerChannelMap()
+      // getBrandInfluencerChannelMap()
+      getUserToken()
     }
   }, [user]);
 
@@ -120,54 +129,72 @@ const MerchantDetails: React.FC = () => {
 
   // channelimransyncynetinfluencerimransyncynet
 
-  return (
-    <MerchantDetailsWrapper>
-        {channel && chatClient &&
-        <Chat client={chatClient} theme="str-chat__theme-dark">
-        <Channel channel={channel}>
-          <Window>
-            <ChannelHeader />
-            <MessageList />
-            <MessageInput />
-          </Window>
-          <Thread />
-        </Channel>
-        </Chat>
-        }
-      <div className="owner-name">
-        {/* <img
-          className="profile-img"
-          src="https://ph-avatars.imgix.net/2429667/b98d457a-ff12-4ffd-a85a-c7da09f645ec?auto=format&auto=compress&codec=mozjpeg&cs=strip&w=170&h=170&fit=crop&dpr=2"
-          alt="profile"
-        /> */}
-        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-        <a href="#">No campaigns created</a>
-      </div>
+  const CustomPreview = (props: ChannelPreviewUIComponentProps) => {
+    const { channel, setActiveChannel } = props;
 
+    const { channel: activeChannel } = useChatContext();
 
-      {ShowStores ? (
-        <>
-          <div className="stores">
-            {[...Array(NumberOfStores)].map((e, i) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <StoreCard key={i} />
-            ))}
-          </div>
-          <AddCardBtn onClick={() => setNumberOfStores(NumberOfStores + 1)} />
-        </>
-      ) : (
-        <div className="no-store">
-          <img className="profile-img" src={shopImg} alt="shop" />
-          <div>
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-            <h1>No campaigns created</h1>
-            <p>Create a Campaign by clicking on "Create Campaign".</p>
-            <Button text="Create Campaign" backgroundColor={CSSVARIABLES.COLORS.BLUE_0} onClick={() => setShowAddStoreForm(true)} />
+    const selected = channel?.id === activeChannel?.id;
+
+    const renderMessageText = () => {
+      const lastMessageText = channel.state.messages[channel.state.messages.length - 1].text;
+
+      const text = lastMessageText || 'message text';
+
+      return text.length < 60 ? lastMessageText : `${text.slice(0, 70)}...`;
+    };
+
+    if (!channel.state.messages.length) return null;
+
+    return (
+      <>
+      <button aria-label={`Select Channel: ${channel.data?.name || 'Channel'}`} aria-selected={selected} 
+        className="str-chat__channel-preview-messenger str-chat__channel-preview" 
+        data-testid="channel-preview-button" role="option"
+        onClick={() => setChannel(channel)}
+      >
+        
+        <div className="str-chat__channel-preview-messenger--left">
+          <div className="str-chat__avatar str-chat__avatar--circle str-chat__message-sender-avatar" 
+            data-testid="avatar" title={`${channel.data?.name || 'Channel'}`} 
+            style={{flexBasis: "40px", fontSize: "20px", height: "40px", lineHeight: "40px", width: "40px"}}>
+              <img alt="J" className="str-chat__avatar-image str-chat__avatar-image--loaded" data-testid="avatar-img" 
+                src={channel?.data?.image} style={{flexBasis: "40px", height: "40px", objectFit: "cover", width: "40px",}} />
           </div>
         </div>
-      )}
-      {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
-      <AddStoreModal isShown={ShowAddStoreForm} setIsShown={setShowAddStoreForm} setShowStores={setShowStores} />
+          <div className="str-chat__channel-preview-messenger--right str-chat__channel-preview-end">
+            <div className="str-chat__channel-preview-end-first-row">
+              <div className="str-chat__channel-preview-messenger--name">
+                <span>{channel.data?.name || 'Channel'}</span>
+              </div>
+            </div>
+            <div className="str-chat__channel-preview-messenger--last-message">{renderMessageText()}</div>
+          </div>
+
+        </button>
+      </>
+    );
+  };
+
+  return (
+    <MerchantDetailsWrapper>
+      {chatClient &&
+        <Chat client={chatClient} theme="str-chat__theme-dark">
+        {filters && sort && options &&
+         <ChannelList showChannelSearch filters={filters} sort={sort} options={options} Preview={CustomPreview} />}
+        {channel &&
+          <div className="content">
+          <Channel channel={channel}>
+            <Window>
+              <ChannelHeader />
+              <MessageList />
+              <MessageInput />
+            </Window>
+            <Thread />
+          </Channel>
+          </div>
+        }
+      </Chat>}
     </MerchantDetailsWrapper>
   );
 };

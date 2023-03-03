@@ -124,7 +124,7 @@ const ManageRequestsWrapper = styled.div`
 
     /* overflow: auto; */
 
-    z-index: 1000;
+    z-index: 100;
 
     /* shadow on the left */
     box-shadow: -2px 0px 10px 0px rgba(0, 0, 0, 0.2);

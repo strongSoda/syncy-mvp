@@ -16,7 +16,7 @@ async function query(prompt, maxTokens = 200) {
   return response.data.choices[0].text;
 }
 
-export async function createReachout(influencer) {
+export async function createReachout(influencer, brandUserProfile) {
 //   if (!apiKey || apiKey.length === 0) {
 //     console.warn("No openai key set. Returning precanned response");
 
@@ -32,8 +32,8 @@ export async function createReachout(influencer) {
 
   return await query(
     `
-    You are a large neural network trained on a large corpus of text from the internet.
-    Your goal is to help a human to reach out to influencers that match a given interest or category.
+    Your goal is to reach out to influencers that match a given interest or category.
+    
     You are creating an initial reach out message with the goal of getting the influencer to respond to you about getting on a call to discuss about running an influencer marketing campaign.
     Be kind and sincere in the message. Personalise the message.
     
@@ -47,6 +47,16 @@ export async function createReachout(influencer) {
     --------------------
 
     Keep the email short and sweet. The goal is to get the influencer to respond to you. Include the subject line in the response. Separate the subject line and the body of the email with a newline character \n.
+
+    Write the email on behalf of the person below.
+    --------------------
+    Name: ${brandUserProfile?.first_name} ${brandUserProfile?.last_name}.
+    Job Title: ${brandUserProfile?.job_title}.
+    Company Name: ${brandUserProfile?.company_name}
+    Company Description: ${brandUserProfile?.company_description}.
+    Company Website: ${brandUserProfile?.company_website}.
+    Company Address: ${brandUserProfile?.company_address}.
+    --------------------
     `
     ,
     200

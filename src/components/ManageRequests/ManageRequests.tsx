@@ -307,6 +307,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
   const [messageGenerated, setMessageGenerated] = React.useState<boolean>(false);
   const [messageGenerating, setMessageGenerating] = React.useState<boolean>(false);
   const [sendingMessage, setSendingMessage] = React.useState<boolean>(false);
+  const [showEditMessage, setShowEditMessage] = React.useState<boolean>(false);
   
     const user = useContext(AuthContext)
 
@@ -318,8 +319,10 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
   const [channelMapping, setChannelMapping] = useState<any>(null);
   
   const load = async () => {
+    const brandUserProfile = await getBrandUserProfile();
+
     setMessageGenerating(true);
-    const msg = await createReachout(influencer);
+    const msg = await createReachout(influencer, brandUserProfile);
     console.log(msg);
     setMessage(msg);
     setMessageGenerated(true);
@@ -387,6 +390,15 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     }
   }
 
+  // get brand user profile
+  const getBrandUserProfile = async () => {
+    // /brand_user_profile
+    const response = await fetch(`${API}/brand_user_profile?email=${user?.email}`)
+    const data = await response.json();
+    console.log('brand_user_profile', data?.data);
+    return data?.data;
+  }
+
   // create brandInfluencerChannel mapping
   const createBrandInfluencerChannel = async () => {
     const channelId = removeSpecialChar(`channel${user?.email}${influencer?.email || influencer?.publicEmail || influencer?.mailFound}`);
@@ -413,6 +425,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
   const getUserToken = async (channelId: string) => {
     console.log('getUserToken', channelId);
     
+    const brandUserProfile = await getBrandUserProfile();
 
     // /stream-chat-token
     const response = await fetch(`${API}/stream-chat-token?uid=${user?.uid}`)
@@ -420,8 +433,11 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     console.log(data, data?.data?.token);
 
     setUserToken(data?.data?.token);
+
+    const user1 = {email: user?.email, id: user?.uid, fullName: brandUserProfile?.first_name + ' ' + brandUserProfile?.last_name, imageUrl: brandUserProfile?.company_logo}
+    const user2 = {fullName: influencer?.fullName, imageUrl: influencer?.imageUrl}
     
-    const {channel, chatClient} = createChat(data?.data?.token, user, influencer, channelId);
+    const {channel, chatClient} = createChat(data?.data?.token, user1, user2, channelId);
     setChannel(channel);
     setChatClient(chatClient);
 
@@ -471,6 +487,11 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
               {!message ? 
               <img src={loadingGif} alt="Loading" style={{height: '2vh'}} />
               : 
+              <>
+              {showEditMessage ?
+              // textarea for message
+              <textarea className='message-textarea' value={message} onChange={(e) => setMessage(e.target.value)} rows={30} cols={80} />
+            :
               <TypeAnimation
                 sequence={[
                   message as any,
@@ -487,8 +508,12 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
                 speed={75}
               />
             }
-            </div>
+            </>
+
+            }
+              </div>
             
+            {!showEditMessage && <Button text="Edit" backgroundColor={CSSVARIABLES.COLORS.BLUE_0} onClick={() => setShowEditMessage(true) } />}
             <Button text={sendingMessage ? "Sending...": "Send Message"} backgroundColor={CSSVARIABLES.COLORS.GREEN_0} onClick={reachout} />
 
             {/* {subject && body && 

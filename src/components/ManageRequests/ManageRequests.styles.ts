@@ -22,10 +22,10 @@ const ManageRequestsWrapper = styled.div`
       cursor: pointer;
       position: absolute;
       top: 1vh;
-      right: 3vw;
+      right: 13vw;
     }
     .syncy-avatar {
-      height: 8vh;
+      height: 14vh;
     }
   }
 

@@ -1,5 +1,5 @@
 import SideBar from 'components/SideBar/SideBar.lazy';
-import { Pane, Paragraph, Spinner } from 'evergreen-ui';
+import { Button, Heading, Pane, Paragraph, Spinner } from 'evergreen-ui';
 import API from 'global/constants/api';
 import CSSVARIABLES from 'global/constants/variables';
 import { AuthContext } from 'global/context/AuthContext';
@@ -168,6 +168,7 @@ const Messages: React.FC = () => {
 
   return (
     <MessagesWrapper data-testid="Messages">
+
       <SideBar lightColor={CSSVARIABLES.COLORS.BLUE_1} darkColor={CSSVARIABLES.COLORS.BLUE_0} />
       {chatExists ? 
       <>

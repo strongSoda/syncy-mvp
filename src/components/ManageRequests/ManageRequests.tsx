@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
-import { Avatar, Badge, Pane, Paragraph, Popover, Position, Pulsar, Tab, Tablist, TextInputField, toaster, Tooltip } from 'evergreen-ui';
+import { Avatar, Badge, Heading, Pane, Paragraph, Popover, Position, Pulsar, Tab, Tablist, TextInputField, toaster, Tooltip } from 'evergreen-ui';
 
 import Button from 'components/Button/Button.lazy';
 import Navbar from 'components/Navbar/Navbar.lazy';
@@ -58,15 +58,26 @@ const searchClient = algoliasearch('L7PFECEWC3', 'a953f96171e71bef23ebd1760c7dea
 
 const ManageRequests: React.FC = () => (
   <ManageRequestsWrapper data-testid="ManageRequests">
+    <Pane display="flex" padding={16} background={CSSVARIABLES.COLORS.YELLOW_GREEN_1} borderRadius={3}>
+      <img src={Syncy} alt="Syncy" width="50" height="50" />
+      <Pane>
+        <Heading size={800} flex={1} alignItems="center" display="flex">
+          Syncy
+        </Heading>
+        <Heading size={400}>
+          Where brands connect with quality micro-influencers
+        </Heading>
+      </Pane>
+      <Pane>
+      </Pane>
+    </Pane>
+
     <SideBar lightColor={CSSVARIABLES.COLORS.PRIMARY_GREEEN_1} darkColor={CSSVARIABLES.COLORS.GREEN_0} />
     {/* <Navbar /> */}
     <SyncyGPT />
     <br />
-    <br />
-    <br />
-    <br />
 
-    <h1>Syncy | Discover Influencers</h1>
+    <h1>Discover Influencers</h1>
     {/* <p>//TODO: SELECT A ROW & DISPLAY FULL INFLUENCER PROFILE</p> */}
     {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
     {/* <BasicTabsExample /> */}

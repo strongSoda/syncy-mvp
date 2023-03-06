@@ -6,6 +6,9 @@ const MessagesWrapper = styled.div`
   margin-left: ${CSSVARIABLES.LAYOUT.PRIMARY.MARGIN_LEFT};
   /* padding: ${CSSVARIABLES.LAYOUT.PRIMARY.PADDING}; */
 
+  height: 100vh;
+  overflow: hidden;
+
   .content {
     padding-left: 22.35em;
     height: 100vh;

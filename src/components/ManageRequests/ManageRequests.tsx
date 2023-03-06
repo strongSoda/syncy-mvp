@@ -42,12 +42,13 @@ import {
 import "stream-chat-react/dist/css/v2/index.css";
 import { AuthContext } from 'global/context/AuthContext';
 import API from 'global/constants/api';
-import createChat from 'global/functions/create-chat';
+import createChat, { chatClient } from 'global/functions/create-chat';
 import { removeSpecialChar } from 'global/functions/remove-special-char';
 import sendChatMessage from 'global/functions/send-chat-message';
 
 
 import { ChannelPreviewUIComponentProps, useChatContext } from 'stream-chat-react';
+import formatNumber from 'global/functions/formatFollowers';
 
 const searchClient = algoliasearch('L7PFECEWC3', 'a953f96171e71bef23ebd1760c7dea10');
 
@@ -227,16 +228,6 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
     }
   },[])
 
-  const formatNumber = (num: number) => {
-    return Intl.NumberFormat('en-US', {
-              notation: "compact",
-              maximumFractionDigits: 1
-            }).format(num);
-  }
-
-
-
-
   return (
   <CardWrapper data-testid="Card">
     <Avatar src={hit?.imageUrl} alt="profile" size={80} name={hit?.fullName} />
@@ -284,9 +275,9 @@ const BookCall: React.FC<IBookCallProps> = ({influencer, setShowBookCall}: IBook
 
       {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
       <div className='container'>  
-        <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} />
+        <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />
         <h1 className='name'>{influencer?.fullName}</h1>
-        <p className='followers'>Followers: {influencer?.followersCount}</p>
+        <p className='followers'>Followers: {formatNumber(influencer?.followersCount)}</p>
         {/* <p className='bio'>{influencer?.bio}</p> */}
         {/* <p className='bio'>{influencer?.imageUrl}</p> */}
 
@@ -312,13 +303,14 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
   const [messageGenerating, setMessageGenerating] = React.useState<boolean>(false);
   const [sendingMessage, setSendingMessage] = React.useState<boolean>(false);
   const [showEditMessage, setShowEditMessage] = React.useState<boolean>(false);
+
+  const [loading, setLoading] = React.useState<boolean>(false);
   
     const user = useContext(AuthContext)
 
   const [userToken, setUserToken] = useState<string | null>(null);
 
   const [channel, setChannel] = useState<any>(null);
-  const [chatClient, setChatClient] = useState<any>(null);
   const [filters, setFilters] = useState<any>(null);
   const [sort, setSort] = useState<any>(null);
   const [options, setOptions] = useState<any>(null);
@@ -326,7 +318,9 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
   const [channelMapping, setChannelMapping] = useState<any>(null);
   
   const load = async () => {
+    setLoading(true);
     const brandUserProfile = await getBrandUserProfile();
+    setLoading(false);
 
     setMessageGenerating(true);
     const msg = await createReachout(influencer, brandUserProfile);
@@ -397,6 +391,23 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     }
   }
 
+  // delete brand influencer channel mapping
+  const deleteBrandInfluencerChannel = async () => {
+    
+    const response = await fetch(`${API}/brand-influencer-channel-map?brandEmail=${user?.email}&influencerEmail=${influencer?.email || influencer?.publicEmail || influencer?.mailFound}`, {
+      method: 'DELETE',
+    });
+    const data = await response.json();
+    console.log('mapping', data);
+    if (data?.status === 'success') {
+      setChannelMapping(false);
+      setShowEditMessage(false);
+      setMessageGenerating(false);
+      setShowReachout(false);
+      // const destroy = await channel.delete();
+    }
+  }
+
   // get brand user profile
   const getBrandUserProfile = async () => {
     // /brand_user_profile
@@ -406,9 +417,22 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     return data?.data;
   }
 
+  // create channel for brand and influencer
+  const createChannel = async (channelId: string, channelName: string) => {
+    const channel = chatClient.channel('messaging', channelId, {
+    name: channelName,
+  });
+  // Here, 'travel' will be the channel ID
+  await channel.create();
+  }
   // create brandInfluencerChannel mapping
   const createBrandInfluencerChannel = async () => {
+    const brandUserProfile = await getBrandUserProfile();
+    const user1 = {email: user?.email, id: user?.uid, fullName: brandUserProfile?.company_name, imageUrl: brandUserProfile?.company_logo}
+    const user2 = {fullName: influencer?.fullName, imageUrl: influencer?.imageUrl}
+    
     const channelId = removeSpecialChar(`channel${user?.email}${influencer?.email || influencer?.publicEmail || influencer?.mailFound}`);
+    const channelName = `${user2?.fullName} x ${user1?.fullName}`
 
     const response = await fetch(`${API}/brand-influencer-channel-map`, {
       method: 'POST',
@@ -446,7 +470,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     
     const {channel, chatClient} = createChat(data?.data?.token, user1, user2, channelId);
     setChannel(channel);
-    setChatClient(chatClient);
+    // setChatClient(chatClient);
 
     const filters = { members: { $in: [ user1?.id ] } }
     const sort = { last_message_at: -1 };
@@ -535,14 +559,19 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
         </Channel>
         </Chat>
         }
+
+        {/* check if "test" case insensitive is present in influencer?.fullName  */}
+        {influencer?.fullName?.toLowerCase().includes('test') &&
+          <Button text="Reset" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={deleteBrandInfluencerChannel} />
+        }
       </>
       : 
       <>    
         {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
         <div className='container'>  
-          <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} />
+          <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />
           <h1 className='name'>{influencer?.fullName}</h1>
-          <p className='followers'>Followers: {influencer?.followersCount}</p>
+          <p className='followers'>Followers: {formatNumber(influencer?.followersCount)}</p>
 
           {messageGenerated ? 
           <div style={{width: '100%', whiteSpace: 'pre-wrap'}}>
@@ -597,7 +626,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
             <img src={loadingGif} alt="Loading" style={{height: '2vh'}} />
             </div>
           </div>
-          : <Button text="Reachout" backgroundColor={CSSVARIABLES.COLORS.PURPLE_2} onClick={load} />}
+          : <Button text={loading ? "Loading..." : "Reachout"} backgroundColor={CSSVARIABLES.COLORS.PURPLE_2} onClick={load} />}
         </>
         }
 

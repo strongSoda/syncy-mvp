@@ -25,6 +25,7 @@ import AuthenticatedRoute from 'components/Brand/AuthenticatedRoute';
 import InfluencerUnAuthenticatedRoute from 'components/Influencer/UnAuthenticatedRoute';
 import InfluencerAuthenticatedRoute from 'components/Influencer/AuthenticatedRoute';
 import InfluencerCompleteProfilePage from 'pages/Influencer/CompleteProfilePage/CompleteProfilePage.lazy';
+import MessagesPage from 'pages/Brand/MessagesPage/MessagesPage.lazy';
 ;
 
 const StyledNav = styled.nav`
@@ -70,6 +71,7 @@ const AppRouterSwitch: React.FC = () => {
         <AuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.DISCOVER} component={ManageRequestsPage} />
         <AuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.CAMPAIGNS} component={ManageMerchantsPage} />
         <AuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.COMPLETE_PROFILE} component={BrandCompleteProfilePage} />
+        <AuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.MESSAGES} component={MessagesPage} />
 
         <UnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.REGISTER} component={SignupPage} />
         <UnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.LOGIN} component={LoginPage} />

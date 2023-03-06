@@ -11,6 +11,7 @@ const ROUTES = {
     CAMPAIGNS: '/brand/campaigns',
     COMPLETE_PROFILE: '/brand/complete-profile',
     FORGOT_PASSWORD: '/brand/forgot-password',
+    MESSAGES: '/brand/messages',
   },
   INFLUENCER: {
     LOGIN: '/influencer/login',

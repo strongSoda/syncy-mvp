@@ -28,6 +28,12 @@ const Links = [
     id: 0,
     path: ROUTES.BRAND.DISCOVER,
   },
+  {
+    icon: ProfileIcon,
+    text: 'Messages',
+    id: 1,
+    path: ROUTES.BRAND.MESSAGES,
+  },
   // {
   //   icon: Shop,
   //   text: 'Campaigns',

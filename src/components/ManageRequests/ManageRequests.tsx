@@ -445,6 +445,12 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     const channelId = removeSpecialChar(`channel${user?.email}${influencer?.email || influencer?.publicEmail || influencer?.mailFound}`);
     const channelName = `${user2?.fullName} x ${user1?.fullName}`
 
+    try {
+      await createChannel(channelId, channelName);
+    } catch(e) {
+      console.log(e);
+    }
+
     const response = await fetch(`${API}/brand-influencer-channel-map`, {
       method: 'POST',
       headers: {

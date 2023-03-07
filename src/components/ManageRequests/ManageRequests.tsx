@@ -394,8 +394,8 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     console.log('mapping', data);
     
     if (data?.status === 'success') {
-      setChannelMapping(true);
       getUserToken(data?.data?.channelId);
+      setChannelMapping(true);
     } else {
       // createBrandInfluencerChannel();
       setChannelMapping(false);
@@ -429,13 +429,21 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
   }
 
   // create channel for brand and influencer
-  const createChannel = async (channelId: string, channelName: string) => {
-    const channel = chatClient.channel('messaging', channelId, {
-    name: channelName,
-  });
-  // Here, 'travel' will be the channel ID
-  await channel.create();
+  const createChannel = async (channelId: string, channelName: string,  userId: string) => {
+    //   const channel = chatClient.channel('messaging', channelId, {
+    //   name: channelName,
+    //   image: user1?.imageUrl,
+    //   members: [user1.id],
+    // });
+    // Here, 'travel' will be the channel ID
+    // await channel.create();
+    console.log('creating channel...', channel);
+    // call GET api /stream-chat-create-channel with channelId, channelName, userId, imageUrl
+    const response = await fetch(`${API}/stream-chat-create-channel?channelId=${channelId}&channelName=${channelName}&userId=${userId}&imageUrl=${influencer?.imageUrl}`);
+    const data = await response.json();
+    console.log('channel created', data);
   }
+
   // create brandInfluencerChannel mapping
   const createBrandInfluencerChannel = async () => {
     const brandUserProfile = await getBrandUserProfile();
@@ -445,11 +453,11 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     const channelId = removeSpecialChar(`channel${user?.email}${influencer?.email || influencer?.publicEmail || influencer?.mailFound}`);
     const channelName = `${user2?.fullName} x ${user1?.fullName}`
 
-    try {
-      await createChannel(channelId, channelName);
-    } catch(e) {
-      console.log(e);
-    }
+    // try {
+    //   await createChannel(channelId, channelName);
+    // } catch(e) {
+    //   console.log(e);
+    // }
 
     const response = await fetch(`${API}/brand-influencer-channel-map`, {
       method: 'POST',
@@ -465,9 +473,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     const data = await response.json();
     console.log('mapping', data);
 
-    setChannelMapping(true);
-
-    await getUserToken(channelId);
+    sendFirstMessage(channelId, channelName, user1?.id as string);
   }
   
   const getUserToken = async (channelId: string) => {
@@ -486,18 +492,31 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     const user2 = {fullName: influencer?.fullName, imageUrl: influencer?.imageUrl}
     
     const {channel, chatClient} = createChat(data?.data?.token, user1, user2, channelId);
+
+    // wait for 3 seconds
+    // await new Promise((resolve) => setTimeout(resolve, 3000));
+
     setChannel(channel);
     // setChatClient(chatClient);
-
+    
     const filters = { members: { $in: [ user1?.id ] } }
     const sort = { last_message_at: -1 };
     const options = { limit: 10 }
-
+    
     setFilters(filters);
     setSort(sort);
     setOptions(options);
 
+    console.log('channel', channel?.id, channel?.cid, channel?.data?.id);
+
+    channel?.id?.replaceAll('messaging:', '');
+  }
+
+  const sendFirstMessage = async (channelId: string, channelName: string, userId: string) => {
+    await createChannel(channelId, channelName, userId);
     await sendChatMessage(channelId, user?.uid, message);
+    await getUserToken(channelId);
+    setChannelMapping(true);
   }
 
   useEffect(() => {

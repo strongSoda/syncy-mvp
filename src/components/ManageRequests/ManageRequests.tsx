@@ -364,7 +364,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     const templateParams = {
       to_name: influencer?.fullName,
       // todo: use email of influencer
-      to_email: 'imran@syncy.net',
+      to_email: influencer?.email || influencer?.publicEmail || influencer?.mailFound,
     };
 
     emailjs.send('service_p835il9', 'template_adclu1d', templateParams, 'wo1FnANWwcN5Nav88')

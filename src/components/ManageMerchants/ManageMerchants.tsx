@@ -10,7 +10,6 @@ import shopImg from 'assets/images/shop.png';
 import Button from 'components/Button/Button.lazy';
 import MerchantsBar from 'components/MerchantsBar/MerchantsBar.lazy';
 import Navbar from 'components/Navbar/Navbar.lazy';
-import SideBar from 'components/SideBar/SideBar.lazy';
 import CSSVARIABLES from 'global/constants/variables';
 
 import { AddCardBtnWrapper, AddMenuPromptWrapper, AddStoreModalWrapper, ManageMerchantsWrapper, MerchantDetailsWrapper, StoreCardWrapper } from './ManageMerchants.styles';
@@ -19,6 +18,7 @@ import { AuthContext } from 'global/context/AuthContext';
 import createChat, { chatClient, getChannels } from 'global/functions/create-chat';
 import { Channel, ChannelHeader, ChannelList, ChannelPreviewUIComponentProps, Chat, getChannel, MessageInput, MessageList, Thread, useChatContext, Window } from 'stream-chat-react';
 import "stream-chat-react/dist/css/v2/index.css";
+import SideBar from 'components/Influencer/SideBar/SideBar.lazy';
 
 // declare interface IManageMerchantsProps {}
 

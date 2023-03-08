@@ -55,7 +55,7 @@ const Login: React.FC = () => {
 
     // dispatch(setUser());
     dispatch(login());
-    history.push(ROUTES.BRAND.DISCOVER);
+    history.push(ROUTES.INFLUENCER.MESSAGES);
     setLoading(false);
 
   } catch (error: any) {
@@ -110,7 +110,7 @@ const Login: React.FC = () => {
         </form>
       </div>
       <div className="banner">
-        <h1 className='title'>Find Influencers</h1>
+        <h1 className='title'>Partner with Top Brands</h1>
       </div>
   </LoginWrapper>
 )};

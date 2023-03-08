@@ -1,4 +1,4 @@
-import SideBar from 'components/SideBar/SideBar.lazy';
+import SideBar from 'components/Influencer/SideBar/SideBar.lazy';
 import { Alert, Button, FormField, Pane, Paragraph, Spinner, Tab, Tablist, TextInputField, toaster } from 'evergreen-ui';
 import { useFormik } from 'formik';
 import API from 'global/constants/api';
@@ -27,9 +27,52 @@ const InfluencerCompleteProfile: React.FC = () => {
 function ProfileTabs() {
   const [selectedIndex, setSelectedIndex] = React.useState(0)
   const [tabs] = React.useState(['Personal', 'Instagram'])
+  
+  const [fetchingProfile, setFetchingProfile] = useState<boolean>(false);
+  
+  const user = useContext(AuthContext);
+
+  const [profile, setProfile] = useState<any>(null);
+
+  const getProfile = async () => {
+    setFetchingProfile(true);
+    try {
+      const res = await fetch(`${API}/influencer-profile?email=${user?.email}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await res.json();
+      console.log(data);
+      const profile = data?.data
+      setProfile(profile);
+      // setLoading(false);
+      setFetchingProfile(false);
+    } catch (error: any) {
+      console.error(error);
+      const errorCode = error?.code;
+      const errorMessage = error?.message;
+      setFetchingProfile(false);
+    }      
+  }
+
+  useEffect(() => {
+    if(user) {
+      getProfile();
+    }
+  }, [user]);
 
   return (
-    <Pane height={120}>
+  <>
+    {fetchingProfile ? 
+      <Pane display="flex" alignItems="center" justifyContent="center" height={400}>
+        <Spinner />
+      </Pane>
+      :
+      <>
+      {profile && <SideBar lightColor={CSSVARIABLES.COLORS.BLUE_1} darkColor={CSSVARIABLES.COLORS.BLUE_0} />}
+      <Pane height={120}>
       <h2 className='title'>Complete your profile</h2>
 
       <Tablist marginBottom={16} flexBasis={240} marginRight={24}>
@@ -52,7 +95,7 @@ function ProfileTabs() {
             key="Personal"
             role="tabpanel"
           >
-          <PersonalDetails setSelectedIndex={setSelectedIndex} />
+          <PersonalDetails setSelectedIndex={setSelectedIndex} profile={profile} />
         </Pane>
 
         <Pane
@@ -62,7 +105,7 @@ function ProfileTabs() {
             key="Instagram"
             role="Instagram"
           >
-          <InstagramDetails setSelectedIndex={setSelectedIndex} />
+          <InstagramDetails setSelectedIndex={setSelectedIndex} profile={profile} />
         </Pane>
 
 
@@ -78,26 +121,30 @@ function ProfileTabs() {
 
       </Pane>
     </Pane>
+    </>
+    }
+  </>
   )
 }
 
 interface IProfileDetailsProps {
-  setSelectedIndex: any
+  setSelectedIndex: any,
+  profile: any,
 }
 
-const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex}: IProfileDetailsProps) => {
+const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, profile}: IProfileDetailsProps) => {
   const user = useContext(AuthContext);
 
   const [Error, setCustomError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [fetchingProfile, setFetchingProfile] = useState(false);
+  // const [fetchingProfile, setFetchingProfile] = useState(false);
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [bio, setBio] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [city, setCity] = useState('');
-  const [bookCallInfo, setBookCallInfo] = useState('');
+  const [firstName, setFirstName] = useState(profile?.first_name || '');
+  const [lastName, setLastName] = useState(profile?.last_name || '');
+  const [bio, setBio] = useState(profile?.bio) || '';
+  const [imageUrl, setImageUrl] = useState(profile?.image_url || '');
+  const [city, setCity] = useState(profile?.city || '');
+  const [bookCallInfo, setBookCallInfo] = useState(profile?.calender_url || '');
 
 
   const formik = useFormik({
@@ -256,22 +303,22 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex}: IPr
   )
 };
 
-const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex }: IProfileDetailsProps) => {
+const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, profile }: IProfileDetailsProps) => {
   const [Error, setCustomError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [fetchingProfile, setFetchingProfile] = useState(false);
+  // const [fetchingProfile, setFetchingProfile] = useState(false);
 
-  const [username, setUsername] = useState('');
-  const [followersCount, setFollowersCount] = useState('');
-  const [rate, setRate] = useState('');
-  const [category, setCategory] = useState('');
-  const [hashtags, setHashtags] = useState('');
-  const [topPostUrl1, setTopPostUrl1] = useState('');
-  const [topPostUrl2, setTopPostUrl2] = useState('');
-  const [topPostUrl3, setTopPostUrl3] = useState('');
-  const [sponsoredPostUrl1, setSponsoredPostUrl1] = useState('');
-  const [sponsoredPostUrl2, setSponsoredPostUrl2] = useState('');
-  const [sponsoredPostUrl3, setSponsoredPostUrl3] = useState('');
+  const [username, setUsername] = useState(profile?.instagram_username || '');
+  const [followersCount, setFollowersCount] = useState(profile?.followers_count || '');
+  const [rate, setRate] = useState(profile?.rate || '');
+  const [category, setCategory] = useState(profile?.category || '');
+  const [hashtags, setHashtags] = useState(profile?.hashtags || '');
+  const [topPostUrl1, setTopPostUrl1] = useState(profile?.top_post_url_1 || '');
+  const [topPostUrl2, setTopPostUrl2] = useState(profile?.top_post_url_2 || '');
+  const [topPostUrl3, setTopPostUrl3] = useState(profile?.top_post_url_3 || '');
+  const [sponsoredPostUrl1, setSponsoredPostUrl1] = useState(profile?.sponsored_post_url_1 || '');
+  const [sponsoredPostUrl2, setSponsoredPostUrl2] = useState(profile?.sponsored_post_url_2 || '');
+  const [sponsoredPostUrl3, setSponsoredPostUrl3] = useState(profile?.sponsored_post_url_3 || '');
 
   const history = useHistory();
 
@@ -297,16 +344,16 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex }: 
     },
     validationSchema: Yup.object({
       username: Yup.string().required('Required'),
-      followersCount: Yup.string().required('Required'),
       rate: Yup.number().required('Required'),
-      category: Yup.string().required('Required'),
-      hashtags: Yup.string().required('Required'),
-      topPostUrl1: Yup.string().required('Required'),
-      topPostUrl2: Yup.string().required('Required'),
-      topPostUrl3: Yup.string().required('Required'),
-      sponsoredPostUrl1: Yup.string().required('Required'),
-      sponsoredPostUrl2: Yup.string().required('Required'),
-      sponsoredPostUrl3: Yup.string().required('Required'),
+      followersCount: Yup.string(),
+      category: Yup.string(),
+      hashtags: Yup.string(),
+      topPostUrl1: Yup.string(),
+      topPostUrl2: Yup.string(),
+      topPostUrl3: Yup.string(),
+      sponsoredPostUrl1: Yup.string(),
+      sponsoredPostUrl2: Yup.string(),
+      sponsoredPostUrl3: Yup.string(),
     }),
 
     onSubmit: async (values: any) => {
@@ -338,7 +385,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex }: 
       if(data.status === 'success') {
         toaster.success(data.message);
         
-        history.push(ROUTES.INFLUENCER.CAMPAIGNS);
+        history.push(ROUTES.INFLUENCER.MESSAGES);
         // todo: change tab
 
       } else {
@@ -376,7 +423,6 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex }: 
         <TextInputField
           name='followersCount'
           label="Followers Count"
-          required
           // description="This is a description."
           value={formik.values.followersCount}
           onChange={(e: any) => formik.setFieldValue('followersCount', e.target.value)}
@@ -403,7 +449,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex }: 
         <TextInputField
           name='category'
           label="Category"
-          required
+          // required
           // description="This is a description."
           value={formik.values.category}
           onChange={(e: any) => formik.setFieldValue('category', e.target.value)}
@@ -416,7 +462,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex }: 
         <TextInputField
           name='hashtags'
           label="Top Hashtags (comma separated)"
-          required
+          // required
           // description="This is a description."
           value={formik.values.hashtags}
           onChange={(e: any) => formik.setFieldValue('hashtags', e.target.value)}
@@ -429,7 +475,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex }: 
         <TextInputField
           name='topPostUrl1'
           label="Top Post Url 1"
-          required
+          // required
           // description="This is a description."
           value={formik.values.topPostUrl1}
           onChange={(e: any) => formik.setFieldValue('topPostUrl1', e.target.value)}
@@ -442,7 +488,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex }: 
         <TextInputField
           name='topPostUrl2'
           label="Top Post Url 2"
-          required
+          // required
           // description="This is a description."
           value={formik.values.topPostUrl2}
           onChange={(e: any) => formik.setFieldValue('topPostUrl2', e.target.value)}
@@ -456,7 +502,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex }: 
         <TextInputField
           name='topPostUrl3'
           label="Top Post Url 3"
-          required
+          // required
           // description="This is a description."
           value={formik.values.topPostUrl3}
           onChange={(e: any) => formik.setFieldValue('topPostUrl3', e.target.value)}
@@ -470,7 +516,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex }: 
         <TextInputField
           name='sponsoredPostUrl1'
           label="Sponsored Post Url 1"
-          required
+          // required
           // description="This is a description."
           value={formik.values.sponsoredPostUrl1}
           onChange={(e: any) => formik.setFieldValue('sponsoredPostUrl1', e.target.value)}
@@ -484,7 +530,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex }: 
         <TextInputField
           name='sponsoredPostUrl2'
           label="Sponsored Post Url 2"
-          required
+          // required
           // description="This is a description."
           value={formik.values.sponsoredPostUrl2}
           onChange={(e: any) => formik.setFieldValue('sponsoredPostUrl2', e.target.value)}
@@ -498,7 +544,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex }: 
         <TextInputField
           name='sponsoredPostUrl3'
           label="Sponsored Post Url 3"
-          required
+          // required
           // description="This is a description."
           value={formik.values.sponsoredPostUrl3}
           onChange={(e: any) => formik.setFieldValue('sponsoredPostUrl3', e.target.value)}

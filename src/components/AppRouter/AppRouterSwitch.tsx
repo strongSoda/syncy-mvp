@@ -80,7 +80,7 @@ const AppRouterSwitch: React.FC = () => {
 
         {/* Influencer */}
         <InfluencerAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.DISCOVER} component={ManageRequestsPage} />
-        <InfluencerAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.CAMPAIGNS} component={ManageMerchantsPage} />
+        <InfluencerAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.MESSAGES} component={ManageMerchantsPage} />
         <InfluencerAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.COMPLETE_PROFILE} component={InfluencerCompleteProfilePage} />
 
         <InfluencerUnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.REGISTER} component={InfluencerSignupPage} />

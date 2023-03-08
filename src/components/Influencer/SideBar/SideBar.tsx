@@ -2,9 +2,9 @@ import React, { useContext, useEffect } from 'react';
 
 import reactangleImg from 'assets/images/rectangle.png';
 
-import LightChat from '../../assets/icons/Chat.svg';
-import Shop from '../../assets/icons/shop.svg';
-import ProfileIcon from '../../assets/icons/profile.svg';
+import LightChat from '../../../assets/icons/Chat.svg';
+import Shop from '../../../assets/icons/shop.svg';
+import ProfileIcon from '../../../assets/icons/profile.svg';
 import SideBarWrapper from './SideBar.styles';
 import { signOut } from 'firebase/auth';
 import { auth } from 'global/constants/firebase';
@@ -24,9 +24,9 @@ declare interface ISideBarProps {
 const Links = [
   {
     icon: LightChat,
-    text: 'Discover',
+    text: 'Messages',
     id: 0,
-    path: ROUTES.INFLUENCER.DISCOVER,
+    path: ROUTES.INFLUENCER.MESSAGES,
   },
   // {
   //   icon: Shop,

@@ -16,6 +16,16 @@ import {
   persistStore,
 } from 'redux-persist'
 
+import * as Sentry from "@sentry/react";
+import { BrowserTracing } from "@sentry/tracing";
+
+
+Sentry.init({
+  dsn: "https://f5f1d5819bfc49c9b6dfccdaa0912f32@o4504809769467904.ingest.sentry.io/4504809770385408",
+  integrations: [new BrowserTracing()],
+  tracesSampleRate: 1.0,
+});
+
 let persistor = persistStore(store)
 
 ReactDOM.render(

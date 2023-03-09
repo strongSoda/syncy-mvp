@@ -311,7 +311,7 @@ const BookCall: React.FC<IBookCallProps> = ({influencer, setShowBookCall}: IBook
       </div>      
       {brandUserProfile ? 
         <iframe title={influencer?.fullName} 
-        src={`${influencer?.bookCallInfo}?email=${user?.email}&first_name=${brandUserProfile?.first_name}&last_name=${brandUserProfile?.last_name}&guests=assistant@syncy.net`} 
+        src={`${influencer?.bookCallInfo}?email=${user?.email}&name=${brandUserProfile?.first_name} ${brandUserProfile?.last_name}&guests=assistant@syncy.net`} 
         width="100%" height="1000px" frameBorder="0">
         </iframe> 
       :

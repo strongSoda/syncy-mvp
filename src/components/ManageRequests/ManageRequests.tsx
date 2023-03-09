@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
-import { Avatar, Badge, Heading, Pane, Paragraph, Popover, Position, Pulsar, Tab, Tablist, TextInputField, toaster, Tooltip } from 'evergreen-ui';
+import { Avatar, Badge, Heading, Pane, Paragraph, Popover, Position, Pulsar, Spinner, Tab, Tablist, TextInputField, toaster, Tooltip } from 'evergreen-ui';
 
 import Button from 'components/Button/Button.lazy';
 import Navbar from 'components/Navbar/Navbar.lazy';
@@ -279,6 +279,21 @@ interface IBookCallProps {
 
 const BookCall: React.FC<IBookCallProps> = ({influencer, setShowBookCall}: IBookCallProps) => {
 
+  const user = useContext(AuthContext);
+  const [brandUserProfile, setBrandUserProfile] = useState<any>(null);
+
+  const getBrandUserProfile = async () => {
+    // /brand_user_profile
+    const response = await fetch(`${API}/brand_user_profile?email=${user?.email}`)
+    const data = await response.json();
+    console.log('brand_user_profile', data?.data);
+    setBrandUserProfile(data?.data);
+  }
+
+  useEffect(() => {
+    getBrandUserProfile();
+  },[])
+
   return (
     <div className='influencer-profile'>
       {/* cross icon to close sidebar on click */}
@@ -294,7 +309,16 @@ const BookCall: React.FC<IBookCallProps> = ({influencer, setShowBookCall}: IBook
 
         {/* calednly iframe */}
       </div>      
-      <iframe src={influencer?.bookCallInfo} width="100%" height="1000px" frameBorder="0"></iframe>
+      {brandUserProfile ? 
+        <iframe title={influencer?.fullName} 
+        src={`${influencer?.bookCallInfo}&email=${user?.email}&first_name=${brandUserProfile?.first_name}&last_name=${brandUserProfile?.last_name}&guests=assistant@syncy.net`} 
+        width="100%" height="1000px" frameBorder="0">
+        </iframe> 
+      :
+      <Pane display="flex" alignItems="center" justifyContent="center" height="100vh">
+        <Spinner />
+      </Pane>
+      }
     </div>
   );
 }

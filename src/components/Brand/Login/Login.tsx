@@ -3,8 +3,10 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useFormik } from 'formik';
 import { auth } from 'global/constants/firebase';
 import ROUTES from 'global/constants/routes';
+import { AuthContext } from 'global/context/AuthContext';
+import logUsage from 'global/functions/usage-logs';
 import { useAppDispatch } from 'hooks/storeHooks';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router';
 import * as Yup from "yup";
 
@@ -18,6 +20,8 @@ const Login: React.FC = () => {
   
   const dispatch = useAppDispatch();
   const history = useHistory();
+
+  const user = useContext(AuthContext);
 
   const formik = useFormik({
     initialValues: {
@@ -55,6 +59,7 @@ const Login: React.FC = () => {
 
     // dispatch(setUser());
     dispatch(login());
+    logUsage(user, 'LOGIN', {});
     history.push(ROUTES.BRAND.DISCOVER);
     setLoading(false);
 

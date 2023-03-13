@@ -27,11 +27,6 @@ const logUsage = async (user: any, MESSAGE_TYPE: string, payload: any) => {
                     },
                     {
                         type: 'mrkdwn',
-                        // PST Time
-                        text: `*Time*: ${new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })}`,
-                    },
-                    {
-                        type: 'mrkdwn',
                         text: `*Payload*: ${JSON.stringify(payload)}`,
                     },
                 ],

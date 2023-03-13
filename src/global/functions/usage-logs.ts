@@ -15,7 +15,7 @@ const logUsage = async (MESSAGE_TYPE: string, payload: any) => {
                 type: 'section',
                 text: {
                     type: 'mrkdwn',
-                    text: `*${MESSAGE_TYPE}*`,
+                    text: `*${MESSAGE_TYPE}*\n\n`,
                 },
             },
             {
@@ -27,7 +27,8 @@ const logUsage = async (MESSAGE_TYPE: string, payload: any) => {
                     },
                     {
                         type: 'mrkdwn',
-                        text: `*Payload*: ${JSON.stringify(payload)}`,
+                        // eslint-disable-next-line no-template-curly-in-string
+                        text: `*Payload*: \`${JSON.stringify(payload)}\``,
                     },
                 ],
             },

@@ -39,7 +39,7 @@ const logUsage = async (user: any, MESSAGE_TYPE: string, payload: any) => {
         ],
     };
 
-    let res = await fetch(webhookUrl, {
+    let res = await fetch(webhookUrl as any, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

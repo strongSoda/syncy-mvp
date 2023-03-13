@@ -1,6 +1,6 @@
 const logUsage = async (user: any, MESSAGE_TYPE: string, payload: any) => {
     // e.preventDefault();
-    const webhookUrl = 'https://hooks.slack.com/services/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';
+    const webhookUrl = process.env.REACT_APP_SLACK_INCOMING_WEBHOOK_URL;
 
 
     const USAGE_LOGS = {

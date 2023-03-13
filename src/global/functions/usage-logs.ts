@@ -1,4 +1,4 @@
-const logUsage = async (user: any, MESSAGE_TYPE: string, payload: any) => {
+const logUsage = async (MESSAGE_TYPE: string, payload: any) => {
     // e.preventDefault();
     const webhookUrl = process.env.REACT_APP_SLACK_INCOMING_WEBHOOK_URL;
 
@@ -23,7 +23,7 @@ const logUsage = async (user: any, MESSAGE_TYPE: string, payload: any) => {
                 fields: [
                     {
                         type: 'mrkdwn',
-                        text: `*User Email*: ${user?.email}`,
+                        text: `*User Email*: ${payload?.user?.email}`,
                     },
                     {
                         type: 'mrkdwn',

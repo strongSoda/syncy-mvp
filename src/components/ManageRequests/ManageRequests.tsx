@@ -49,6 +49,7 @@ import sendChatMessage from 'global/functions/send-chat-message';
 
 import { ChannelPreviewUIComponentProps, useChatContext } from 'stream-chat-react';
 import formatNumber from 'global/functions/formatFollowers';
+import logUsage from 'global/functions/usage-logs';
 
 const searchClient = algoliasearch('L7PFECEWC3', 'a953f96171e71bef23ebd1760c7dea10');
 
@@ -155,6 +156,13 @@ interface IInfluencerProfileProps {
 
 const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setShowInfluencerProfile, setShowBookCall, setShowReachout}: IInfluencerProfileProps) => {
 
+  const user = useContext(AuthContext)
+
+  useEffect(() => {
+    console.log('influencer', influencer);
+    logUsage('BRAND VIEW INFLUENCER PROFILE', { user: user, influencer: influencer?.fullName });
+  }, [influencer]);
+
   return (
     <div className='influencer-profile'>
       
@@ -178,7 +186,7 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
       <img className='cross-icon' src='https://www.svgimages.com/svg-image/s3/close-icon-256x256.png' alt="cross" onClick={() => setShowInfluencerProfile(false) } />
       </div>
 
-      <iframe title={influencer?.fullName} src={`${influencer?.profileUrl}embed`} name="myiFrame" scrolling="yes" frameBorder="0" height="900" width="100%" allowFullScreen={true}></iframe>
+      <iframe title={influencer?.fullName} src={`${influencer?.profileUrl ? influencer?.profileUrl : `https://www.instagram.com/${influencer?.instagram_username}/` }embed`} name="myiFrame" scrolling="yes" frameBorder="0" height="900" width="100%" allowFullScreen={true}></iframe>
       {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
       {/* <div className='container'>  
         <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />
@@ -292,6 +300,7 @@ const BookCall: React.FC<IBookCallProps> = ({influencer, setShowBookCall}: IBook
 
   useEffect(() => {
     getBrandUserProfile();
+    logUsage('BRAND BOOK CALL BUTTON CLICKED', {user: brandUserProfile, influencer: influencer});
   },[])
 
   return (
@@ -360,6 +369,9 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     setMessageGenerating(true);
     const msg = await createReachout(influencer, brandUserProfile);
     console.log(msg);
+
+    logUsage('BRAND GENERATED AI REACHOUT MESSAGE NOT YET SENT', {user: user, influencer: influencer, meesage: msg});
+
     setMessage(msg);
     setMessageGenerated(true);
     setMessageGenerating(false);
@@ -544,12 +556,14 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     await createChannel(channelId, channelName, userId);
     await sendChatMessage(channelId, user?.uid, message);
     await getUserToken(channelId);
+    logUsage('BRAND FIRST MESSAGE SENT', {user: user, influencer: influencer, meesage: message, channelId: channelId, channelName: channelName});
     setChannelMapping(true);
   }
 
   useEffect(() => {
     // load();
     console.log(user, influencer);
+    logUsage('BRAND REACHOUT BUTTON CLICKED', {user: user, influencer: influencer});
     if(user) {
       checkMapping();
     }
@@ -740,6 +754,12 @@ const SearchTable: React.FC = () => {
   const [showInfluencerProfile, setShowInfluencerProfile] = useState(false);
   const [selectedInfluencer, setSelectedInfluencer] = useState({});
 
+  const user = useContext(AuthContext);
+
+  useEffect(() => {
+    logUsage('BRAND VISITED DISCOVER PAGE', {user: user});
+  }, [])
+
   return (
     <InstantSearch searchClient={searchClient} indexName="influencers" routing={true}>
       {/* <RefinementsSideba dynamicWidgets={true} /> */}
@@ -792,6 +812,8 @@ const SyncyGPT: React.FC = () => {
 
     const [doneTyping, setDoneTyping] = React.useState<boolean>(false);
 
+    const user = useContext(AuthContext);
+
     const load = async () => {
 
       setMessage("");
@@ -803,6 +825,9 @@ const SyncyGPT: React.FC = () => {
       setLoading(true);
       const msg = await getCategories(query, allCategories);
       console.log(msg);
+
+      logUsage('BRAND GENERATED AI CATEGORIES', {user: user, query: query, categories: msg});
+  
       setCategories(msg);
       setMessage(`The influencers best suited for your product are: \n\n\n * ${msg[0]}\n * ${msg[1]}\n * ${msg[2]}`);
       setLoading(false);

@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import API from 'global/constants/api';
 import CSSVARIABLES from 'global/constants/variables';
 import { AuthContext } from 'global/context/AuthContext';
+import logUsage from 'global/functions/usage-logs';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import * as Yup from "yup";
@@ -36,7 +37,11 @@ const BrandCompleteProfile: React.FC = () => {
   // const dispatch = useAppDispatch();
   const history = useHistory();
 
-    const formik = useFormik({
+  useEffect(() => {
+    logUsage('BRAND VISITED COMPLETE PROFILE PAGE', {user: user});
+  }, [])
+
+  const formik = useFormik({
     enableReinitialize: true,
     // Form to enter First Name, Last Name, job title, company name, company website, company logo, company description, company address, company phone number, company email, company social media links
     initialValues: {

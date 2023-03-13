@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/
 import { useFormik } from 'formik';
 import { auth } from 'global/constants/firebase';
 import ROUTES from 'global/constants/routes';
+import logUsage from 'global/functions/usage-logs';
 import { useAppDispatch } from 'hooks/storeHooks';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
@@ -62,6 +63,7 @@ const Signup: React.FC = () => {
       await sendEmailVerification(user)
 
       dispatch(login());
+      logUsage('BRAND SIGNUP', {user: values});
       history.push(ROUTES.BRAND.COMPLETE_PROFILE);
 
     } catch (error: any) {

@@ -59,7 +59,7 @@ const Login: React.FC = () => {
 
     // dispatch(setUser());
     dispatch(login());
-    logUsage(values, 'LOGIN', {});
+    logUsage('BRAND LOGIN', {user: values});
     history.push(ROUTES.BRAND.DISCOVER);
     setLoading(false);
 

@@ -5,6 +5,7 @@ import API from 'global/constants/api';
 import ROUTES from 'global/constants/routes';
 import CSSVARIABLES from 'global/constants/variables';
 import { AuthContext } from 'global/context/AuthContext';
+import logUsage from 'global/functions/usage-logs';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import * as Yup from "yup";
@@ -15,6 +16,12 @@ import InfluencerCompleteProfileWrapper from './CompleteProfile.styles'
 
 const InfluencerCompleteProfile: React.FC = () => {
   // const dispatch = useAppDispatch();
+
+  const user = useContext(AuthContext);
+
+  useEffect(() => {
+    logUsage('INFLUENCER VISITED COMPLETE PROFILE PAGE', {user: user});
+  }, [])
 
   return (
   <InfluencerCompleteProfileWrapper data-testid="BrandCompleteProfile">

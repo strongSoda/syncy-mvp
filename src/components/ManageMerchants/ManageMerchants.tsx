@@ -19,6 +19,7 @@ import createChat, { chatClient, getChannels } from 'global/functions/create-cha
 import { Channel, ChannelHeader, ChannelList, ChannelPreviewUIComponentProps, Chat, getChannel, MessageInput, MessageList, Thread, useChatContext, Window } from 'stream-chat-react';
 import "stream-chat-react/dist/css/v2/index.css";
 import SideBar from 'components/Influencer/SideBar/SideBar.lazy';
+import logUsage from 'global/functions/usage-logs';
 
 // declare interface IManageMerchantsProps {}
 
@@ -47,6 +48,10 @@ const MerchantDetails: React.FC = () => {
   const [filters, setFilters] = useState<any>(null);
   const [sort, setSort] = useState<any>(null);
   const [options, setOptions] = useState<any>(null);
+
+  useEffect(() => {
+    logUsage('INFLUENCER VISITED MESSAGES PAGE', {user: user});
+  }, [])
 
   
   // get influencer profile

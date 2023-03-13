@@ -4,6 +4,7 @@ import API from 'global/constants/api';
 import CSSVARIABLES from 'global/constants/variables';
 import { AuthContext } from 'global/context/AuthContext';
 import { chatClient } from 'global/functions/create-chat';
+import logUsage from 'global/functions/usage-logs';
 import React, { useContext, useEffect, useState } from 'react';
 import { Channel, ChannelHeader, ChannelList, ChannelPreviewUIComponentProps, Chat, MessageInput, MessageList, Thread, useChatContext, Window } from 'stream-chat-react';
 
@@ -22,6 +23,10 @@ const Messages: React.FC = () => {
   const [sort, setSort] = useState<any>(null);
   const [options, setOptions] = useState<any>(null);
   const [chatExists, setChatExists] = useState<boolean>(false);
+
+  useEffect(() => {
+    logUsage('BRAND VISITED MESSAGES PAGE', {user: user});
+  }, [])
   
   // get influencer profile
   const getBrandProfile = async () => {

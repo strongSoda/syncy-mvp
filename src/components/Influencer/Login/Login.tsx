@@ -3,6 +3,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useFormik } from 'formik';
 import { auth } from 'global/constants/firebase';
 import ROUTES from 'global/constants/routes';
+import logUsage from 'global/functions/usage-logs';
 import { useAppDispatch } from 'hooks/storeHooks';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
@@ -55,6 +56,7 @@ const Login: React.FC = () => {
 
     // dispatch(setUser());
     dispatch(login());
+    logUsage('INFLUENCER LOGIN', {user: values});
     history.push(ROUTES.INFLUENCER.MESSAGES);
     setLoading(false);
 

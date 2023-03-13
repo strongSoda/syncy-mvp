@@ -300,7 +300,7 @@ const BookCall: React.FC<IBookCallProps> = ({influencer, setShowBookCall}: IBook
 
   useEffect(() => {
     getBrandUserProfile();
-    logUsage('BRAND BOOK CALL BUTTON CLICKED', {user: brandUserProfile, influencer: influencer});
+    logUsage('BRAND BOOK CALL BUTTON CLICKED', {user: {email: user?.email}, influencer: influencer?.fullName});
   },[])
 
   return (
@@ -370,7 +370,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     const msg = await createReachout(influencer, brandUserProfile);
     console.log(msg);
 
-    logUsage('BRAND GENERATED AI REACHOUT MESSAGE NOT YET SENT', {user: brandUserProfile, influencer: influencer, meesage: msg});
+    logUsage('BRAND GENERATED AI REACHOUT MESSAGE NOT YET SENT', {user: {email: user?.email}, influencer: influencer?.fullName, meesage: msg});
 
     setMessage(msg);
     setMessageGenerated(true);
@@ -556,14 +556,14 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     await createChannel(channelId, channelName, userId);
     await sendChatMessage(channelId, user?.uid, message);
     await getUserToken(channelId);
-    logUsage('BRAND FIRST MESSAGE SENT', {user: {email: user?.email}, influencer: influencer, meesage: message, channelId: channelId, channelName: channelName});
+    logUsage('BRAND FIRST MESSAGE SENT', {user: {email: user?.email}, influencer: influencer?.fullName, meesage: message, channelId: channelId, channelName: channelName});
     setChannelMapping(true);
   }
 
   useEffect(() => {
     // load();
     console.log(user, influencer);
-    logUsage('BRAND REACHOUT BUTTON CLICKED', {user: {email: user?.email}, influencer: influencer});
+    logUsage('BRAND REACHOUT BUTTON CLICKED', {user: {email: user?.email}, influencer: influencer?.fullName});
     if(user) {
       checkMapping();
     }

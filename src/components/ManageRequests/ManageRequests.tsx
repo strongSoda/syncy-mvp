@@ -171,7 +171,7 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
           setShowReachout(true);
           setShowInfluencerProfile(false);
         }} />
-        <img className='icon' src={SaveIcon} alt="save" />
+        {/* <img className='icon' src={SaveIcon} alt="save" /> */}
       </div>
 
       {/* cross icon to close sidebar on click */}
@@ -255,7 +255,7 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
           {hit?.bookCallInfo && <img className='icon' src={PhoneIcon} alt="eye" onClick={() => setShowBookCall(true) } />}
           <img className='icon' src={EyeIcon} alt="eye" onClick={() => setShowInfluencerProfile(true) } />
           <img className='icon' src={EmailIcon} alt="eye" onClick={() => setShowReachout(true) } />
-          <img className='icon' src={SaveIcon} alt="eye" />
+          {/* <img className='icon' src={SaveIcon} alt="eye" /> */}
         </div>
       </div>
       <small>#<Highlight attribute="category" hit={hit} /></small>

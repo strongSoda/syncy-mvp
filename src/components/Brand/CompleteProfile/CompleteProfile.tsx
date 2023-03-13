@@ -38,7 +38,7 @@ const BrandCompleteProfile: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    logUsage('BRAND VISITED COMPLETE PROFILE PAGE', {user: user});
+    logUsage('BRAND VISITED COMPLETE PROFILE PAGE', {user: {email: user?.email}});
   }, [])
 
   const formik = useFormik({

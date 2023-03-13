@@ -50,7 +50,7 @@ const MerchantDetails: React.FC = () => {
   const [options, setOptions] = useState<any>(null);
 
   useEffect(() => {
-    logUsage('INFLUENCER VISITED MESSAGES PAGE', {user: user});
+    logUsage('INFLUENCER VISITED MESSAGES PAGE', {user: {email: user?.email}});
   }, [])
 
   

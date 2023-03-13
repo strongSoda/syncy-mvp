@@ -25,7 +25,7 @@ const Messages: React.FC = () => {
   const [chatExists, setChatExists] = useState<boolean>(false);
 
   useEffect(() => {
-    logUsage('BRAND VISITED MESSAGES PAGE', {user: user});
+    logUsage('BRAND VISITED MESSAGES PAGE', {user: {email: user?.email}});
   }, [])
   
   // get influencer profile

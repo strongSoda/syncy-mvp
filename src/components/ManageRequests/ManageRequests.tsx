@@ -160,7 +160,7 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
 
   useEffect(() => {
     console.log('influencer', influencer);
-    logUsage('BRAND VIEW INFLUENCER PROFILE', { user: user, influencer: influencer?.fullName });
+    logUsage('BRAND VIEW INFLUENCER PROFILE', { user: {email: user?.email}, influencer: influencer?.fullName });
   }, [influencer]);
 
   return (
@@ -370,7 +370,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     const msg = await createReachout(influencer, brandUserProfile);
     console.log(msg);
 
-    logUsage('BRAND GENERATED AI REACHOUT MESSAGE NOT YET SENT', {user: user, influencer: influencer, meesage: msg});
+    logUsage('BRAND GENERATED AI REACHOUT MESSAGE NOT YET SENT', {user: brandUserProfile, influencer: influencer, meesage: msg});
 
     setMessage(msg);
     setMessageGenerated(true);
@@ -556,14 +556,14 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     await createChannel(channelId, channelName, userId);
     await sendChatMessage(channelId, user?.uid, message);
     await getUserToken(channelId);
-    logUsage('BRAND FIRST MESSAGE SENT', {user: user, influencer: influencer, meesage: message, channelId: channelId, channelName: channelName});
+    logUsage('BRAND FIRST MESSAGE SENT', {user: {email: user?.email}, influencer: influencer, meesage: message, channelId: channelId, channelName: channelName});
     setChannelMapping(true);
   }
 
   useEffect(() => {
     // load();
     console.log(user, influencer);
-    logUsage('BRAND REACHOUT BUTTON CLICKED', {user: user, influencer: influencer});
+    logUsage('BRAND REACHOUT BUTTON CLICKED', {user: {email: user?.email}, influencer: influencer});
     if(user) {
       checkMapping();
     }
@@ -757,7 +757,7 @@ const SearchTable: React.FC = () => {
   const user = useContext(AuthContext);
 
   useEffect(() => {
-    logUsage('BRAND VISITED DISCOVER PAGE', {user: user});
+    logUsage('BRAND VISITED DISCOVER PAGE', {user: {email: user?.email}});
   }, [])
 
   return (
@@ -826,7 +826,7 @@ const SyncyGPT: React.FC = () => {
       const msg = await getCategories(query, allCategories);
       console.log(msg);
 
-      logUsage('BRAND GENERATED AI CATEGORIES', {user: user, query: query, categories: msg});
+      logUsage('BRAND GENERATED AI CATEGORIES', {user: {email: user?.email}, query: query, categories: msg});
   
       setCategories(msg);
       setMessage(`The influencers best suited for your product are: \n\n\n * ${msg[0]}\n * ${msg[1]}\n * ${msg[2]}`);

@@ -15,7 +15,7 @@ const logUsage = async (MESSAGE_TYPE: string, payload: any) => {
                 type: 'section',
                 text: {
                     type: 'mrkdwn',
-                    text: `*${MESSAGE_TYPE}*\n\n`,
+                    text: `*${MESSAGE_TYPE}* \n\n`,
                 },
             },
             {
@@ -23,12 +23,12 @@ const logUsage = async (MESSAGE_TYPE: string, payload: any) => {
                 fields: [
                     {
                         type: 'mrkdwn',
-                        text: `*User Email*: ${payload?.user?.email}`,
+                        text: `*User Email*: ${payload?.user?.email} \n\n`,
                     },
                     {
                         type: 'mrkdwn',
                         // eslint-disable-next-line no-template-curly-in-string
-                        text: `*Payload*: \`${JSON.stringify(payload)}\``,
+                        text: `*Payload*: \n \`${JSON.stringify(payload)}\``,
                     },
                 ],
             },

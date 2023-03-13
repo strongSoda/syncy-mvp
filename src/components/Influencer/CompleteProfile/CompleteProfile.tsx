@@ -20,7 +20,7 @@ const InfluencerCompleteProfile: React.FC = () => {
   const user = useContext(AuthContext);
 
   useEffect(() => {
-    logUsage('INFLUENCER VISITED COMPLETE PROFILE PAGE', {user: user});
+    logUsage('INFLUENCER VISITED COMPLETE PROFILE PAGE', {user: {email: user?.email}});
   }, [])
 
   return (

@@ -382,13 +382,17 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     setBody(body);
   };
 
-  const sendEmail = () => {
-    // emailjs send email
+  const sendEmail = async () => {
+    // get brand user profile
+    const brandUserProfile = await getBrandUserProfile();
 
+    // emailjs send email
     const templateParams = {
       to_name: influencer?.fullName,
       // todo: use email of influencer
       to_email: influencer?.email || influencer?.publicEmail || influencer?.mailFound,
+      brand_name: brandUserProfile?.company_name,
+      contact_name: brandUserProfile?.first_name + ' ' + brandUserProfile?.last_name,
     };
 
     emailjs.send('service_p835il9', 'template_adclu1d', templateParams, 'wo1FnANWwcN5Nav88')

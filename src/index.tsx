@@ -7,7 +7,6 @@ import AppRouter from 'components/AppRouter';
 import ThemeProvider from 'components/ThemeProvider';
 import GlobalStyles from 'global/themes/globalStyles';
 import { store } from 'store';
-import { MoralisProvider } from "react-moralis";
 
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from 'global/provider/AuthProvider';

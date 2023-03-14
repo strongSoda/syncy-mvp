@@ -57,7 +57,7 @@ const Login: React.FC = () => {
     // dispatch(setUser());
     dispatch(login());
     logUsage('INFLUENCER LOGIN', {user: values});
-    history.push(ROUTES.INFLUENCER.MESSAGES);
+    history.push(ROUTES.INFLUENCER.DASHBOARD);
     setLoading(false);
 
   } catch (error: any) {

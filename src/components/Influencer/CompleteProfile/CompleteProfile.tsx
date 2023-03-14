@@ -392,7 +392,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
       if(data.status === 'success') {
         toaster.success(data.message);
         
-        history.push(ROUTES.INFLUENCER.MESSAGES);
+        history.push(ROUTES.INFLUENCER.DASHBOARD);
         // todo: change tab
 
       } else {

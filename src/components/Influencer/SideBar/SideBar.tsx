@@ -23,17 +23,17 @@ declare interface ISideBarProps {
 
 const Links = [
   {
+    icon: Shop,
+    text: 'Dashboard',
+    id: 1,
+    path: ROUTES.INFLUENCER.DASHBOARD,
+  },
+  {
     icon: LightChat,
     text: 'Messages',
     id: 0,
     path: ROUTES.INFLUENCER.MESSAGES,
   },
-  // {
-  //   icon: Shop,
-  //   text: 'Campaigns',
-  //   id: 1,
-  //   path: ROUTES.INFLUENCER.CAMPAIGNS,
-  // },
   {
     icon: ProfileIcon,
     text: 'Profile',

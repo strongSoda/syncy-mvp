@@ -16,7 +16,7 @@ const ROUTES = {
   INFLUENCER: {
     LOGIN: '/influencer/login',
     REGISTER: '/influencer/register',
-    DISCOVER: '/influencer/discover',
+    DASHBOARD: '/influencer/dashboard',
     CAMPAIGNS: '/influencer/campaigns',
     COMPLETE_PROFILE: '/influencer/complete-profile',
     FORGOT_PASSWORD: '/influencer/forgot-password',

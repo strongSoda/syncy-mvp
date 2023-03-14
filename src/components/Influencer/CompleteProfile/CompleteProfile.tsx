@@ -78,7 +78,7 @@ function ProfileTabs() {
       </Pane>
       :
       <>
-      {profile && <SideBar lightColor={CSSVARIABLES.COLORS.BLUE_1} darkColor={CSSVARIABLES.COLORS.BLUE_0} />}
+      {profile && <SideBar lightColor={CSSVARIABLES.COLORS.PRIMARY_GREEEN_1} darkColor={CSSVARIABLES.COLORS.GREEN_0} />}
       <Pane height={120}>
       <h2 className='title'>Complete your profile</h2>
 

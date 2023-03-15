@@ -39,6 +39,17 @@ const InfluencerCompleteProfileWrapper = styled.div`
             margin-bottom: 1rem;
         }
     }
+
+    @media (max-width: 768px) {
+        .container {
+            width: 100vw;
+
+            .title {
+                font-size: 1.5em;
+                text-align: center;
+            }
+        }
+    }
 `;
 
 export default InfluencerCompleteProfileWrapper;

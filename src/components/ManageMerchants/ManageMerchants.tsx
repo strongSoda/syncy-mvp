@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
-import { Dialog, Pane, Table } from 'evergreen-ui';
+import { Dialog, Pane, Spinner, Table } from 'evergreen-ui';
 
 import storeImg from 'assets/images/McD.png';
 import reactangleImg from 'assets/images/rectangle.png';
@@ -49,6 +49,8 @@ const MerchantDetails: React.FC = () => {
   const [sort, setSort] = useState<any>(null);
   const [options, setOptions] = useState<any>(null);
 
+  const [chatLoading, setChatLoading] = useState<boolean>(false);
+
   useEffect(() => {
     logUsage('INFLUENCER VISITED MESSAGES PAGE', {user: {email: user?.email}});
   }, [])
@@ -89,8 +91,10 @@ const MerchantDetails: React.FC = () => {
         await updateChannelMembers(mapping?.channel_id)
       })
       
-      getUserToken(data?.data?.channelId)
+      await getUserToken(data?.data?.channelId)
     }
+
+    setChatLoading(false)
     // getUserToken(data?.data?.channelId);
   }
 
@@ -134,6 +138,7 @@ const MerchantDetails: React.FC = () => {
     console.log(user);
 
     if(user) {
+      setChatLoading(true)
       getBrandInfluencerChannelMap()
       // getUserToken()
     }
@@ -195,6 +200,12 @@ const MerchantDetails: React.FC = () => {
 
   return (
     <MerchantDetailsWrapper>
+      {chatLoading ? 
+      <Pane display="flex" alignItems="center" justifyContent="center" height="100vh">
+        <Spinner />
+      </Pane>
+      :
+      <>      
       {chatClient &&
         <Chat client={chatClient} theme="str-chat__theme-dark">
         {filters && sort && options &&
@@ -211,7 +222,10 @@ const MerchantDetails: React.FC = () => {
           </Channel>
           </div>
         }
-      </Chat>}
+      </Chat>
+      }
+      </>      
+      }
     </MerchantDetailsWrapper>
   );
 };

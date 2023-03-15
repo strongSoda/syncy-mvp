@@ -35,7 +35,7 @@ const InfluencerDashboardWrapper = styled.div`
     position: fixed;
     top: 0;
     right: 0;
-    width: 30vw;
+    width: 40vw;
     background-color: ${CSSVARIABLES.COLORS.WHITE_0};
     border-radius: 10px;
 
@@ -56,9 +56,9 @@ const InfluencerDashboardWrapper = styled.div`
 
     .profile-header {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-
+      flex-direction: row;
+      /* justify-content: space-between; */
+      /* align-items: center; */
       .actions {
         display: flex;
         gap: 2em;
@@ -67,8 +67,16 @@ const InfluencerDashboardWrapper = styled.div`
       margin-bottom: 1em;
     }
 
+    .container {
+      /* background: red; */
+      display: flex;
+      flex-direction: row;
+      gap: 1em;
+      align-items: center;
+    }
+
     .str-chat {
-      height: 80%;
+      height: 60%;
     }
 
     .send-email-btn {

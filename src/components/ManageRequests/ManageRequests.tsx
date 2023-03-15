@@ -20,8 +20,8 @@ import Syncy from '../../assets/images/syncy.png';
 import { CardWrapper, ManageRequestsWrapper } from './ManageRequests.styles';
 import { AgGridReact } from 'ag-grid-react';
 
-import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
-import 'ag-grid-community/styles/ag-theme-material.css'; // Optional theme CSS
+// import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
+// import 'ag-grid-community/styles/ag-theme-material.css'; // Optional theme CSS
 import INFLUENCERS from 'global/constants/infleuncers';
 
 import algoliasearch from 'algoliasearch/lite';
@@ -40,6 +40,7 @@ import {
 } from "stream-chat-react";
 
 import "stream-chat-react/dist/css/v2/index.css";
+
 import { AuthContext } from 'global/context/AuthContext';
 import API from 'global/constants/api';
 import createChat, { chatClient } from 'global/functions/create-chat';

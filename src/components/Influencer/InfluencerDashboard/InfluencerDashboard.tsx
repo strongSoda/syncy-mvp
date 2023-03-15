@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import SideBar from 'components/Influencer/SideBar/SideBar.lazy';
 
 import InfluencerDashboardWrapper from './InfluencerDashboard.styles';
@@ -9,7 +9,6 @@ import { Avatar, Heading, Pane, Paragraph, Spinner } from 'evergreen-ui';
 
 import EyeIcon from '../../../assets/icons/eye.svg';
 import EmailIcon from '../../../assets/icons/email.svg';
-import { CardWrapper } from 'components/ManageRequests/ManageRequests.styles';
 import { useHistory } from 'react-router';
 import ROUTES from 'global/constants/routes';
 import logUsage from 'global/functions/usage-logs';
@@ -17,6 +16,11 @@ import logUsage from 'global/functions/usage-logs';
 // import SaveIcon from '../../assets/icons/save.svg';
 // import loadingGif from '../../assets/images/loading.gif';
 import Syncy from '../../../assets/images/syncy.png';
+import createChat, { chatClient } from 'global/functions/create-chat';
+import { Channel, ChannelHeader, Chat, MessageInput, MessageList, Thread, Window } from 'stream-chat-react';
+import "stream-chat-react/dist/css/v2/index.css";
+
+import { CardWrapper } from 'components/ManageRequests/ManageRequests.styles';
 
 // declare interface IInfluencerDashboardProps {}
 
@@ -103,12 +107,6 @@ interface ICardProps {
 }
 
 const Card: React.FC<ICardProps> = ({invite, setShowBrandProfile, setSelectedInvite}: ICardProps) => {
-  const history = useHistory();
-
-  useEffect(() => {
-    console.log('invite', invite);
-  }, [invite]);
-
   return (
   <CardWrapper data-testid="Card">
     <Avatar src={invite?.companyLogo} alt="profile" size={80} name={invite?.fullName} />
@@ -124,10 +122,6 @@ const Card: React.FC<ICardProps> = ({invite, setShowBrandProfile, setSelectedInv
             // logUsage('InfluencerDashboard', 'VIEW Brand Profile');
             setShowBrandProfile(true);
             setSelectedInvite(invite);
-          } } />
-          <img className='icon' src={EmailIcon} alt="eye" onClick={() => {
-            // go to Messages route and pass invite channel id
-            // history.push(ROUTES.INFLUENCER.MESSAGES + '?invite=' + invite?.channelId)
           } } />
           {/* <img className='icon' src={SaveIcon} alt="eye" /> */}
         </div>
@@ -151,31 +145,133 @@ declare interface IBrandProfileProps {
 const BrandProfile: React.FC<IBrandProfileProps> = ({brand, setShowBrandProfile}: IBrandProfileProps) => {
 
   const user = useContext(AuthContext)
+  const [channel, setChannel] = useState<any>(null);
+  const [filters, setFilters] = useState<any>(null);
+  const [sort, setSort] = useState<any>(null);
+  const [options, setOptions] = useState<any>(null);
+
+  const [loadingChat, setLoadingChat] = useState(false);
+
+  const getProfile = async () => {
+    // setFetchingProfile(true);
+    try {
+      const res = await fetch(`${API}/influencer-profile?email=${user?.email}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await res.json();
+      console.log(data);
+      const profile = data?.data
+      return profile;
+      // setLoading(false);
+      // setFetchingProfile(false);
+    } catch (error: any) {
+      console.error(error);
+      const errorCode = error?.code;
+      const errorMessage = error?.message;
+      // setFetchingProfile(false);
+    }      
+  }
 
   useEffect(() => {
-    if(brand) {
-      console.log('brand', brand);
-      // logUsage('INFLUENCER VIEW BRAND PROFILE', { user: {email: user?.email}, brand: brand?.brandName });
+    console.log('brand', brand?.channelId);
+    if(brand?.channelId) {
+      setLoadingChat(true);
+      console.log('here');
+      getUserToken(brand?.channelId);
     }
   }, [brand]);
+
+  const updateChannelMembers = async (channelId: string) => {
+    console.log('updateChannelMembers', channelId);
+    // /stream-chat-update-channel-members
+    const response = await fetch(`${API}/stream-chat-update-channel-members?email=${user?.email}&userId=${user?.uid}&channelId=${channelId}`)
+    const data = await response.json();
+    console.log(data, data?.data?.token);
+  }
+
+
+  const getUserToken = async (channelId: string) => {
+    console.log('getUserToken', channelId);
+    
+    const influencerProfile = await getProfile();
+
+    await updateChannelMembers(channelId)
+
+    // /stream-chat-token
+    const response = await fetch(`${API}/stream-chat-token?uid=${user?.uid}`)
+    const data = await response.json();
+    console.log(data, data?.data?.token);
+
+    // setUserToken(data?.data?.token);
+
+    const user1 = {email: user?.email, id: user?.uid, fullName: influencerProfile?.first_name + influencerProfile?.last_name, imageUrl: influencerProfile?.image_url}
+    const user2 = {fullName: brand?.brandName, imageUrl: brand?.companyLogo}
+    
+    const {channel, chatClient} = createChat(data?.data?.token, user1, user2, brand?.channelId);
+
+    // wait for 3 seconds
+    // await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    setChannel(channel);
+    // setChatClient(chatClient);
+    
+    const filters = { members: { $in: [ user1?.id ] } }
+    const sort = { last_message_at: -1 };
+    const options = { limit: 10 }
+
+    setFilters(filters);
+    setSort(sort);
+    setOptions(options);
+
+    setLoadingChat(false);
+    console.log('channel', channel?.id, channel?.cid, channel?.data?.id);
+  }
+
 
   return (
     <div className='brand-profile'>
       
       <div className='profile-header'>
       {/* cross icon to close sidebar on click */}
-      <img className='cross-icon' src='https://www.svgimages.com/svg-image/s3/close-icon-256x256.png' alt="cross" onClick={() => setShowBrandProfile(false) } />
+        <img className='cross-icon' src='https://www.svgimages.com/svg-image/s3/close-icon-256x256.png' alt="cross" onClick={() => setShowBrandProfile(false) } />
+      </div>
+      <div className='container'>  
+        <Avatar src={brand?.companyLogo} alt="profile" name={brand?.brandName} size={80} />
+        <div className='profile-info'>
+          <h1 className='name'>{brand?.brandName}</h1>
+          <p className='bio'>{brand?.companyDescription}</p>
+          <p className='bio'>Contacted by: {brand?.contactName}</p>
+          <a className='website' href={brand?.companyWebsite} target="_blank" rel='noreferrer'>{brand?.companyWebsite}</a>
+        </div>
       </div>
 
       {/* <iframe title={influencer?.fullName} src={`${influencer?.profileUrl ? influencer?.profileUrl : `https://www.instagram.com/${influencer?.instagram_username}/` }embed`} name="myiFrame" scrolling="yes" frameBorder="0" height="900" width="100%" allowFullScreen={true}></iframe> */}
       {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
-      <div className='container'>  
-        <Avatar src={brand?.companyLogo} alt="profile" name={brand?.brandName} size={80} />
-        <h1 className='name'>{brand?.brandName}</h1>
-        <p className='bio'>{brand?.companyDescription}</p>
-        <p className='bio'>Contacted by: {brand?.contactName}</p>
-        <a className='website' href={brand?.companyWebsite} target="_blank" rel='noreferrer'>{brand?.companyWebsite}</a>
-      </div>      
+
+      {loadingChat ?
+      <Pane display="flex" alignItems="center" justifyContent="center" height={400}>
+        <Spinner />
+      </Pane>
+      :
+      <>
+      {channel && chatClient && filters && sort && options &&
+        <Chat client={chatClient} theme="str-chat__theme-dark">
+        {/* <ChannelList showChannelSearch filters={filters} sort={sort} options={options} Preview={CustomPreview} /> */}
+        <Channel channel={channel}>
+          <Window>
+            <ChannelHeader />
+            <MessageList />
+            <MessageInput />
+          </Window>
+          <Thread />
+        </Channel>
+        </Chat>
+        }
+      </>
+      }
     </div>
   );
 }

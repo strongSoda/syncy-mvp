@@ -168,6 +168,34 @@ const InfluencerDashboardWrapper = styled.div`
         }
 
       }
+    }
+  }
+
+  @media only screen and (max-width: 768px) {
+    margin-left: 0;
+    padding: 0;
+    /* overflow-x: hidden; */
+    /* background: yellow !important; */
+
+    /* width: 80%; */
+
+    * {
+      /* outline: 2px solid red; */
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .invite {
+      width: 100%;
+    }
+
+    .brand-profile {
+      width: 80%;
+      padding: 2em;
+    }
+  }
 `;
 
 export default InfluencerDashboardWrapper;

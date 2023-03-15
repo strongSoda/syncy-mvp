@@ -310,6 +310,16 @@ const CardWrapper = styled.div`
     font-weight: bold;
     font-size: 16px;
   }
+
+  @media only screen and (max-width: 768px) {
+    width: 80%;
+    margin: 10px auto;
+
+    .card-body {
+      /* width: 80%; */
+    }
+  }
+
 `;
 
 export { ManageRequestsWrapper, CardWrapper };

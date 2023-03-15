@@ -81,6 +81,10 @@ const SideBarWrapper = styled.div`
       font-weight: ${CSSVARIABLES.SIDEBAR.LINK.WEIGHT};
     }
   }
+
+  @media only screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export default SideBarWrapper;

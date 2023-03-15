@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
 import CSSVARIABLES from 'global/constants/variables';
@@ -18,6 +17,15 @@ const ManageMerchantsWrapper = styled.div`
     padding-left: 22.35em;
     /* width: fit-content; */
     /* background-color: #17191c; */
+  }
+
+  @media only screen and (max-width: 768px) {
+    margin-left: 0;
+    /* background: yellow !important; */
+
+    .content {
+      padding-left: 0;
+    }
   }
 `;
 

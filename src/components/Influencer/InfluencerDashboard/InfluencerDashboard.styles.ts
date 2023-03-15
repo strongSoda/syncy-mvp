@@ -194,7 +194,13 @@ const InfluencerDashboardWrapper = styled.div`
     .brand-profile {
       width: 80%;
       padding: 2em;
+
+      .str-chat {
+        height: 50%;
+        margin-bottom: 3em;
+      }
     }
+
   }
 `;
 

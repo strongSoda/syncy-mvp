@@ -8,11 +8,11 @@ import { AuthContext } from 'global/context/AuthContext';
 import { Avatar, Heading, Pane, Paragraph, Spinner } from 'evergreen-ui';
 
 import EyeIcon from '../../../assets/icons/eye.svg';
-import EmailIcon from '../../../assets/icons/email.svg';
+// import EmailIcon from '../../../assets/icons/email.svg';
 import { useHistory } from 'react-router';
 import ROUTES from 'global/constants/routes';
 import logUsage from 'global/functions/usage-logs';
-// import PhoneIcon from '../../assets/icons/phone.svg';
+import PhoneIcon from '../../../assets/icons/phone.svg';
 // import SaveIcon from '../../assets/icons/save.svg';
 // import loadingGif from '../../assets/images/loading.gif';
 import Syncy from '../../../assets/images/syncy.png';
@@ -21,6 +21,8 @@ import { Channel, ChannelHeader, Chat, MessageInput, MessageList, Thread, Window
 import "stream-chat-react/dist/css/v2/index.css";
 
 import { CardWrapper } from 'components/ManageRequests/ManageRequests.styles';
+import getInfluencerProfile from 'global/functions/get-influencer-profile';
+import formatNumber from 'global/functions/formatFollowers';
 
 // declare interface IInfluencerDashboardProps {}
 
@@ -32,6 +34,7 @@ const InfluencerDashboard: React.FC = () => {
   const [invites, setInvites] = React.useState<any[]>([]);
 
   const [showBrandProfile, setShowBrandProfile] = React.useState(false);
+  const [showBookCall, setShowBookCall] = React.useState(false);
   const [selectedInvite, setSelectedInvite] = React.useState<any>(null);
 
   // get invites by influencer email
@@ -85,7 +88,7 @@ const InfluencerDashboard: React.FC = () => {
         {invites?.length > 0 ?
           <div>
             {invites?.map((invite: any) => (
-              <Card invite={invite} setSelectedInvite={setSelectedInvite} setShowBrandProfile={setShowBrandProfile} />
+              <Card invite={invite} setSelectedInvite={setSelectedInvite} setShowBrandProfile={setShowBrandProfile} setShowBookCall={setShowBookCall} />
             ))}
           </div>
         :
@@ -97,6 +100,7 @@ const InfluencerDashboard: React.FC = () => {
     }
 
   {showBrandProfile && <BrandProfile brand={selectedInvite} setShowBrandProfile={setShowBrandProfile} />}
+  {showBookCall && <BookCall brand={selectedInvite} setShowBookCall={setShowBookCall} />}
   </InfluencerDashboardWrapper>
 )};
 
@@ -104,9 +108,10 @@ interface ICardProps {
   invite: any;
   setShowBrandProfile: any;
   setSelectedInvite: any;
+  setShowBookCall: any;
 }
 
-const Card: React.FC<ICardProps> = ({invite, setShowBrandProfile, setSelectedInvite}: ICardProps) => {
+const Card: React.FC<ICardProps> = ({invite, setShowBrandProfile, setSelectedInvite, setShowBookCall }) => {
   return (
   <CardWrapper data-testid="Card">
     <Avatar src={invite?.companyLogo} alt="profile" size={80} name={invite?.fullName} />
@@ -117,7 +122,10 @@ const Card: React.FC<ICardProps> = ({invite, setShowBrandProfile, setSelectedInv
           {/* <Paragraph>{invite?.contactName}</Paragraph> */}
         </p>
         <div className='actions'>          
-          {/* {invite?.bookCallInfo && <img className='icon' src={PhoneIcon} alt="eye" onClick={() => setShowBookCall(true) } />} */}
+          {invite?.bookCallInfo && <img className='icon' src={PhoneIcon} alt="eye" onClick={() => {
+            setSelectedInvite(invite);
+            setShowBookCall(true)} 
+          } />}
           <img className='icon' src={EyeIcon} alt="eye" onClick={() => {
             // logUsage('InfluencerDashboard', 'VIEW Brand Profile');
             setShowBrandProfile(true);
@@ -152,29 +160,6 @@ const BrandProfile: React.FC<IBrandProfileProps> = ({brand, setShowBrandProfile}
 
   const [loadingChat, setLoadingChat] = useState(false);
 
-  const getProfile = async () => {
-    // setFetchingProfile(true);
-    try {
-      const res = await fetch(`${API}/influencer-profile?email=${user?.email}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await res.json();
-      console.log(data);
-      const profile = data?.data
-      return profile;
-      // setLoading(false);
-      // setFetchingProfile(false);
-    } catch (error: any) {
-      console.error(error);
-      const errorCode = error?.code;
-      const errorMessage = error?.message;
-      // setFetchingProfile(false);
-    }      
-  }
-
   useEffect(() => {
     console.log('brand', brand?.channelId);
     if(brand?.channelId) {
@@ -196,7 +181,7 @@ const BrandProfile: React.FC<IBrandProfileProps> = ({brand, setShowBrandProfile}
   const getUserToken = async (channelId: string) => {
     console.log('getUserToken', channelId);
     
-    const influencerProfile = await getProfile();
+    const influencerProfile = await getInfluencerProfile(user?.email as string);
 
     await updateChannelMembers(channelId)
 
@@ -271,6 +256,62 @@ const BrandProfile: React.FC<IBrandProfileProps> = ({brand, setShowBrandProfile}
         </Chat>
         }
       </>
+      }
+    </div>
+  );
+}
+
+interface IBookCallProps {
+  brand: any;
+  setShowBookCall: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const BookCall: React.FC<IBookCallProps> = ({brand, setShowBookCall}: IBookCallProps) => {
+
+  const user = useContext(AuthContext);
+  const [influencerUserProfile, setInfluencerUserProfile] = useState<any>(null);
+
+  const getProfile = async () => {
+    // /brand_user_profile
+    const profile = await getInfluencerProfile(user?.email as string);
+    console.log('influencer_profile', profile);
+    setInfluencerUserProfile(profile);
+  }
+
+  useEffect(() => {
+    getProfile();
+    logUsage('BRAND BOOK CALL BUTTON CLICKED', {user: {email: user?.email}, brand: brand?.brandName});
+  },[])
+
+  return (
+    <div className='brand-profile'>
+      {/* cross icon to close sidebar on click */}
+      <img className='cross-icon' src='https://www.svgimages.com/svg-image/s3/close-icon-256x256.png' alt="cross" onClick={() => setShowBookCall(false) } />
+
+      {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
+      <div className='container'>  
+        <Avatar src={brand?.companyLogo} alt="profile" name={brand?.brandName} size={80} />
+          
+        <div>
+          <h1 className='name'>{brand?.brandName}</h1>
+          <p className='bio'>{brand?.companyDescription}</p>
+          <p className='bio'>Contacted by: {brand?.contactName}</p>
+          <a className='website' href={brand?.companyWebsite} target="_blank" rel='noreferrer'>{brand?.companyWebsite}</a>
+        </div>
+        {/* <p className='followers'>Followers: {formatNumber(brand?.followersCount)}</p> */}
+        {/* <p className='bio'>{influencer?.imageUrl}</p> */}
+
+        {/* calednly iframe */}
+      </div>      
+      {influencerUserProfile ? 
+        <iframe title={brand?.brandName} 
+        src={`${brand?.bookCallInfo}?email=${user?.email}&name=${influencerUserProfile?.first_name} ${influencerUserProfile?.last_name}&guests=assistant@syncy.net`} 
+        width="100%" height="1000px" frameBorder="0">
+        </iframe> 
+      :
+      <Pane display="flex" alignItems="center" justifyContent="center" height="100vh">
+        <Spinner />
+      </Pane>
       }
     </div>
   );

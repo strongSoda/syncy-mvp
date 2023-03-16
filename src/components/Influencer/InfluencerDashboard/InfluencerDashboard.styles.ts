@@ -6,6 +6,15 @@ const InfluencerDashboardWrapper = styled.div`
   margin-left: ${CSSVARIABLES.LAYOUT.PRIMARY.MARGIN_LEFT};
   padding: ${CSSVARIABLES.LAYOUT.PRIMARY.PADDING};
 
+  .toggleBtn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+
+    display: none;
+  }
+
   .invite {
     
     width: 40%;
@@ -185,6 +194,10 @@ const InfluencerDashboardWrapper = styled.div`
 
     h1 {
       text-align: center;
+    }
+
+    .toggleBtn {
+      display: block;
     }
 
     .invite {

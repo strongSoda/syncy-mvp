@@ -65,7 +65,7 @@ const SideBar: React.FC<ISideBarProps> = ({ lightColor, darkColor }: ISideBarPro
   }, [])
 
   return (
-  <SideBarWrapper data-testid="SideBar" lightColor={lightColor} darkColor={darkColor}>
+  <SideBarWrapper id="Sidebar" data-testid="SideBar" lightColor={lightColor} darkColor={darkColor}>
     <div className="top-section">
       <p className="title">SYNCY</p>
       {Links.map((Link) => (

@@ -24,6 +24,10 @@ import { CardWrapper } from 'components/ManageRequests/ManageRequests.styles';
 import getInfluencerProfile from 'global/functions/get-influencer-profile';
 import formatNumber from 'global/functions/formatFollowers';
 
+import { Spin as Hamburger } from 'hamburger-react'
+
+// import { useMediaQuery } from 'react-responsive';
+
 // declare interface IInfluencerDashboardProps {}
 
 const InfluencerDashboard: React.FC = () => {
@@ -36,6 +40,8 @@ const InfluencerDashboard: React.FC = () => {
   const [showBrandProfile, setShowBrandProfile] = React.useState(false);
   const [showBookCall, setShowBookCall] = React.useState(false);
   const [selectedInvite, setSelectedInvite] = React.useState<any>(null);
+  
+  const [isOpen, setOpen] = useState(true)
 
   // get invites by influencer email
   const getInvites = async () => {
@@ -62,7 +68,11 @@ const InfluencerDashboard: React.FC = () => {
 
   return (
   <InfluencerDashboardWrapper data-testid="InfluencerDashboard">
-    <Pane display="flex" padding={16} background={CSSVARIABLES.COLORS.YELLOW_GREEN_1} borderRadius={3}>
+    <div className='toggleBtn'>
+      <Hamburger toggled={isOpen} toggle={(setOpen)} />
+    </div>
+
+    <Pane display="flex" padding={36} background={CSSVARIABLES.COLORS.YELLOW_GREEN_1} borderRadius={3}>
       <img src={Syncy} alt="Syncy" width="50" height="50" />
       <Pane>
         <Heading size={800} flex={1} alignItems="center" display="flex">
@@ -76,7 +86,8 @@ const InfluencerDashboard: React.FC = () => {
       </Pane>
     </Pane>
     
-    <SideBar lightColor={CSSVARIABLES.COLORS.PURPLE_1} darkColor={CSSVARIABLES.COLORS.PURPLE_2} />
+    {isOpen && <SideBar lightColor={CSSVARIABLES.COLORS.PURPLE_1} darkColor={CSSVARIABLES.COLORS.PURPLE_2} />}
+  
     <h1>Campaign Invites</h1>
 
     {loading ? 

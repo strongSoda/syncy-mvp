@@ -31,6 +31,7 @@ const BrandCompleteProfile: React.FC = () => {
   const [companyEmail, setCompanyEmail] = useState('');
   const [companyInstagram, setCompanyInstagram] = useState('');
   const [companyLinkedin, setCompanyLinkedin] = useState('');
+  const [bookCallInfo, setBookCallInfo] = useState('');
 
   const user = useContext(AuthContext);
   
@@ -57,6 +58,7 @@ const BrandCompleteProfile: React.FC = () => {
       companyInstagram: companyInstagram,
       companyLinkedin: companyLinkedin,
       email: user?.email,
+      bookCallInfo: bookCallInfo,
       // companySocialMediaLinks: '',
     },
     validationSchema: Yup.object({
@@ -83,6 +85,7 @@ const BrandCompleteProfile: React.FC = () => {
             /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
             'Invalid url!'
         ).required('Required'),
+      bookCallInfo: Yup.string(),
     }),
 
     onSubmit: async (values: any) => {
@@ -152,6 +155,7 @@ const BrandCompleteProfile: React.FC = () => {
       setCompanyEmail(profile?.company_email);
       setCompanyInstagram(profile?.company_instagram);
       setCompanyLinkedin(profile?.company_linkedin);
+      setBookCallInfo(profile?.book_call_info);
 
       // setLoading(false);
       setFetchingProfile(false);
@@ -243,6 +247,19 @@ const BrandCompleteProfile: React.FC = () => {
               // description="This is a description."
               value={formik.values.companyWebsite}
               onChange={(e: any) => formik.setFieldValue('companyWebsite', e.target.value)}
+            />
+          </FormField>
+
+          {Error && <p className="error">{Error}</p>}
+          {formik.touched.bookCallInfo && formik.errors.bookCallInfo ? ( <div>{formik.errors.bookCallInfo}</div> ) : null}
+          <FormField>
+            <TextInputField
+              name='bookCallInfo'
+              label="Link to book a 30-minute call with you (Calendly etc.)"
+              // required
+              // description="This is a description."
+              value={formik.values.bookCallInfo}
+              onChange={(e: any) => formik.setFieldValue('bookCallInfo', e.target.value)}
             />
           </FormField>
 

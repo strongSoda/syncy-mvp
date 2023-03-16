@@ -213,7 +213,7 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
   const [showReachout, setShowReachout] = useState(false);
 
     const fixProfileUrl = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/?imageUrl=${hit?.imageUrl}&username=${hit?.fullName}}`, {
+    const res = await fetch(`http://127.0.0.1:8000/imageUpload?imageUrl=${hit?.imageUrl}&username=${hit?.fullName}}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -227,7 +227,7 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
 
     console.log(data);
     
-    const resp = await fetch(`http://127.0.0.1:5000/update-algolia?url=${data?.url}&objectID=${hit?.objectID}}`, {
+    const resp = await fetch(`http://127.0.0.1:8000/update-algolia?url=${data?.url}&objectID=${hit?.objectID}}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

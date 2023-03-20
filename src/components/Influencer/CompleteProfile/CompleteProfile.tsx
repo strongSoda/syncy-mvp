@@ -217,7 +217,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       const res = await fetch('https://api.imgur.com/3/image', {
         method: 'POST',
         headers: {
-          Authorization: `Client-ID ${process.env.IMGUR_CLIENT_ID}`,
+          Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}`,
         },
         body: formData,
       });
@@ -419,7 +419,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
     },
     validationSchema: Yup.object({
       username: Yup.string().required('Required'),
-      rate: Yup.number().required('Required'),
+      rate: Yup.number(),
       followersCount: Yup.string(),
       category: Yup.string(),
       hashtags: Yup.string(),
@@ -511,7 +511,6 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
           type="number"
           name='rate'
           label="Rate Per Post ($)"
-          required
           // description="This is a description."
           value={formik.values.rate}
           onChange={(e: any) => formik.setFieldValue('rate', e.target.value)}

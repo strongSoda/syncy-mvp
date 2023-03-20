@@ -338,7 +338,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       <FormField>
         <TextInputField
           name='bookCallInfo'
-          label="Link to book a 30-minute call with you (Calendly etc.)"
+          label="Link to book a call with you (Calendly etc.)"
           required
           // description="This is a description."
           value={formik.values.bookCallInfo}

@@ -160,12 +160,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
   const [city, setCity] = useState(profile?.city || '');
   const [bookCallInfo, setBookCallInfo] = useState(profile?.calender_url || '');
 
-  const [files, setFiles] = React.useState<any>(profile?.image_url ?  [{
-        source: profile?.image_url || '',
-        options: {
-          type: 'png',
-        },
-      }]: [])
+  const [files, setFiles] = React.useState<any>([])
   const [fileRejections, setFileRejections] = React.useState<any>([])
   const handleChange = React.useCallback((files) => setFiles([files[0]]), [])
   const handleRejected = React.useCallback((fileRejections) => setFileRejections([fileRejections[0]]), [])

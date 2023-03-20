@@ -1,11 +1,12 @@
 import SideBar from 'components/Influencer/SideBar/SideBar.lazy';
-import { Alert, Button, FormField, Pane, Paragraph, Spinner, Tab, Tablist, TextInputField, toaster } from 'evergreen-ui';
+import { Alert, Button, FormField, Pane, Paragraph, Spinner, Tab, Tablist, TextInputField, toaster, FileUploader, FileCard } from 'evergreen-ui';
 import { useFormik } from 'formik';
 import API from 'global/constants/api';
 import ROUTES from 'global/constants/routes';
 import CSSVARIABLES from 'global/constants/variables';
 import { AuthContext } from 'global/context/AuthContext';
 import logUsage from 'global/functions/usage-logs';
+import Hamburger from 'hamburger-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import * as Yup from "yup";
@@ -41,6 +42,8 @@ function ProfileTabs() {
 
   const [profile, setProfile] = useState<any>(null);
 
+  const [isOpen, setOpen] = useState(true)
+
   const getProfile = async () => {
     setFetchingProfile(true);
     try {
@@ -72,13 +75,17 @@ function ProfileTabs() {
 
   return (
   <>
+    <div className='toggleBtn'>
+      <Hamburger toggled={isOpen} toggle={(setOpen)} />
+    </div>
+
     {fetchingProfile ? 
       <Pane display="flex" alignItems="center" justifyContent="center" height={400}>
         <Spinner />
       </Pane>
       :
       <>
-      {profile && <SideBar lightColor={CSSVARIABLES.COLORS.PRIMARY_GREEEN_1} darkColor={CSSVARIABLES.COLORS.GREEN_0} />}
+      {profile && isOpen && <SideBar lightColor={CSSVARIABLES.COLORS.PRIMARY_GREEEN_1} darkColor={CSSVARIABLES.COLORS.GREEN_0} />}
       <Pane height={120}>
       <h2 className='title'>Complete your profile</h2>
 
@@ -153,6 +160,19 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
   const [city, setCity] = useState(profile?.city || '');
   const [bookCallInfo, setBookCallInfo] = useState(profile?.calender_url || '');
 
+  const [files, setFiles] = React.useState<any>(imageUrl ?  [{
+        source: profile?.image_url || '',
+        options: {
+          type: 'local',
+        },
+      }]: [])
+  const [fileRejections, setFileRejections] = React.useState<any>([])
+  const handleChange = React.useCallback((files) => setFiles([files[0]]), [])
+  const handleRejected = React.useCallback((fileRejections) => setFileRejections([fileRejections[0]]), [])
+  const handleRemove = React.useCallback(() => {
+    setFiles([])
+    setFileRejections([])
+  }, [])
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -171,7 +191,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       lastName: Yup.string().required('Required'),
       bio: Yup.string().required('Required'),
       city: Yup.string().required('Required'),
-      imageUrl: Yup.string().required('Required'),
+      imageUrl: Yup.string(),
       email: Yup.string().email('Invalid email address'),
       bookCallInfo: Yup.string().required('Required'),
     }),
@@ -189,12 +209,47 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
     },
   });
 
+  // upload profile image to imgur
+  const uploadImage = async (file: any) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    try {
+      const res = await fetch('https://api.imgur.com/3/image', {
+        method: 'POST',
+        headers: {
+          Authorization: `Client-ID ${process.env.IMGUR_CLIENT_ID}`,
+        },
+        body: formData,
+      });
+      const data = await res.json();
+
+      if(data?.success) {
+        const imageUrl = data?.data?.link;
+        formik.setFieldValue('imageUrl', imageUrl);
+      } else {
+        toaster.danger("Can't upload image. Please try again later.");
+      }
+    }
+    catch (error: any) {
+      console.error(error);
+      const errorCode = error?.code;
+      const errorMessage = error?.message;
+      console.log(error);
+      toaster.danger("Can't upload image. Please try again later.");
+    }
+  }
+
   const saveProfile = async (values: any) => {
     console.log('here');
     
     try {
       console.log('now here');
-      
+
+      // upload image to imgur
+      if(files?.length > 0) {
+        await uploadImage(files[0]);
+      }
+
       const res = await fetch(`${API}/influencer-profile-personal`, {
         method: 'POST',
         headers: {
@@ -279,19 +334,6 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       </FormField>
 
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.imageUrl && formik.errors.imageUrl ? ( <div>{formik.errors.imageUrl}</div> ) : null}
-      <FormField>
-        <TextInputField
-          name='imageUrl'
-          label="Profile Image Url"
-          required
-          // description="This is a description."
-          value={formik.values.imageUrl}
-          onChange={(e: any) => formik.setFieldValue('imageUrl', e.target.value)}
-        />
-      </FormField>
-
-      {Error && <p className="error">{Error}</p>}
       {formik.touched.bookCallInfo && formik.errors.bookCallInfo ? ( <div>{formik.errors.bookCallInfo}</div> ) : null}
       <FormField>
         <TextInputField
@@ -303,6 +345,32 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
           onChange={(e: any) => formik.setFieldValue('bookCallInfo', e.target.value)}
         />
       </FormField>
+
+      <FileUploader
+        label="Upload Profile Image"
+        description="You can upload 1 file. File can be up to 50 MB."
+        maxSizeInBytes={50 * 1024 ** 2}
+        maxFiles={1}
+        onChange={handleChange}
+        onRejected={handleRejected}
+        renderFile={(file: any) => {
+          const { name, size, type } = file
+          const fileRejection = fileRejections.find((fileRejection: any) => fileRejection.file === file)
+          const { message } = fileRejection || {}
+          return (
+            <FileCard
+              key={name}
+              isInvalid={fileRejection != null}
+              name={name}
+              onRemove={handleRemove}
+              sizeInBytes={size}
+              type={type}
+              validationMessage={message}
+            />
+          )
+        }}
+        values={files}
+      />
 
       {/* Submit Button */}
       <input type="submit" value={loading ? 'loading...' : 'Save 👉'} />

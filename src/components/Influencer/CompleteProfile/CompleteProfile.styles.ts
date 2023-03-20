@@ -5,6 +5,15 @@ import styled from 'styled-components';
 const InfluencerCompleteProfileWrapper = styled.div`
     /* margin-left: ${CSSVARIABLES.LAYOUT.PRIMARY.MARGIN_LEFT}; */
 
+    .toggleBtn {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
+
+        display: none;
+    }
+
     .container {
         width: 40vw;
         margin: 0 auto;
@@ -41,11 +50,14 @@ const InfluencerCompleteProfileWrapper = styled.div`
     }
 
     @media (max-width: 768px) {
+        .toggleBtn {
+            display: block;
+        }
         .container {
             width: 100vw;
 
             .title {
-                font-size: 1.5em;
+                /* font-size: 0.6em; */
                 text-align: center;
             }
         }

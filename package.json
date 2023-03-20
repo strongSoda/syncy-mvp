@@ -39,7 +39,7 @@
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-testing-library": "^3.10.2",
-    "evergreen-ui": "^6.4.0",
+    "evergreen-ui": "^7.1.4",
     "firebase": "^9.17.1",
     "formik": "^2.2.9",
     "framer-motion": "^4.1.17",

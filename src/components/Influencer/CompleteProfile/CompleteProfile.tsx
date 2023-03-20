@@ -226,7 +226,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       if(data?.success) {
         console.log('imageUrl: ', data);
         const imageUrl = data?.data?.link;
-        formik.setFieldValue('imageUrl', imageUrl);
+        formik.setFieldValue('imageUrl', data?.data?.link);
       } else {
         toaster.danger("Can't upload image. Please try again later.");
       }

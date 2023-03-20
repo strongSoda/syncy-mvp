@@ -223,6 +223,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
         const imageUrl = data?.data?.link;
         setImageUrl(imageUrl);
         formik.setFieldValue('imageUrl', data?.data?.link);
+        return data?.data?.link
       } else {
         toaster.danger("Can't upload image. Please try again later.");
       }
@@ -244,9 +245,9 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
 
       // upload image to imgur
       if(files?.length > 0) {
-        await uploadImage(files[0]);
-        console.log('imageUrl: ', values.imageUrl);
-        values.imageUrl = imageUrl;
+        const link = await uploadImage(files[0]);
+        console.log('imageUrl: ', values.imageUrl, link);
+        values.imageUrl = link;
       }
 
       const res = await fetch(`${API}/influencer-profile-personal`, {

@@ -5,7 +5,7 @@ import InfluencerDashboardWrapper from './InfluencerDashboard.styles';
 import CSSVARIABLES from 'global/constants/variables';
 import API from 'global/constants/api';
 import { AuthContext } from 'global/context/AuthContext';
-import { Avatar, Heading, Pane, Paragraph, Spinner } from 'evergreen-ui';
+import { Avatar, Button, Heading, Pane, Paragraph, Spinner, toaster } from 'evergreen-ui';
 
 import EyeIcon from '../../../assets/icons/eye.svg';
 // import EmailIcon from '../../../assets/icons/email.svg';
@@ -25,6 +25,7 @@ import getInfluencerProfile from 'global/functions/get-influencer-profile';
 import formatNumber from 'global/functions/formatFollowers';
 
 import { Spin as Hamburger } from 'hamburger-react'
+// import Button from 'components/Button/Button.lazy';
 
 // import { useMediaQuery } from 'react-responsive';
 
@@ -34,7 +35,10 @@ const InfluencerDashboard: React.FC = () => {
   
   const user = useContext(AuthContext)
 
+  const [campaignsLoading, setCampaignsLoading] = useState(true);
+  const [campaigns, setCampaigns] = useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const [applyLoading, setApplyLoading] = React.useState(false);
   const [invites, setInvites] = React.useState<any[]>([]);
 
   const [showBrandProfile, setShowBrandProfile] = React.useState(false);
@@ -59,11 +63,52 @@ const InfluencerDashboard: React.FC = () => {
     }
   }
 
+  const getCampaigns = async () => {
+    try {
+      setCampaignsLoading(true);
+      // /influencer-invites
+      const response = await fetch(`${API}/admin/campaigns`)
+      const data = await response.json();
+      console.log('campaigns', data);
+      setCampaigns(data?.body?.campaigns);
+      setCampaignsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setCampaignsLoading(false);
+    }
+  }
+
+  const sendProposal = async (campaignId: any) => {
+    setApplyLoading(true);
+    try {
+      const res = await fetch(`${API}/campaign/apply?campaignId=${campaignId}&email=${user?.email}`)
+      const data = await res.json();
+  
+      console.log('sendProposal', data);
+  
+      if(data?.status === 'success') {
+        toaster.success('Proposal sent successfully');
+      }
+    }
+    catch (error) {
+      console.log(error);
+      toaster.danger('Error sending proposal');
+    }
+    finally {
+      setApplyLoading(false);
+    }
+  }
+
+
   useEffect(() => {
     if(user?.email) {
       getInvites();
     }
   }, [user])
+
+  useEffect(() => {
+    getCampaigns();
+  }, [])
 
 
   return (
@@ -88,27 +133,68 @@ const InfluencerDashboard: React.FC = () => {
     
     {isOpen && <SideBar lightColor={CSSVARIABLES.COLORS.PURPLE_1} darkColor={CSSVARIABLES.COLORS.PURPLE_2} />}
   
-    <h1>Campaign Invites</h1>
 
     {loading ? 
       <Pane display="flex" alignItems="center" justifyContent="center" height={400}>
         <Spinner />
       </Pane>
     :
-      <>
-        {invites?.length > 0 ?
+    <>
+        {invites?.length > 0 &&
           <div>
+            <h1>Campaign Invites</h1>
             {invites?.map((invite: any) => (
               <Card invite={invite} setSelectedInvite={setSelectedInvite} setShowBrandProfile={setShowBrandProfile} setShowBookCall={setShowBookCall} />
             ))}
           </div>
+        }
+      </>
+    }
+
+    <h1>Discover All Campaigns</h1>
+    {campaignsLoading ? 
+      <Pane display="flex" alignItems="center" justifyContent="center" height={400}>
+        <Spinner />
+      </Pane>
+    :
+      <>
+        {campaigns?.length > 0 ?
+          <div>
+            {campaigns?.map((campaign: any) => (
+              <div className="campaign">
+                <div className='header'>
+                  <Avatar src={campaign?.logo} name={campaign?.name} size={40} />
+                  <div>
+                    <p className='title'>{campaign?.name}</p>
+                    <Paragraph>{campaign?.description}</Paragraph>
+                  </div>
+                  <div className='actions'>
+                  <Button
+                    appearance="primary"
+                    intent="success"
+                    onClick={() => {
+                      // setShowBrandProfile(true);
+                      sendProposal(campaign?.id);
+                    }}
+                  >
+                    {applyLoading ? "Applying..." : "Apply"}
+                  </Button>
+                  </div>
+                </div>
+                {/* <p className='card-title'>{campaign?.status ? "Active" : "Inactive"}</p> */}
+
+              </div>
+            ))}
+          </div>
         :
           <div>
-            <span>No invites</span>
+            <span>No campaigns</span>
           </div>
         }
       </>
     }
+    
+
 
   {showBrandProfile && <BrandProfile brand={selectedInvite} setShowBrandProfile={setShowBrandProfile} />}
   {showBookCall && <BookCall brand={selectedInvite} setShowBookCall={setShowBookCall} />}

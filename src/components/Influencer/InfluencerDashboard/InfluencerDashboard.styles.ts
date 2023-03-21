@@ -38,6 +38,35 @@ const InfluencerDashboardWrapper = styled.div`
     }
   } 
 
+  .campaign {
+    background: ${CSSVARIABLES.COLORS.WHITE_0};
+    border-radius: 10px;
+    padding: 1em;
+    margin-bottom: 1em;
+
+    width: 60%;
+
+    .header {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      gap: 1em;
+      align-items: center;
+
+      .title {
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: capitalize;
+      }
+
+      .actions {
+        position: absolute;
+        right: 0;
+      }
+    }
+    
+  }
+
     /* fixed sidebar full height */
   .brand-profile {
     height: 100vh;

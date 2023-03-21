@@ -243,6 +243,11 @@ const InfluencerDashboardWrapper = styled.div`
       }
     }
 
+    .campaign {
+      width: 80%;
+      margin: 0 auto;
+    }
+
   }
 `;
 

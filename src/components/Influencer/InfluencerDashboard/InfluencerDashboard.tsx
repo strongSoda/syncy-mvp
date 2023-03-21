@@ -5,7 +5,7 @@ import InfluencerDashboardWrapper from './InfluencerDashboard.styles';
 import CSSVARIABLES from 'global/constants/variables';
 import API from 'global/constants/api';
 import { AuthContext } from 'global/context/AuthContext';
-import { Avatar, Button, Heading, Pane, Paragraph, Spinner, toaster } from 'evergreen-ui';
+import { Avatar, Badge, Button, Heading, Pane, Paragraph, Spinner, toaster } from 'evergreen-ui';
 
 import EyeIcon from '../../../assets/icons/eye.svg';
 // import EmailIcon from '../../../assets/icons/email.svg';
@@ -165,8 +165,14 @@ const InfluencerDashboard: React.FC = () => {
                 <div className='header'>
                   <Avatar src={campaign?.logo} name={campaign?.name} size={40} />
                   <div>
-                    <p className='title'>{campaign?.name}</p>
+                    <p className='title'>
+                      {campaign?.name} &nbsp;
+                      {campaign?.status ? <Badge color="green">Active</Badge> : <Badge color="red">Inactive</Badge>}
+                    </p>
+                    
                     <Paragraph>{campaign?.description}</Paragraph>
+                    <br/>
+                    {campaign?.type.replaceAll(/[{}"]/g, '').split(',').map((type: any) => (<><Badge>{type}</Badge>&nbsp;</>))}
                   </div>
                   <div className='actions'>
                   <Button
@@ -181,8 +187,6 @@ const InfluencerDashboard: React.FC = () => {
                   </Button>
                   </div>
                 </div>
-                {/* <p className='card-title'>{campaign?.status ? "Active" : "Inactive"}</p> */}
-
               </div>
             ))}
           </div>

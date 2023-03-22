@@ -62,6 +62,7 @@ const InfluencerDashboardWrapper = styled.div`
       .actions {
         position: absolute;
         right: 0;
+        top: 0;
       }
     }
     

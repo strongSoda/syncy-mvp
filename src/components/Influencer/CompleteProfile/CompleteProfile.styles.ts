@@ -14,6 +14,17 @@ const InfluencerCompleteProfileWrapper = styled.div`
         display: none;
     }
 
+    .error {
+        /* text-align: center; */
+        /* margin: 0 auto; */
+        color: ${CSSVARIABLES.COLORS.RED};
+        font-size: 0.8em;
+        margin: 0%;
+        /* margin-left: 57%; */
+        padding: 0%;
+        width: 100%;
+    }
+
     .container {
         width: 40vw;
         margin: 0 auto;
@@ -24,16 +35,7 @@ const InfluencerCompleteProfileWrapper = styled.div`
             margin-bottom: 1rem;
         }
         
-        .error {
-            /* text-align: center; */
-            /* margin: 0 auto; */
-            color: ${CSSVARIABLES.COLORS.RED};
-            font-size: 0.8em;
-            margin: 0%;
-            margin-left: 57%;
-            padding: 0%;
-            width: 100%;
-        }
+
 
         input[type='submit'] {
             background-color: ${CSSVARIABLES.COLORS.GREEN_0};

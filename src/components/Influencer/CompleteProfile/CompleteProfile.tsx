@@ -184,7 +184,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
     validationSchema: Yup.object({
       firstName: Yup.string().required('Required'),
       lastName: Yup.string().required('Required'),
-      bio: Yup.string().required('Required'),
+      bio: Yup.string().required('Required').length(500, 'Must be 500 characters or less'),
       city: Yup.string().required('Required'),
       imageUrl: Yup.string(),
       email: Yup.string().email('Invalid email address'),
@@ -282,7 +282,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
   return (
     <form id="PersonalDetails" onSubmit={formik.handleSubmit}>
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.firstName && formik.errors.firstName ? ( <div>{formik.errors.firstName}</div> ) : null}
+      {formik.touched.firstName && formik.errors.firstName ? ( <div className="error">{formik.errors.firstName}</div> ) : null}
       <FormField>
         <TextInputField
           name='firstName'
@@ -295,7 +295,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       </FormField>
 
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.lastName && formik.errors.lastName ? ( <div>{formik.errors.lastName}</div> ) : null}
+      {formik.touched.lastName && formik.errors.lastName ? ( <div className="error">{formik.errors.lastName}</div> ) : null}
       <FormField>
         <TextInputField
           name='lastName'
@@ -308,7 +308,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       </FormField>
 
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.bio && formik.errors.bio ? ( <div>{formik.errors.bio}</div> ) : null}
+      {formik.touched.bio && formik.errors.bio ? ( <div className="error">{formik.errors.bio}</div> ) : null}
       <FormField>
         <TextInputField
           name='bio'
@@ -321,7 +321,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       </FormField>
 
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.city && formik.errors.city ? ( <div>{formik.errors.city}</div> ) : null}
+      {formik.touched.city && formik.errors.city ? ( <div className="error">{formik.errors.city}</div> ) : null}
       <FormField>
         <TextInputField
           name='city'
@@ -334,13 +334,13 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       </FormField>
 
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.bookCallInfo && formik.errors.bookCallInfo ? ( <div>{formik.errors.bookCallInfo}</div> ) : null}
+      {formik.touched.bookCallInfo && formik.errors.bookCallInfo ? ( <div className="error">{formik.errors.bookCallInfo}</div> ) : null}
       <FormField>
         <TextInputField
           name='bookCallInfo'
-          label="Link to book a call with you (Calendly etc.)"
+          label="Link to book a call with you"
           required
-          // description="This is a description."
+          description={<a href='https://calendly.wistia.com/medias/cszvl9saba' target="_blank" rel="noreferrer">Learn More</a>}
           value={formik.values.bookCallInfo}
           onChange={(e: any) => formik.setFieldValue('bookCallInfo', e.target.value)}
         />
@@ -480,7 +480,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
   return (
     <form id="form" onSubmit={formik.handleSubmit}>
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.username && formik.errors.username ? ( <div>{formik.errors.username}</div> ) : null}
+      {formik.touched.username && formik.errors.username ? ( <div className="error">{formik.errors.username}</div> ) : null}
       <FormField>
         <TextInputField
           name='username'
@@ -493,7 +493,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
       </FormField>
 
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.followersCount && formik.errors.followersCount ? ( <div>{formik.errors.followersCount}</div> ) : null}
+      {formik.touched.followersCount && formik.errors.followersCount ? ( <div className="error">{formik.errors.followersCount}</div> ) : null}
       <FormField>
         <TextInputField
           name='followersCount'
@@ -505,7 +505,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
       </FormField>
 
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.rate && formik.errors.rate ? ( <div>{formik.errors.rate}</div> ) : null}
+      {formik.touched.rate && formik.errors.rate ? ( <div className="error">{formik.errors.rate}</div> ) : null}
       <FormField>
         <TextInputField
           type="number"
@@ -518,7 +518,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
       </FormField>
 
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.category && formik.errors.category ? ( <div>{formik.errors.category}</div> ) : null}
+      {formik.touched.category && formik.errors.category ? ( <div className="error">{formik.errors.category}</div> ) : null}
       <FormField>
         <TextInputField
           name='category'
@@ -531,7 +531,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
       </FormField>
 
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.hashtags && formik.errors.hashtags ? ( <div>{formik.errors.hashtags}</div> ) : null}
+      {formik.touched.hashtags && formik.errors.hashtags ? ( <div className="error">{formik.errors.hashtags}</div> ) : null}
       <FormField>
         <TextInputField
           name='hashtags'
@@ -544,7 +544,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
       </FormField>
 
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.topPostUrl1 && formik.errors.topPostUrl1 ? ( <div>{formik.errors.topPostUrl1}</div> ) : null}
+      {formik.touched.topPostUrl1 && formik.errors.topPostUrl1 ? ( <div className="error">{formik.errors.topPostUrl1}</div> ) : null}
       <FormField>
         <TextInputField
           name='topPostUrl1'
@@ -557,7 +557,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
       </FormField>
 
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.topPostUrl2 && formik.errors.topPostUrl2 ? ( <div>{formik.errors.topPostUrl2}</div> ) : null}
+      {formik.touched.topPostUrl2 && formik.errors.topPostUrl2 ? ( <div className="error">{formik.errors.topPostUrl2}</div> ) : null}
       <FormField>
         <TextInputField
           name='topPostUrl2'
@@ -571,7 +571,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
 
 
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.topPostUrl3 && formik.errors.topPostUrl3 ? ( <div>{formik.errors.topPostUrl3}</div> ) : null}
+      {formik.touched.topPostUrl3 && formik.errors.topPostUrl3 ? ( <div className="error">{formik.errors.topPostUrl3}</div> ) : null}
       <FormField>
         <TextInputField
           name='topPostUrl3'
@@ -585,7 +585,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
 
 
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.sponsoredPostUrl1 && formik.errors.sponsoredPostUrl1 ? ( <div>{formik.errors.sponsoredPostUrl1}</div> ) : null}
+      {formik.touched.sponsoredPostUrl1 && formik.errors.sponsoredPostUrl1 ? ( <div className="error">{formik.errors.sponsoredPostUrl1}</div> ) : null}
       <FormField>
         <TextInputField
           name='sponsoredPostUrl1'
@@ -599,7 +599,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
 
 
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.sponsoredPostUrl2 && formik.errors.sponsoredPostUrl2 ? ( <div>{formik.errors.sponsoredPostUrl2}</div> ) : null}
+      {formik.touched.sponsoredPostUrl2 && formik.errors.sponsoredPostUrl2 ? ( <div className="error">{formik.errors.sponsoredPostUrl2}</div> ) : null}
       <FormField>
         <TextInputField
           name='sponsoredPostUrl2'
@@ -613,7 +613,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
 
 
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.sponsoredPostUrl3 && formik.errors.sponsoredPostUrl3 ? ( <div>{formik.errors.sponsoredPostUrl3}</div> ) : null}
+      {formik.touched.sponsoredPostUrl3 && formik.errors.sponsoredPostUrl3 ? ( <div className="error">{formik.errors.sponsoredPostUrl3}</div> ) : null}
       <FormField>
         <TextInputField
           name='sponsoredPostUrl3'

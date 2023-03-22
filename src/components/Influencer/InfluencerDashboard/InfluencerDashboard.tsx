@@ -78,7 +78,7 @@ const InfluencerDashboard: React.FC = () => {
     }
   }
 
-  const sendProposal = async (campaignId: any) => {
+  const sendProposal = async (campaignId: string, campaignName: string) => {
     setApplyLoading(true);
     try {
       const res = await fetch(`${API}/campaign/apply?campaignId=${campaignId}&email=${user?.email}`)
@@ -88,6 +88,10 @@ const InfluencerDashboard: React.FC = () => {
   
       if(data?.status === 'success') {
         toaster.success('Proposal sent successfully');
+        // send email with zapier
+        fetch(`https://hooks.zapier.com/hooks/catch/14836002/335ckfi/?email=${user?.email}&campaignName=${campaignName}`, {
+          method: 'POST',
+        })
       }
     }
     catch (error) {
@@ -180,7 +184,7 @@ const InfluencerDashboard: React.FC = () => {
                     intent="success"
                     onClick={() => {
                       // setShowBrandProfile(true);
-                      sendProposal(campaign?.id);
+                      sendProposal(campaign?.id, campaign?.name);
                     }}
                   >
                     {applyLoading ? "Applying..." : "Apply"}

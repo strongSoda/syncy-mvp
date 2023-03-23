@@ -184,7 +184,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
     validationSchema: Yup.object({
       firstName: Yup.string().required('Required'),
       lastName: Yup.string().required('Required'),
-      bio: Yup.string().required('Required').length(500, 'Must be 500 characters or less'),
+      bio: Yup.string().required('Required').max(500, 'Must be 500 characters or less'),
       city: Yup.string().required('Required'),
       imageUrl: Yup.string(),
       email: Yup.string().email('Invalid email address'),

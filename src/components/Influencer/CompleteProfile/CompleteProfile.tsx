@@ -340,7 +340,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
           name='bookCallInfo'
           label="Link to book a call with you"
           required
-          description={<a href='https://calendly.wistia.com/medias/cszvl9saba' target="_blank" rel="noreferrer">Learn More</a>}
+          description={<a href='https://calendly.com/signup' target="_blank" rel="noreferrer">Learn More</a>}
           value={formik.values.bookCallInfo}
           onChange={(e: any) => formik.setFieldValue('bookCallInfo', e.target.value)}
         />

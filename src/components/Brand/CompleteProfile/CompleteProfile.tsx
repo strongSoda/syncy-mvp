@@ -58,7 +58,7 @@ const BrandCompleteProfile: React.FC = () => {
       companyInstagram: companyInstagram,
       companyLinkedin: companyLinkedin,
       email: user?.email,
-      bookCallInfo: bookCallInfo,
+      bookCallInfo: bookCallInfo ? bookCallInfo : 'None',
       // companySocialMediaLinks: '',
     },
     validationSchema: Yup.object({

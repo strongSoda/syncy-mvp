@@ -418,6 +418,19 @@ const BrandCompleteProfile: React.FC = () => {
           </FormField>
 
           {Error && <p className="error">{Error}</p>}
+          {formik.touched.bookCallInfo && formik.errors.bookCallInfo ? ( <div>{formik.errors.bookCallInfo}</div> ) : null}
+          <FormField>
+            <TextInputField
+              name='bookCallInfo'
+              label="Link to book a 30-minute call with you (Calendly etc.)"
+              // required
+              // description="This is a description."
+              value={formik.values.bookCallInfo}
+              onChange={(e: any) => formik.setFieldValue('bookCallInfo', e.target.value)}
+            />
+          </FormField>
+
+          {Error && <p className="error">{Error}</p>}
           {formik.touched.companyLogo && formik.errors.companyLogo ? ( <div>{formik.errors.companyLogo}</div> ) : null}
           <FormField>
             <TextInputField

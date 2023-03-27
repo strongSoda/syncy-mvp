@@ -5,6 +5,14 @@ import styled from 'styled-components';
 const BrandCompleteProfileWrapper = styled.div`
     /* margin-left: ${CSSVARIABLES.LAYOUT.PRIMARY.MARGIN_LEFT}; */
 
+    .toggleBtn {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
+
+        display: none;
+    }
     .container {
         width: 40vw;
         margin: 0 auto;
@@ -37,6 +45,20 @@ const BrandCompleteProfileWrapper = styled.div`
             font-weight: 600;
             cursor: pointer;
             margin-bottom: 1rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .toggleBtn {
+            display: block;
+        }
+        .container {
+            width: 80vw;
+
+            .title {
+                /* font-size: 0.6em; */
+                text-align: center;
+            }
         }
     }
 `;

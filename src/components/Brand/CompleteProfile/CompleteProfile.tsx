@@ -5,6 +5,7 @@ import API from 'global/constants/api';
 import CSSVARIABLES from 'global/constants/variables';
 import { AuthContext } from 'global/context/AuthContext';
 import logUsage from 'global/functions/usage-logs';
+import Hamburger from 'hamburger-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import * as Yup from "yup";
@@ -19,6 +20,7 @@ const BrandCompleteProfile: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [fetchingProfile, setFetchingProfile] = useState(false);
 
+  const [isOpen, setOpen] = useState(true)
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -164,11 +166,15 @@ const BrandCompleteProfile: React.FC = () => {
   return (
   <BrandCompleteProfileWrapper data-testid="BrandCompleteProfile">
 
+    <div className='toggleBtn'>
+      <Hamburger toggled={isOpen} toggle={(setOpen)} />
+    </div>
+
     {!fetchingProfile ?
     <>
       {firstName ?       
       <>
-        <SideBar lightColor={CSSVARIABLES.COLORS.PURPLE_1} darkColor={CSSVARIABLES.COLORS.PURPLE_2} />
+        {isOpen && <SideBar lightColor={CSSVARIABLES.COLORS.PURPLE_1} darkColor={CSSVARIABLES.COLORS.PURPLE_2} />}
 
         <div className='container'>
           <form id="form" onSubmit={formik.handleSubmit}>
@@ -337,6 +343,7 @@ const BrandCompleteProfile: React.FC = () => {
       </>
       :
       <>
+        {isOpen && <SideBar lightColor={CSSVARIABLES.COLORS.PURPLE_1} darkColor={CSSVARIABLES.COLORS.PURPLE_2} />}
         <div className='container'>
           <form id="form" onSubmit={formik.handleSubmit}>
           <h2 className='title'>Complete your profile</h2>

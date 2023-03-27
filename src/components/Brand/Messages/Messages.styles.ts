@@ -26,6 +26,49 @@ const MessagesWrapper = styled.div`
     /* top: 12vh; */
     /* background: #f7f7f7; */
   }
+
+  .toggleBtn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    padding-top: 6vh;
+
+      .toggleBtn {
+          display: block;
+      }
+      .container {
+          width: 100vw;
+
+          .title {
+              /* font-size: 0.6em; */
+              text-align: center;
+          }
+      }
+
+      .str-chat {
+        width: 100%;
+      }
+      *! > .str-chat-channel-list {
+        display: block;
+      }
+
+    .str-chat-channel-list {
+      width: 30vw;
+    }
+    .content {
+      padding-left: 0;
+      /* height: 100vh; */
+      width: 80vw;
+      margin-left: 30%;
+    }
+  }
 `;
 
 export default MessagesWrapper;

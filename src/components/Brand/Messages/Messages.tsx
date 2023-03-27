@@ -5,6 +5,7 @@ import CSSVARIABLES from 'global/constants/variables';
 import { AuthContext } from 'global/context/AuthContext';
 import { chatClient } from 'global/functions/create-chat';
 import logUsage from 'global/functions/usage-logs';
+import Hamburger from 'hamburger-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { Channel, ChannelHeader, ChannelList, ChannelPreviewUIComponentProps, Chat, MessageInput, MessageList, Thread, useChatContext, Window } from 'stream-chat-react';
 
@@ -16,6 +17,8 @@ import MessagesWrapper from './Messages.styles';
 
 const Messages: React.FC = () => {
   const user = useContext(AuthContext)
+
+  const [isOpen, setOpen] = useState(true)
 
   const [channel, setChannel] = useState<any>(null);
   // const [chatClient, setChatClient] = useState<any>(null);
@@ -173,8 +176,11 @@ const Messages: React.FC = () => {
 
   return (
     <MessagesWrapper data-testid="Messages">
+      <div className='toggleBtn'>
+        <Hamburger toggled={isOpen} toggle={(setOpen)} />
+      </div>
 
-      <SideBar lightColor={CSSVARIABLES.COLORS.BLUE_1} darkColor={CSSVARIABLES.COLORS.BLUE_0} />
+      {isOpen && <SideBar lightColor={CSSVARIABLES.COLORS.BLUE_1} darkColor={CSSVARIABLES.COLORS.BLUE_0} />}
       {chatExists ? 
       <>
       {chatClient ?

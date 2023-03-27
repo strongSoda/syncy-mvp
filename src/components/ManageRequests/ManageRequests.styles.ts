@@ -280,7 +280,7 @@ const ManageRequestsWrapper = styled.div`
       }
       .results {
         margin-top: 2em;
-        width: 100vw;
+        width: 100%;
           /* background: yellow; */
 
 
@@ -299,26 +299,38 @@ const ManageRequestsWrapper = styled.div`
           .ais-Hits-item {
             /* width: 100vw !important; */
           }
+
+          .actions {
+            /* display: block; */
+          }
+        }
+
+      .footer {
+        /* width: 50%; */
+
+        .ais-Pagination {
+          width: 30vw !important;
+          padding: 1em;
+        }
+        .ais-HitsPerPage-select {
+          margin-top: 10vh;
         }
       }
-      .footer {
-        width: 50%;
-      }
     }
+  }
 
-    .syncy-gpt {
-      width: 100vw;
-    .syncy-avatar-container {
-      cursor: pointer;
-      position: absolute;
-      top: 1vh;
-      right: 13vw;
+  .influencer-profile {
+    width: 90%;
+
+    iframe {
+      width: 80%;
     }
-    .syncy-avatar {
-      height: 14vh;
+    .profile-header {
+      width: 80%;
+      /* justify-content: space-evenly; */
     }
   }
-  }
+}
 `;
 
 const CardWrapper = styled.div`
@@ -397,6 +409,14 @@ const CardWrapper = styled.div`
 
     .card-body {
       /* width: 80%; */
+    }
+  }
+
+  .card-header {
+    display: block !important;
+
+    .actions {
+      position: relative;
     }
   }
 

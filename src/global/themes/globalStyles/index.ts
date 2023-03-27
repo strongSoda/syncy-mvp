@@ -50,6 +50,20 @@ ${({ theme }) => css`
   border-radius: 50%;
   display: inline;
 }
+
+@media only screen and (max-width: 768px) {
+  .query-input-container {
+    min-width: 80%;
+    margin-left: 30%;
+  }
+  .ai-result {
+    width: 100%;
+    /* margin-left: 6em; */
+    margin-left: 3%;
+  }
+}
+
+
 `}
 `;
 

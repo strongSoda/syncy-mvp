@@ -66,25 +66,13 @@ const BrandCompleteProfile: React.FC = () => {
       lastName: Yup.string().required('Required'),
       jobTitle: Yup.string().required('Required'),
       companyName: Yup.string().required('Required'),
-      companyWebsite: Yup.string()
-        .matches(
-            /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-            'Invalid url!'
-        ).required('Required'),
+      companyWebsite: Yup.string().required('Required'),
       companyLogo: Yup.string().required('Required'),
       companyDescription: Yup.string().required('Required'),
       companyAddress: Yup.string().required('Required'),
       companyEmail: Yup.string().email('Invalid email address').required('Required'),
-      companyInstagram: Yup.string()
-        .matches(
-            /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-            'Invalid url!'
-        ).required('Required'),
-      companyLinkedin: Yup.string()
-        .matches(
-            /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-            'Invalid url!'
-        ).required('Required'),
+      companyInstagram: Yup.string().required('Required'),
+      companyLinkedin: Yup.string().required('Required'),
       bookCallInfo: Yup.string(),
     }),
 

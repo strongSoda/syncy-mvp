@@ -81,6 +81,21 @@ const SideBarWrapper = styled.div`
       font-weight: ${CSSVARIABLES.SIDEBAR.LINK.WEIGHT};
     }
   }
+
+  @media only screen and (max-width: 768px) {
+    /* display: none; */
+    .top-section {
+      .title {
+        font-size: 1em;
+        text-align: left;
+      }
+    }
+    .bottom-section {
+      .title {
+        font-size: 0.7em;
+      }
+    }
+  }
 `;
 
 export default SideBarWrapper;

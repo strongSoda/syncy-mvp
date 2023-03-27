@@ -51,6 +51,7 @@ import sendChatMessage from 'global/functions/send-chat-message';
 import { ChannelPreviewUIComponentProps, useChatContext } from 'stream-chat-react';
 import formatNumber from 'global/functions/formatFollowers';
 import logUsage from 'global/functions/usage-logs';
+import Hamburger from 'hamburger-react';
 
 const searchClient = algoliasearch('L7PFECEWC3', 'a953f96171e71bef23ebd1760c7dea10');
 
@@ -58,9 +59,16 @@ const searchClient = algoliasearch('L7PFECEWC3', 'a953f96171e71bef23ebd1760c7dea
 
 // declare interface IManageRequestsProps {}
 
-const ManageRequests: React.FC = () => (
+const ManageRequests: React.FC = () => {
+  const [isOpen, setOpen] = useState(true)
+  
+  return(
   <ManageRequestsWrapper data-testid="ManageRequests">
-    <Pane display="flex" padding={16} background={CSSVARIABLES.COLORS.YELLOW_GREEN_1} borderRadius={3}>
+    <div className='toggleBtn'>
+      <Hamburger toggled={isOpen} toggle={(setOpen)} />
+    </div>
+
+    <Pane display="flex" padding={16} marginTop={24} background={CSSVARIABLES.COLORS.YELLOW_GREEN_1} borderRadius={3}>
       <img src={Syncy} alt="Syncy" width="50" height="50" />
       <Pane>
         <Heading size={800} flex={1} alignItems="center" display="flex">
@@ -74,7 +82,7 @@ const ManageRequests: React.FC = () => (
       </Pane>
     </Pane>
 
-    <SideBar lightColor={CSSVARIABLES.COLORS.PRIMARY_GREEEN_1} darkColor={CSSVARIABLES.COLORS.GREEN_0} />
+    {isOpen && <SideBar lightColor={CSSVARIABLES.COLORS.PRIMARY_GREEEN_1} darkColor={CSSVARIABLES.COLORS.GREEN_0} />}
     {/* <Navbar /> */}
     <SyncyGPT />
     <br />
@@ -86,7 +94,7 @@ const ManageRequests: React.FC = () => (
     <SearchTable />
     {/* <Influencers /> */}
   </ManageRequestsWrapper>
-);
+)};
 
 const Influencers: React.FC = () => {
   const gridRef = useRef<any>();

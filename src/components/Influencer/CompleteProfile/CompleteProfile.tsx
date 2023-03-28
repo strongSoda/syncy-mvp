@@ -43,6 +43,7 @@ function ProfileTabs() {
   const [profile, setProfile] = useState<any>(null);
 
   const [isOpen, setOpen] = useState(true)
+  const [previewProfile, setPreviewProfile] = useState(false)
 
   const getProfile = async () => {
     setFetchingProfile(true);
@@ -86,20 +87,22 @@ function ProfileTabs() {
       :
       <>
       {profile && isOpen && <SideBar lightColor={CSSVARIABLES.COLORS.PRIMARY_GREEEN_1} darkColor={CSSVARIABLES.COLORS.GREEN_0} />}
+      
       <Pane height={120}>
       <h2 className='title'>Complete your profile</h2>
 
       <Tablist marginBottom={16} flexBasis={240} marginRight={24}>
         {tabs.map((tab, index) => (
           <Tab
-            aria-controls={`panel-${tab}`}
-            isSelected={index === selectedIndex}
-            key={tab}
-            onSelect={() => setSelectedIndex(index)}
+          aria-controls={`panel-${tab}`}
+          isSelected={index === selectedIndex}
+          key={tab}
+          onSelect={() => setSelectedIndex(index)}
           >
             {tab}
           </Tab>
         ))}
+        {profile && <Button onClick={() => setPreviewProfile(true)}>Preview Profile</Button>}
       </Tablist>
       <Pane padding={16} background="tint1" flex="1">
         <Pane
@@ -137,6 +140,8 @@ function ProfileTabs() {
     </Pane>
     </>
     }
+
+    {previewProfile && <PreviewProfile profile={profile} setPreviewProfile={setPreviewProfile} />}
   </>
   )
 }
@@ -629,6 +634,39 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
     <input type="submit" value={loading ? 'loading...' : 'Submit'} />
     </form>
   )
+}
+
+declare interface IPreviewProfileProps {
+  profile: any;
+  setPreviewProfile: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const PreviewProfile: React.FC<IPreviewProfileProps> = ({profile, setPreviewProfile}: IPreviewProfileProps) => {
+
+  const user = useContext(AuthContext)
+
+  useEffect(() => {
+    console.log('profile', profile);
+  }, [profile]);
+
+  return (
+    <div className='influencer-profile'>
+      
+      <div className='profile-header'>
+        {/* cross icon to close sidebar on click */}
+        <img className='cross-icon' src='https://www.svgimages.com/svg-image/s3/close-icon-256x256.png' alt="cross" onClick={() => setPreviewProfile(false) } />
+      </div>
+
+      <iframe title={profile?.fullName} src={`${profile?.profileUrl ? profile?.profileUrl : `https://www.instagram.com/${encodeURI(profile?.instagramUsername)}/`}embed`} name="myiFrame" scrolling="yes" frameBorder="0" height="900" width="100%" allowFullScreen={true}></iframe>
+      {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
+      {/* <div className='container'>  
+        <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />
+        <h1 className='name'>{influencer?.fullName}</h1>
+        <p className='followers'>Followers: {influencer?.followersCount}</p>
+        <p className='bio'>{influencer?.bio}</p>
+      </div>       */}
+    </div>
+  );
 }
 
 // const AudienceDetails: React.FC = () => {

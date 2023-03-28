@@ -798,13 +798,15 @@ const SearchTable: React.FC = () => {
             <Hits hitComponent={Card as any} />
           </div>
           <div className='footer'>
-            <Pagination />
-            <HitsPerPage
+            {isMobile.any() ? <>
+              <Pagination showFirst={false} showLast={false} totalPages={4} />
+            </> : <Pagination />}
+            {!isMobile.any() && <HitsPerPage
               items={[
                 { label: '10 per page', value: 10 },
                 { label: '20 per page', value: 20, default: true },
               ]}
-            />
+            />}
           </div>
         </div>
       </div>

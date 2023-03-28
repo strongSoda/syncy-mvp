@@ -31,7 +31,7 @@ const ManageRequestsWrapper = styled.div`
       cursor: pointer;
       position: absolute;
       top: 1vh;
-      right: 13vw;
+      right: 18vw;
     }
     .syncy-avatar {
       height: 14vh;
@@ -84,6 +84,7 @@ const ManageRequestsWrapper = styled.div`
   .searchtable-container {
     display: flex;
     gap: 2em;
+    width: 100%;
       .filters {
         margin-top: 2em;
         width: 18vw !important;
@@ -97,12 +98,6 @@ const ManageRequestsWrapper = styled.div`
 
         .container {
           margin-top: 2em;
-          /* height: 70vh; */
-          /* overflow: auto; */
-
-          /* .profile-img {
-            height: 8vh !important;
-          } */
         }
       }
       .footer {

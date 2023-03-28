@@ -410,13 +410,13 @@ const CardWrapper = styled.div`
     .card-body {
       /* width: 80%; */
     }
-  }
 
-  .card-header {
-    display: block !important;
+    .card-header {
+      display: block !important;
 
-    .actions {
-      position: relative;
+      .actions {
+        position: relative;
+      }
     }
   }
 

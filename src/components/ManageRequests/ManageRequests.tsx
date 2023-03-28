@@ -52,6 +52,7 @@ import { ChannelPreviewUIComponentProps, useChatContext } from 'stream-chat-reac
 import formatNumber from 'global/functions/formatFollowers';
 import logUsage from 'global/functions/usage-logs';
 import Hamburger from 'hamburger-react';
+import isMobile from 'global/functions/is-mobile';
 
 const searchClient = algoliasearch('L7PFECEWC3', 'a953f96171e71bef23ebd1760c7dea10');
 
@@ -60,8 +61,11 @@ const searchClient = algoliasearch('L7PFECEWC3', 'a953f96171e71bef23ebd1760c7dea
 // declare interface IManageRequestsProps {}
 
 const ManageRequests: React.FC = () => {
-  const [isOpen, setOpen] = useState(true)
-  
+  const [isOpen, setOpen] = useState(isMobile.any() ? false : true)
+
+  useEffect(() => {
+    // alert(isMobile.any())
+  }, [])
   return(
   <ManageRequestsWrapper data-testid="ManageRequests">
     <div className='toggleBtn'>

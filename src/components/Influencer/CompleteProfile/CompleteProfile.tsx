@@ -657,7 +657,7 @@ const PreviewProfile: React.FC<IPreviewProfileProps> = ({profile, setPreviewProf
         <img className='cross-icon' src='https://www.svgimages.com/svg-image/s3/close-icon-256x256.png' alt="cross" onClick={() => setPreviewProfile(false) } />
       </div>
 
-      <iframe title={profile?.fullName} src={`${profile?.profileUrl ? profile?.profileUrl : `https://www.instagram.com/${encodeURI(profile?.instagramUsername)}/`}embed`} name="myiFrame" scrolling="yes" frameBorder="0" height="900" width="100%" allowFullScreen={true}></iframe>
+      <iframe title={profile?.fullName} src={`${profile?.profileUrl ? profile?.profileUrl : `https://www.instagram.com/${encodeURI(profile?.instagram_username)}/`}embed`} name="myiFrame" scrolling="yes" frameBorder="0" height="900" width="100%" allowFullScreen={true}></iframe>
       {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
       {/* <div className='container'>  
         <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />

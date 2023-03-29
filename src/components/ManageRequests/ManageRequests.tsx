@@ -199,7 +199,7 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
       <img className='cross-icon' src='https://www.svgimages.com/svg-image/s3/close-icon-256x256.png' alt="cross" onClick={() => setShowInfluencerProfile(false) } />
       </div>
 
-      <iframe title={influencer?.fullName} src={`${influencer?.profileUrl ? influencer?.profileUrl : `https://www.instagram.com/${encodeURI(influencer?.instagram_username)}/`}embed`} name="myiFrame" scrolling="yes" frameBorder="0" height="900" width="100%" allowFullScreen={true}></iframe>
+      <iframe title={influencer?.fullName} src={`${influencer?.profileUrl ? influencer?.profileUrl[-1]==="/" ? influencer?.profileUrl : influencer?.profileUrl + '/' : `https://www.instagram.com/${encodeURI(influencer?.instagram_username)}/`}embed`} name="myiFrame" scrolling="yes" frameBorder="0" height="900" width="100%" allowFullScreen={true}></iframe>
       {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
       {/* <div className='container'>  
         <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />

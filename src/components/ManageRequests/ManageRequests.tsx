@@ -273,7 +273,7 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
         </Badge>
         {/* <small>{formatNumber(hit?.followersCount)} Followers</small>         */}
         <div className='actions'>          
-          {hit?.bookCallInfo && <img className='icon' src={PhoneIcon} alt="eye" onClick={() => setShowBookCall(true) } />}
+          {hit?.bookCallInfo && hit?.bookCallInfo.includes('calendly') && <img className='icon' src={PhoneIcon} alt="eye" onClick={() => setShowBookCall(true) } />}
           <img className='icon' src={EyeIcon} alt="eye" onClick={() => setShowInfluencerProfile(true) } />
           <img className='icon' src={EmailIcon} alt="eye" onClick={() => setShowReachout(true) } />
           {/* <img className='icon' src={SaveIcon} alt="eye" /> */}

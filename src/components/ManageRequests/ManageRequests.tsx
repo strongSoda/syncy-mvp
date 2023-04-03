@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
-import { Avatar, Badge, Heading, Pane, Paragraph, Popover, Position, Pulsar, Spinner, Tab, Tablist, TextInputField, toaster, Tooltip } from 'evergreen-ui';
+import { Avatar, Badge, Heading, Pane, Paragraph, Popover, Position, Pulsar, SideSheet, Spinner, Tab, Tablist, TextInputField, toaster, Tooltip } from 'evergreen-ui';
 
 import Button from 'components/Button/Button.lazy';
 import Navbar from 'components/Navbar/Navbar.lazy';
@@ -159,6 +159,36 @@ const Influencers: React.FC = () => {
   );
 }
 
+const packs = [
+  {
+    "id": 0,
+    "name": "Discovery Call",
+    "price": 25,
+    "description": "15 minute call to discuss your brand and how I can help you.",
+    "platform": "Instagram",
+  },
+  {
+    "id": 1,
+    "name": "1 Reel",
+    "price": 250,
+    "description": "One reel filmed with professional videographer and equipment.",
+    "platform": "Instagram",
+  },
+  {
+    "id": 2,
+    "name": "1 Story",
+    "price": 100,
+    "description": "One story video where I present the product/ brand.",
+    "platform": "Instagram",
+  },
+  {
+    "id": 3,
+    "name": "1 Post",
+    "price": 50,
+    "description": "One photo with the product and written information about what you would like to promote.",
+    "platform": "Instagram",
+  },
+]
 
 interface IInfluencerProfileProps {
   influencer: any;
@@ -179,9 +209,29 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
   return (
     <div className='influencer-profile'>
       
-      <div className='profile-header'>
+      {/* <div className='profile-header'>
       <div className='actions'>          
         {influencer?.bookCallInfo && 
+          <img className='icon' src={PhoneIcon} alt="call" onClick={() => {
+            setShowBookCall(true);
+            setShowInfluencerProfile(false);
+          }} />
+        }
+        <img className='icon' src={EmailIcon} alt="email" onClick={() => {
+          setShowReachout(true);
+          setShowInfluencerProfile(false);
+        }} />
+      </div>
+      </div> */}
+
+      <div className='profile'>
+        <div className='profile-picture'>
+          {/* <img src={influencer?.imageUrl} alt="profile" /> */}
+          <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />
+        </div>
+        <div className='profile-details'>
+          <div className='actions'>          
+          {influencer?.bookCallInfo && 
           <img className='icon' src={PhoneIcon} alt="call" onClick={() => {
             setShowBookCall(true);
             setShowInfluencerProfile(false);
@@ -194,11 +244,34 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
         }} />
         {/* <img className='icon' src={SaveIcon} alt="save" /> */}
       </div>
-
-      {/* cross icon to close sidebar on click */}
-      <img className='cross-icon' src='https://www.svgimages.com/svg-image/s3/close-icon-256x256.png' alt="cross" onClick={() => setShowInfluencerProfile(false) } />
+          <h1 className='name'>{influencer?.fullName ? influencer?.fullName : influencer?.first_name}</h1>
+          {(influencer?.instagram_username || influencer?.instagramUsername) && <p className='username'>@{influencer?.instagram_username 
+                ? influencer?.instagram_username : influencer?.instagramUsername}</p>}
+          <h1 className='followers'>{formatNumber(influencer?.followersCount)} Followers</h1>
+          <h1 className='location'>{influencer?.location}</h1>
+          <h1 className='bio'>{influencer?.bio}</h1>
+        </div>
       </div>
 
+
+      {/* display packs */}
+      <div className='packs'>
+        <h1 className='title'>Packs</h1>
+        <div className='packs-container'>
+          {packs.map((pack, index) => (
+            <div className='pack' key={index}>
+              <h1 className='name'>{pack.name}</h1>
+              <h1 className='price'>${pack.price}</h1>
+              <Button text="Book" backgroundColor={CSSVARIABLES.COLORS.GREEN_0} onClick={() => {
+                window.location.href = `https://buy.stripe.com/8wM8y22PG5zi3Wo3dk`;
+              }} />
+              <p className='description'>{pack.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <h1 className='title'>Instagram Profile</h1>
       <iframe title={influencer?.fullName ? influencer?.fullName : influencer?.first_name} 
         src={`${influencer?.profileUrl ? (influencer?.profileUrl[influencer?.profileUrl.length-1]==="/" ? influencer?.profileUrl 
                 : (influencer?.profileUrl + '/')) : (`https://www.instagram.com/${encodeURI(influencer?.instagram_username 
@@ -290,7 +363,14 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
       </div>
     </div>
 
-    {showInfluencerProfile && <InfluencerProfile influencer={hit} setShowInfluencerProfile={setShowInfluencerProfile} setShowBookCall={setShowBookCall} setShowReachout={setShowReachout} />}
+    <SideSheet
+        isShown={showInfluencerProfile}
+        onCloseComplete={() => setShowInfluencerProfile(false)}
+        preventBodyScrolling
+        width={1000}
+      >
+        <InfluencerProfile influencer={hit} setShowInfluencerProfile={setShowInfluencerProfile} setShowBookCall={setShowBookCall} setShowReachout={setShowReachout} />
+      </SideSheet>
     {showBookCall && <BookCall influencer={hit} setShowBookCall={setShowBookCall} />}
     {showReachout && <Reachout influencer={hit} setShowReachout={setShowReachout} />}
   </CardWrapper>

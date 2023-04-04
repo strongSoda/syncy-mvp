@@ -99,6 +99,9 @@ ${({ theme }) => css`
 
       margin-bottom: 1em;
     }
+    .profile {
+      width: 20%;
+    }
 
     .profile-details, .profile-picture {
       text-align: center;

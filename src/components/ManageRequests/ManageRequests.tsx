@@ -224,53 +224,56 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
       </div>
       </div> */}
 
-      <div className='profile'>
-        <div className='profile-picture'>
-          {/* <img src={influencer?.imageUrl} alt="profile" /> */}
-          <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />
-        </div>
-        <div className='profile-details'>
-          <div className='actions'>          
-          {influencer?.bookCallInfo && 
-          <img className='icon' src={PhoneIcon} alt="call" onClick={() => {
-            setShowBookCall(true);
+      <div className='profile-container'>
+        <div className='profile'>
+          <div className='profile-picture'>
+            {/* <img src={influencer?.imageUrl} alt="profile" /> */}
+            <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />
+          </div>
+          <div className='profile-details'>
+            <div className='actions'>          
+            {influencer?.bookCallInfo && 
+            <img className='icon' src={PhoneIcon} alt="call" onClick={() => {
+              setShowBookCall(true);
+              setShowInfluencerProfile(false);
+            }} />
+          }
+          {/* <img className='icon' src={EyeIcon} alt="eye" onClick={() => setShowInfluencerProfile(true) } /> */}
+          <img className='icon' src={EmailIcon} alt="email" onClick={() => {
+            setShowReachout(true);
             setShowInfluencerProfile(false);
           }} />
-        }
-        {/* <img className='icon' src={EyeIcon} alt="eye" onClick={() => setShowInfluencerProfile(true) } /> */}
-        <img className='icon' src={EmailIcon} alt="email" onClick={() => {
-          setShowReachout(true);
-          setShowInfluencerProfile(false);
-        }} />
-        {/* <img className='icon' src={SaveIcon} alt="save" /> */}
-      </div>
-          <h1 className='name'>{influencer?.fullName ? influencer?.fullName : influencer?.first_name}</h1>
-          {(influencer?.instagram_username || influencer?.instagramUsername) && <p className='username'>@{influencer?.instagram_username 
-                ? influencer?.instagram_username : influencer?.instagramUsername}</p>}
-          <h1 className='followers'>{formatNumber(influencer?.followersCount)} Followers</h1>
-          <h1 className='location'>{influencer?.location}</h1>
-          <h1 className='bio'>{influencer?.bio}</h1>
+          {/* <img className='icon' src={SaveIcon} alt="save" /> */}
+        </div>
+            <h1 className='name'>{influencer?.fullName ? influencer?.fullName : influencer?.first_name}</h1>
+            {(influencer?.instagram_username || influencer?.instagramUsername) && <p className='username'>@{influencer?.instagram_username 
+                  ? influencer?.instagram_username : influencer?.instagramUsername}</p>}
+            <h1 className='followers'>{formatNumber(influencer?.followersCount)} Followers</h1>
+            <h1 className='location'>{influencer?.location}</h1>
+            <h1 className='bio'>{influencer?.bio}</h1>
+            <a href="#" className='bio'>Read Reviews</a>
+          </div>
+        </div>
+
+
+        {/* display packs */}
+        <div className='packs'>
+          <h1 className='title'>Packs</h1>
+          <div className='packs-container'>
+            {packs.map((pack, index) => (
+              <div className='pack' key={index}>
+                <h1 className='name'>{pack.name}</h1>
+                <h1 className='price'>${pack.price}</h1>
+                <Button text="Book" backgroundColor={CSSVARIABLES.COLORS.GREEN_0} onClick={() => {
+                  window.location.href = `https://buy.stripe.com/8wM8y22PG5zi3Wo3dk`;
+                }} />
+                <p className='description'>{pack.description}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-
-      {/* display packs */}
-      <div className='packs'>
-        <h1 className='title'>Packs</h1>
-        <div className='packs-container'>
-          {packs.map((pack, index) => (
-            <div className='pack' key={index}>
-              <h1 className='name'>{pack.name}</h1>
-              <h1 className='price'>${pack.price}</h1>
-              <Button text="Book" backgroundColor={CSSVARIABLES.COLORS.GREEN_0} onClick={() => {
-                window.location.href = `https://buy.stripe.com/8wM8y22PG5zi3Wo3dk`;
-              }} />
-              <p className='description'>{pack.description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-      
       <h1 className='title'>Instagram Profile</h1>
       <iframe title={influencer?.fullName ? influencer?.fullName : influencer?.first_name} 
         src={`${influencer?.profileUrl ? (influencer?.profileUrl[influencer?.profileUrl.length-1]==="/" ? influencer?.profileUrl 
@@ -367,7 +370,7 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
         isShown={showInfluencerProfile}
         onCloseComplete={() => setShowInfluencerProfile(false)}
         preventBodyScrolling
-        width={1000}
+        width={1300}
       >
         <InfluencerProfile influencer={hit} setShowInfluencerProfile={setShowInfluencerProfile} setShowBookCall={setShowBookCall} setShowReachout={setShowReachout} />
       </SideSheet>

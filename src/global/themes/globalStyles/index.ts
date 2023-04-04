@@ -53,8 +53,15 @@ ${({ theme }) => css`
 }
   .influencer-profile {
     padding: 1em;
+
+    .profile-container {
+      display: flex;
+      gap: 3em;
+      align-items: center;
+    }
     
     .packs {
+      width: 70%;
       margin-top: 8vh;
       margin-bottom: 8vh;
 

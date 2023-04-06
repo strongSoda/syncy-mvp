@@ -1,5 +1,5 @@
 import { StreamChat } from 'stream-chat';
-export const chatClient = new StreamChat("f2hpu5up29pk");
+export const chatClient = new StreamChat("6nrdgtzxm932");
 
 const createChat = (userToken: string, user1: any, user2: any, channelId: string) => {
     chatClient.connectUser(

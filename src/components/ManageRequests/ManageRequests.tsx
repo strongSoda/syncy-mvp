@@ -224,10 +224,9 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
       </div>
       </div> */}
 
-      <div className='profile-container'>
+      {/* <div className='profile-container'>
         <div className='profile'>
           <div className='profile-picture'>
-            {/* <img src={influencer?.imageUrl} alt="profile" /> */}
             <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />
           </div>
           <div className='profile-details'>
@@ -238,12 +237,10 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
               setShowInfluencerProfile(false);
             }} />
           }
-          {/* <img className='icon' src={EyeIcon} alt="eye" onClick={() => setShowInfluencerProfile(true) } /> */}
           <img className='icon' src={EmailIcon} alt="email" onClick={() => {
             setShowReachout(true);
             setShowInfluencerProfile(false);
           }} />
-          {/* <img className='icon' src={SaveIcon} alt="save" /> */}
         </div>
             <h1 className='name'>{influencer?.fullName ? influencer?.fullName : influencer?.first_name}</h1>
             {(influencer?.instagram_username || influencer?.instagramUsername) && <p className='username'>@{influencer?.instagram_username 
@@ -256,7 +253,6 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
         </div>
 
 
-        {/* display packs */}
         <div className='packs'>
           <h1 className='title'>Packs</h1>
           <div className='packs-container'>
@@ -272,9 +268,9 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <h1 className='title'>Instagram Profile</h1>
+      {/* <h1 className='title'>Instagram Profile</h1> */}
       <iframe title={influencer?.fullName ? influencer?.fullName : influencer?.first_name} 
         src={`${influencer?.profileUrl ? (influencer?.profileUrl[influencer?.profileUrl.length-1]==="/" ? influencer?.profileUrl 
                 : (influencer?.profileUrl + '/')) : (`https://www.instagram.com/${encodeURI(influencer?.instagram_username 

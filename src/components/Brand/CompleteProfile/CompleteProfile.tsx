@@ -1,5 +1,5 @@
 import SideBar from 'components/SideBar/SideBar.lazy';
-import { Alert, Button, FormField, Pane, Spinner, TextInputField, toaster } from 'evergreen-ui';
+import { Alert, Button, FileCard, FileUploader, FormField, Pane, Spinner, TextInputField, toaster } from 'evergreen-ui';
 import { useFormik } from 'formik';
 import API from 'global/constants/api';
 import CSSVARIABLES from 'global/constants/variables';
@@ -39,6 +39,15 @@ const BrandCompleteProfile: React.FC = () => {
   
   // const dispatch = useAppDispatch();
   const history = useHistory();
+
+  const [files, setFiles] = React.useState<any>([])
+  const [fileRejections, setFileRejections] = React.useState<any>([])
+  const handleChange = React.useCallback((files) => setFiles([files[0]]), [])
+  const handleRejected = React.useCallback((fileRejections) => setFileRejections([fileRejections[0]]), [])
+  const handleRemove = React.useCallback(() => {
+    setFiles([])
+    setFileRejections([])
+  }, [])
 
   useEffect(() => {
     logUsage('BRAND VISITED COMPLETE PROFILE PAGE', {user: {email: user?.email}});
@@ -91,9 +100,51 @@ const BrandCompleteProfile: React.FC = () => {
     },
   });
 
+  // upload profile image to imgur
+  const uploadImage = async (file: any) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    try {
+      const res = await fetch('https://api.imgur.com/3/image', {
+        method: 'POST',
+        headers: {
+          Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}`,
+        },
+        body: formData,
+      });
+      const data = await res.json();
+
+      if(data?.success) {
+        console.log('companyLogo: ', data);
+        const imageUrl = data?.data?.link;
+        setCompanyLogo(imageUrl);
+        formik.setFieldValue('companyLogo', data?.data?.link);
+        return data?.data?.link
+      } else {
+        toaster.danger("Can't upload image. Please try again later.");
+      }
+    }
+    catch (error: any) {
+      console.error(error);
+      const errorCode = error?.code;
+      const errorMessage = error?.message;
+      console.log(error);
+      toaster.danger("Can't upload image. Please try again later.");
+    }
+  }
+
+
   const saveProfile = async (values: any) => {
     // e.preventDefault();
     try {
+
+      // upload image to imgur
+      if(files?.length > 0) {
+        const link = await uploadImage(files[0]);
+        console.log('imageUrl: ', values.companyLogo, link);
+        values.companyLogo = link;
+      }
+
       const res = await fetch(`${API}/brand_user_profile`, {
         method: 'POST',
         headers: {
@@ -256,19 +307,6 @@ const BrandCompleteProfile: React.FC = () => {
               onChange={(e: any) => formik.setFieldValue('bookCallInfo', e.target.value)}
             />
           </FormField>
-
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyLogo && formik.errors.companyLogo ? ( <div>{formik.errors.companyLogo}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyLogo'
-              label="Company Logo"
-              required
-              // description="This is a description."
-              value={formik.values.companyLogo}
-              onChange={(e: any) => formik.setFieldValue('companyLogo', e.target.value)}
-            />
-          </FormField>
           
           {Error && <p className="error">{Error}</p>}
           {formik.touched.companyDescription && formik.errors.companyDescription ? ( <div>{formik.errors.companyDescription}</div> ) : null}
@@ -335,6 +373,31 @@ const BrandCompleteProfile: React.FC = () => {
             />
           </FormField>
           
+          <FileUploader
+            label="Upload Company Logo"
+            description="You can upload 1 file. File can be up to 50 MB."
+            maxSizeInBytes={50 * 1024 ** 2}
+            maxFiles={1}
+            onChange={handleChange}
+            onRejected={handleRejected}
+            renderFile={(file: any) => {
+              const { name, size, type } = file
+              const fileRejection = fileRejections.find((fileRejection: any) => fileRejection.file === file)
+              const { message } = fileRejection || {}
+              return (
+                <FileCard
+                  key={name}
+                  isInvalid={fileRejection != null}
+                  name={name}
+                  onRemove={handleRemove}
+                  sizeInBytes={size}
+                  type={type}
+                  validationMessage={message}
+                />
+              )
+            }}
+            values={files}
+          />
 
           {/* Submit Button */}
           <input type="submit" value={loading ? 'loading...' : 'Submit'} />
@@ -424,19 +487,6 @@ const BrandCompleteProfile: React.FC = () => {
               onChange={(e: any) => formik.setFieldValue('bookCallInfo', e.target.value)}
             />
           </FormField>
-
-          {Error && <p className="error">{Error}</p>}
-          {formik.touched.companyLogo && formik.errors.companyLogo ? ( <div>{formik.errors.companyLogo}</div> ) : null}
-          <FormField>
-            <TextInputField
-              name='companyLogo'
-              label="Company Logo"
-              required
-              // description="This is a description."
-              value={formik.values.companyLogo}
-              onChange={(e: any) => formik.setFieldValue('companyLogo', e.target.value)}
-            />
-          </FormField>
           
           {Error && <p className="error">{Error}</p>}
           {formik.touched.companyDescription && formik.errors.companyDescription ? ( <div>{formik.errors.companyDescription}</div> ) : null}
@@ -502,6 +552,32 @@ const BrandCompleteProfile: React.FC = () => {
               onChange={(e: any) => formik.setFieldValue('companyLinkedin', e.target.value)}
             />
           </FormField>
+
+          <FileUploader
+            label="Upload Company Logo"
+            description="You can upload 1 file. File can be up to 50 MB."
+            maxSizeInBytes={50 * 1024 ** 2}
+            maxFiles={1}
+            onChange={handleChange}
+            onRejected={handleRejected}
+            renderFile={(file: any) => {
+              const { name, size, type } = file
+              const fileRejection = fileRejections.find((fileRejection: any) => fileRejection.file === file)
+              const { message } = fileRejection || {}
+              return (
+                <FileCard
+                  key={name}
+                  isInvalid={fileRejection != null}
+                  name={name}
+                  onRemove={handleRemove}
+                  sizeInBytes={size}
+                  type={type}
+                  validationMessage={message}
+                />
+              )
+            }}
+            values={files}
+          />
           
 
           {/* Submit Button */}

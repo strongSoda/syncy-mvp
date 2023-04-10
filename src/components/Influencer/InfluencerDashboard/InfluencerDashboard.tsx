@@ -38,7 +38,7 @@ const InfluencerDashboard: React.FC = () => {
   const [campaignsLoading, setCampaignsLoading] = useState(true);
   const [campaigns, setCampaigns] = useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
-  const [applyLoading, setApplyLoading] = React.useState(false);
+  const [applyLoading, setApplyLoading] = React.useState<string>('');
   const [invites, setInvites] = React.useState<any[]>([]);
 
   const [showBrandProfile, setShowBrandProfile] = React.useState(false);
@@ -79,7 +79,7 @@ const InfluencerDashboard: React.FC = () => {
   }
 
   const sendProposal = async (campaignId: string, campaignName: string) => {
-    setApplyLoading(true);
+    setApplyLoading(campaignId);
     try {
       const res = await fetch(`${API}/campaign/apply?campaignId=${campaignId}&email=${user?.email}`)
       const data = await res.json();
@@ -99,7 +99,7 @@ const InfluencerDashboard: React.FC = () => {
       toaster.danger('Error sending proposal');
     }
     finally {
-      setApplyLoading(false);
+      setApplyLoading('');
     }
   }
 
@@ -187,7 +187,7 @@ const InfluencerDashboard: React.FC = () => {
                       sendProposal(campaign?.id, campaign?.name);
                     }}
                   >
-                    {applyLoading ? "Applying..." : "Apply"}
+                    {applyLoading === campaign?.id ? "Applying..." : "Apply"}
                   </Button>
                   </div>
                 </div>

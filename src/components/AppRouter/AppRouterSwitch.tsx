@@ -70,6 +70,7 @@ const AppRouterSwitch: React.FC = () => {
         <Route path={ROUTES.ADMIN.CAMPAIGNS} component={AdminCampaignsPage} />
 
         {/* Brand */}
+
         <AuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.DISCOVER} component={ManageRequestsPage} />
         <AuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.CAMPAIGNS} component={ManageMerchantsPage} />
         <AuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.COMPLETE_PROFILE} component={BrandCompleteProfilePage} />
@@ -79,6 +80,9 @@ const AppRouterSwitch: React.FC = () => {
         <UnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.LOGIN} component={LoginPage} />
         <UnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.BRAND.FORGOT_PASSWORD} component={ForgotPasswordPage} />
 
+        <Route path="/brand">
+          <Redirect to="/brand/discover" />
+        </Route>
 
         {/* Influencer */}
         <InfluencerAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.DASHBOARD} component={InfluencerDashboardPage} />
@@ -88,6 +92,11 @@ const AppRouterSwitch: React.FC = () => {
         <InfluencerUnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.REGISTER} component={InfluencerSignupPage} />
         <InfluencerUnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.LOGIN} component={InfluencerLoginPage} />
         <InfluencerUnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.FORGOT_PASSWORD} component={InfluencerForgotPasswordPage} />
+
+        <Route path="/influencer">
+          <Redirect to="/influencer/dashboard" />
+        </Route>
+
 
         <Route path="/404" component={NotFoundPage} />
         <Redirect to="/404" />

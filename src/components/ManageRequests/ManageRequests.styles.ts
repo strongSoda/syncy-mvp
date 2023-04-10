@@ -148,6 +148,11 @@ const ManageRequestsWrapper = styled.div`
       margin-bottom: 1em;
     }
 
+    .profile-details, .profile-picture {
+      /* background: yellow; */
+      text-align: center;
+    }
+
     .str-chat {
       height: 80%;
     }

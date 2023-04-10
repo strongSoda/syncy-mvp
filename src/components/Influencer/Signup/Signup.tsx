@@ -63,7 +63,7 @@ const Signup: React.FC = () => {
       await sendEmailVerification(user)
 
       dispatch(login());
-      logUsage('INFLUENCER SIGNUP', {user: values}); 
+      logUsage('INFLUENCER SIGNUP', {user: values?.email}); 
       history.push(ROUTES.INFLUENCER.COMPLETE_PROFILE);
 
     } catch (error: any) {

@@ -63,7 +63,7 @@ const Signup: React.FC = () => {
       await sendEmailVerification(user)
 
       dispatch(login());
-      logUsage('BRAND SIGNUP', {user: values});
+      logUsage('BRAND SIGNUP', {user: values?.email});
       history.push(ROUTES.BRAND.COMPLETE_PROFILE);
 
     } catch (error: any) {

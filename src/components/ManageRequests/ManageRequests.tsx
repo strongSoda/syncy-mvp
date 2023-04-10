@@ -295,6 +295,8 @@ interface ICardProps {
 }
 
 const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
+  const user = useContext(AuthContext)
+  
   useEffect(() => {
     console.log('hit', hit);
   }, [hit]);
@@ -340,7 +342,9 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
   },[])
 
   return (
-  <CardWrapper data-testid="Card">
+  <>
+  {hit?.fullName.toLowerCase().includes('test') && !user?.email?.includes('syncy.net')  ? null : (
+    <CardWrapper data-testid="Card">
     <Avatar src={hit?.imageUrl} alt="profile" size={80} name={hit?.fullName} />
     <div className="card-body">
       <div className='card-header'>
@@ -377,6 +381,8 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
     {showBookCall && <BookCall influencer={hit} setShowBookCall={setShowBookCall} />}
     {showReachout && <Reachout influencer={hit} setShowReachout={setShowReachout} />}
   </CardWrapper>
+  )}
+  </>
 )};
 
 interface IBookCallProps {

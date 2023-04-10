@@ -450,6 +450,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
   });
 
   const saveProfile = async (values: any) => {
+    values.username = values?.username?.replace('@', '');
     // e.preventDefault();
     try {
       const res = await fetch(`${API}/influencer-profile-instagram`, {

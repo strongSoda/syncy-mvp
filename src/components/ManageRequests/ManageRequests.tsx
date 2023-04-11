@@ -274,7 +274,7 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
       <iframe title={influencer?.fullName ? influencer?.fullName : influencer?.first_name} 
         src={`${influencer?.profileUrl ? (influencer?.profileUrl[influencer?.profileUrl.length-1]==="/" ? influencer?.profileUrl 
                 : (influencer?.profileUrl + '/')) : (`https://www.instagram.com/${encodeURI(influencer?.instagram_username 
-                ? influencer?.instagram_username : influencer?.instagramUsername)}/`)}embed`} name="myiFrame" scrolling="yes" frameBorder="0" height="900" width="100%" allowFullScreen={true}></iframe>
+                ? influencer?.instagram_username.trim() : influencer?.instagramUsername.trim())}/`)}embed`} name="myiFrame" scrolling="yes" frameBorder="0" height="900" width="100%" allowFullScreen={true}></iframe>
       {/* <Button text="X" backgroundColor={CSSVARIABLES.COLORS.RED} onClick={() => setShowInfluencerProfile(false) } /> */}
       {/* <div className='container'>  
         <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />

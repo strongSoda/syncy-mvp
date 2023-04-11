@@ -113,7 +113,7 @@ const Login: React.FC = () => {
             Forgot Password? <a href={ROUTES.BRAND.FORGOT_PASSWORD}>Reset!</a>
           </p>
         </form>
-      </div>
+    </div>
       <div className="banner">
         <h1 className='title'>Find Influencers</h1>
       </div>

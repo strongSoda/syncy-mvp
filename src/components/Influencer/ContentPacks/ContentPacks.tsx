@@ -5,7 +5,7 @@ import SideBar from '../SideBar/SideBar.lazy';
 import CSSVARIABLES from 'global/constants/variables';
 import { AuthContext } from 'global/context/AuthContext';
 import API from 'global/constants/api';
-import { Button, Card, Heading, Pane, SideSheet } from 'evergreen-ui';
+import { Button, Card, EditIcon, Heading, IconButton, Pane, Pill, Select, SelectField, SideSheet, Spinner, TextInputField, TrashIcon, majorScale, toaster } from 'evergreen-ui';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 
@@ -16,7 +16,7 @@ interface ContentPack {
   title: string;
   description: string;
   price: number;
-  source: string;
+  platform: string;
   examples: string;
 }
 
@@ -25,10 +25,15 @@ const ContentPacks: React.FC = () => {
 
   const [contentPacks, setContentPacks] = useState<ContentPack[]>([]);
 
+  const [selectedPack, setSelectedPack] = useState<ContentPack>();
+
   const [showCreateContentPack, setShowCreateContentPack] = useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   // get content packs from api and set state /content-packs/:id
   const getContentPacks = async () => {
+    setLoading(true);
     try {
       const response = await fetch(`${API}/content-packs/${user?.email}`);
       const data = await response.json();
@@ -36,6 +41,24 @@ const ContentPacks: React.FC = () => {
       
       setContentPacks(data?.body.content_packs);
 
+    } catch (error) {
+      console.log(error);
+    }
+
+    setLoading(false);
+  };
+
+  const deleteContentPack = async (id: string) => {
+    try {
+      const response = await fetch(`${API}/content-pack/${user?.email}/${id}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      console.log(data);
+      if(data?.success) {
+        toaster.success('Content Pack Deleted');
+        getContentPacks();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -57,40 +80,82 @@ const ContentPacks: React.FC = () => {
     <Button appearance='primary' onClick={() => setShowCreateContentPack(true)}>
       Create Content Pack
     </Button>
-
+    {loading ? 
+    <Pane display="flex" alignItems="center" justifyContent="center" height={240}>
+      <Spinner />
+    </Pane>
+    :
+    <>
     {contentPacks.length > 0 ?
       <div className="content-packs">
       {contentPacks?.map((contentPack) => (
-        <div className="content-pack" key={contentPack.id}>
-          <h2>{contentPack.title}</h2>
-          <p>{contentPack.description}</p>
-          <p>{contentPack.price}</p>
-          <p>{contentPack.source}</p>
-          <p>{contentPack.examples}</p>
+      <Pane padding={16} background='#fff' width='40vw' marginTop={30} borderRadius={10}>
+        <div className="content-pack" key={contentPack?.id}>
+          <Pill color="green" marginRight={8}>{contentPack?.platform}</Pill>
+          <IconButton icon={EditIcon} marginRight={majorScale(2)} onClick={() => {
+            setSelectedPack(contentPack);
+            setShowCreateContentPack(true)
+          }} />
+          <IconButton icon={TrashIcon} intent='danger' marginRight={majorScale(2)} onClick={() => {
+            deleteContentPack(contentPack?.id);
+          }} />
+          <h2>{contentPack?.title} for ${contentPack?.price}</h2>
+          <p>{contentPack?.description}</p>
+          <p>{contentPack?.examples}</p>
         </div>
+      </Pane>
       ))}
     </div>
     :
-    <p>You have no content packs</p>
+    <p>You have no content packs</p>}
+    </>
   }
 
-    {showCreateContentPack && <CreateContentPack isShown={showCreateContentPack} setIsShown={setShowCreateContentPack} />}
+    {showCreateContentPack && 
+      <CreateContentPack 
+        isShown={showCreateContentPack} 
+        setIsShown={setShowCreateContentPack} 
+        getContentPacks={getContentPacks} 
+        selectedPack={selectedPack}
+        setSelectedPack={setSelectedPack}
+      />}
   </ContentPacksWrapper>
 )};
 
-function CreateContentPack({ isShown, setIsShown }: { isShown: boolean, setIsShown: (value: boolean) => void }) {
+const platforms = [
+  "Instagram",
+  "Facebook",
+  "Twitter",
+  "YouTube",
+  "TikTok",
+  "Snapchat",
+  "Pinterest",
+  "LinkedIn",
+  "Reddit",
+  "Twitch",
+  "Other"
+]
+
+function CreateContentPack({ isShown, setIsShown, getContentPacks, selectedPack, setSelectedPack }: { isShown: boolean, setIsShown: (value: boolean) => void, getContentPacks: () => void, selectedPack?: ContentPack, setSelectedPack: (value: ContentPack) => void }) {
+
+  const user = useContext(AuthContext);
+  const [customError, setCustomError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      title: '1 Reel',
-      description: '1 Reel of content',
-      price: 100,
-      source: 'Instagram',
-      examples: '',
+      title: selectedPack ? selectedPack?.title : '1 Reel',
+      description: selectedPack ? selectedPack?.description : 'One reel filmed with professional videographer and equipment.',
+      price: selectedPack ? selectedPack?.price : 100,
+      platform: selectedPack ? selectedPack?.platform : 'Instagram',
+      examples: selectedPack ? selectedPack?.examples : '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email address').required('Required'),
-      password: Yup.string().min(6, 'Must be 6 characters or more').required('Required'),
+      title: Yup.string().max(300, 'Must be 300 characters or less').required('Required'),
+      description: Yup.string().max(1000, 'Must be 1000 characters or less').required('Required'),
+      price: Yup.number().min(0, 'Must be greater than 0').required('Required'),
+      platform: Yup.string().max(300, 'Must be 300 characters or less').required('Required'),
+      examples: Yup.string().max(10000, 'Must be 10000 characters or less'),
     }),
 
     onSubmit: async (values: any) => {
@@ -102,17 +167,81 @@ function CreateContentPack({ isShown, setIsShown }: { isShown: boolean, setIsSho
       setCustomError('');
       setLoading(true);
 
-      await signIn(values);
-
+      console.log(selectedPack);
+      
+      if(selectedPack?.title === undefined ) {
+        console.log('create');
+        await createContentPack(values);
+      } else {
+        console.log('update');
+        await updateContentPack(values);
+      }
       setLoading(false);
     },
   });
 
+  const createContentPack = async (values: any) => {
+    try {
+      const response = await fetch(`${API}/content-pack/${user?.email}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      if (data?.status === 'fail') {
+        toaster.danger(data?.message);
+      } else {
+        setIsShown(false);
+        toaster.success('Content Pack Created');
+        getContentPacks()
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateContentPack = async (values: any) => {
+    try {
+      const response = await fetch(`${API}/content-pack/${user?.email}/${selectedPack?.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      if (data?.status === 'fail') {
+        toaster.danger(data?.message);
+      } else {
+        setIsShown(false);
+        toaster.success('Content Pack Updated');
+        getContentPacks()
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    console.log('selectedPack', selectedPack);
+  }, [selectedPack])
+  
   return (
     <React.Fragment>
       <SideSheet
         isShown={isShown}
-        onCloseComplete={() => setIsShown(false)}
+        onCloseComplete={() => {
+          setSelectedPack({} as ContentPack);
+          setIsShown(false);
+        }}
         containerProps={{
           display: 'flex',
           flex: '1',
@@ -122,19 +251,101 @@ function CreateContentPack({ isShown, setIsShown }: { isShown: boolean, setIsSho
       >
         <Pane zIndex={1} flexShrink={0} elevation={0} backgroundColor="white">
           <Pane padding={16}>
-            <Heading size={600}>Create New Content Pack</Heading>
+            <Heading size={600}>{selectedPack ? 'Edit Content Pack' : 'Create New Content Pack'}</Heading>
           </Pane>
         </Pane>
         <Pane flex="1" overflowY="scroll" background="tint1" padding={16}>
           <Card
             backgroundColor="white"
             elevation={0}
-            height={240}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
+            // height={240}
+            padding={16}
+            // display="flex"
+            // alignItems="center"
+            // justifyContent="center"
           >
-            <Heading>Some content</Heading>
+
+        <div className="form_wrapper" id="form_wrapper">
+        <form id="form" onSubmit={formik.handleSubmit}>
+          {Error && <p className="error">{Error}</p>}
+
+          <TextInputField
+            type="text"
+            name="title"
+            id="title"
+            label="Title"
+            required
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.title}
+            placeholder="Title"
+            validationMessage={formik.touched.title && formik.errors.title ? formik.errors.title : null}
+          />
+
+          <br />
+
+          <TextInputField
+            label="Description"
+            required
+            name="description"
+            id="description"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.description}
+            placeholder="Description"
+            validationMessage={formik.touched.description && formik.errors.description ? formik.errors.description : null}
+          />
+
+          <br />
+
+
+          <TextInputField
+            label="Price"
+            required
+            type="number"
+            name="price"
+            id="price"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.price}
+            placeholder="Price"
+            validationMessage={formik.touched.price && formik.errors.price ? formik.errors.price : null}
+          />
+
+          <br />
+
+          <SelectField
+            label="Platform"
+            required
+            value={formik.values.platform} 
+            onChange={(event: any) => formik.setFieldValue('platform', event.target.value)}
+            onBlur={formik.handleBlur}
+          >
+            {platforms.map((platform: string) => (
+              <option value={selectedPack?.platform === platform ? selectedPack?.platform : platform} key={selectedPack?.platform === platform ? selectedPack?.platform : platform}>
+                {selectedPack?.platform === platform ? selectedPack?.platform : platform}
+              </option>
+            ))}
+          </SelectField>
+
+          <br />
+
+
+          <TextInputField
+            label="Examples of past work (comma separated)"
+            type="text"
+            name="examples"
+            id="examples"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.examples}
+            placeholder="https://instagram.com/post1, https://instagram.com/post2"
+            validationMessage={formik.touched.examples && formik.errors.examples ? formik.errors.examples : null}
+          />
+
+          <Button type="submit" appearance='primary' intent="success">{loading ? 'Saving...' : 'Save'}</Button>
+        </form>
+    </div>
           </Card>
         </Pane>
       </SideSheet>

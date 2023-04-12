@@ -26,7 +26,7 @@ const ContentPacks: React.FC = () => {
 
   const [contentPacks, setContentPacks] = useState<ContentPack[]>([]);
 
-  const [selectedPack, setSelectedPack] = useState<ContentPack>();
+  const [selectedPack, setSelectedPack] = useState<ContentPack | undefined>();
 
   const [showCreateContentPack, setShowCreateContentPack] = useState(false);
 
@@ -76,10 +76,10 @@ const ContentPacks: React.FC = () => {
   <ContentPacksWrapper data-testid="ContentPacks">
     <SideBar lightColor={CSSVARIABLES.COLORS.YELLOW_GREEN_1} darkColor={CSSVARIABLES.COLORS.YELLOW_GREEN_0} />
     
-    <h1>My Content Packs
+    <h1>My Content Deliverables
     </h1>
     <Button appearance='primary' onClick={() => setShowCreateContentPack(true)}>
-      Create Content Pack
+      Create Content Deliverable
     </Button>
     {loading ? 
     <Pane display="flex" alignItems="center" justifyContent="center" height={240}>
@@ -110,7 +110,7 @@ const ContentPacks: React.FC = () => {
       ))}
     </div>
     :
-    <p>You have no content packs</p>}
+    <p>You have no content deliverables</p>}
     </>
   }
 
@@ -139,7 +139,10 @@ const platforms = [
   "Other"
 ]
 
-function CreateContentPack({ isShown, setIsShown, getContentPacks, selectedPack, setSelectedPack }: { isShown: boolean, setIsShown: (value: boolean) => void, getContentPacks: () => void, selectedPack?: ContentPack, setSelectedPack: (value: ContentPack) => void }) {
+function CreateContentPack({ isShown, setIsShown, getContentPacks, selectedPack, setSelectedPack }: 
+  { isShown: boolean, setIsShown: (value: boolean) => void, 
+    getContentPacks: () => void, selectedPack?: ContentPack, 
+    setSelectedPack: (value: ContentPack | undefined) => void }) {
 
   const user = useContext(AuthContext);
   const [customError, setCustomError] = useState('');
@@ -244,7 +247,7 @@ function CreateContentPack({ isShown, setIsShown, getContentPacks, selectedPack,
       <SideSheet
         isShown={isShown}
         onCloseComplete={() => {
-          setSelectedPack({} as ContentPack);
+          setSelectedPack(undefined);
           setIsShown(false);
         }}
         containerProps={{
@@ -256,7 +259,7 @@ function CreateContentPack({ isShown, setIsShown, getContentPacks, selectedPack,
       >
         <Pane zIndex={1} flexShrink={0} elevation={0} backgroundColor="white">
           <Pane padding={16}>
-            <Heading size={600}>{selectedPack ? 'Edit Content Pack' : 'Create New Content Pack'}</Heading>
+            <Heading size={600}>{selectedPack ? 'Edit Content Deliverable' : 'Create New Content Deliverable'}</Heading>
           </Pane>
         </Pane>
         <Pane flex="1" overflowY="scroll" background="tint1" padding={16}>

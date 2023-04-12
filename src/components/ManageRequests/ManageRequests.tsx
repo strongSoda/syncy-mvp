@@ -173,9 +173,11 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
 
   const [packs, setPacks] = useState<ContentPack[]>([]);
 
+  const [loading, setLoading] = useState(false);
+
   // get content packs from api and set state /content-packs/:id
   const getContentPacks = async () => {
-    // setLoading(true);
+    setLoading(true);
     try {
       const response = await fetch(`${API}/content-packs/${influencer?.email || influencer?.publicEmail || influencer?.mailFound}`);
       const data = await response.json();
@@ -187,7 +189,7 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
       console.log(error);
     }
 
-    // setLoading(false);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -215,55 +217,66 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
       </div>
       </div> */}
 
-      <div className='profile-container'>
-        <div className='profile'>
-          <div className='profile-picture'>
-            <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />
-          </div>
-          <div className='profile-details'>
-            <div className='actions'>          
-            {influencer?.bookCallInfo && 
-            <img className='icon' src={PhoneIcon} alt="call" onClick={() => {
-              setShowBookCall(true);
+      {loading ? 
+        <Pane display="flex" alignItems="center" justifyContent="center" height={400}>
+          <Spinner />
+        </Pane>
+      : packs?.length > 0 &&  
+        <div className='profile-container'>
+          <div className='profile'>
+            <div className='profile-picture'>
+              <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />
+            </div>
+            <div className='profile-details'>
+              <div className='actions'>          
+              {influencer?.bookCallInfo && 
+              <img className='icon' src={PhoneIcon} alt="call" onClick={() => {
+                setShowBookCall(true);
+                setShowInfluencerProfile(false);
+              }} />
+            }
+            <img className='icon' src={EmailIcon} alt="email" onClick={() => {
+              setShowReachout(true);
               setShowInfluencerProfile(false);
             }} />
-          }
-          <img className='icon' src={EmailIcon} alt="email" onClick={() => {
-            setShowReachout(true);
-            setShowInfluencerProfile(false);
-          }} />
-        </div>
-            <h1 className='name'>{influencer?.fullName ? influencer?.fullName : influencer?.first_name}</h1>
-            {(influencer?.instagram_username || influencer?.instagramUsername) && <p className='username'>@{influencer?.instagram_username 
-                  ? influencer?.instagram_username : influencer?.instagramUsername}</p>}
-            <h1 className='followers'>{formatNumber(influencer?.followersCount)} Followers</h1>
-            <h1 className='location'>{influencer?.location}</h1>
-            <h1 className='bio'>{influencer?.bio}</h1>
-            <a href="#" className='bio'>Read Reviews</a>
+          </div>
+              <h1 className='name'>{influencer?.fullName ? influencer?.fullName : influencer?.first_name}</h1>
+              {(influencer?.instagram_username || influencer?.instagramUsername) && <p className='username'>@{influencer?.instagram_username 
+                    ? influencer?.instagram_username : influencer?.instagramUsername}</p>}
+              <h1 className='followers'>{formatNumber(influencer?.followersCount)} Followers</h1>
+              <h1 className='location'>{influencer?.location}</h1>
+              <h1 className='bio'>{influencer?.bio}</h1>
+              <a href="#" className='bio'>Read Reviews</a>
+            </div>
+          </div>
+
+
+          <div className='packs'>
+            <h1 className='title'>Packs</h1>
+            <div className='packs-container'>
+              {packs.map((pack, index) => (
+                <Pane padding={16} background='#fff' width='20vw' marginTop={30} borderRadius={10}>
+                <div className='pack' key={index}>
+                  <Pill color="green" marginRight={8}>{pack?.platform}</Pill>
+                  <h1 className='name'>{pack?.title}</h1>
+                  <h1 className='price'>${pack?.price}</h1>
+                  <Button text="Book" backgroundColor={CSSVARIABLES.COLORS.GREEN_0} onClick={() => {
+                    window.location.href = `https://buy.stripe.com/8wM8y22PG5zi3Wo3dk`;
+                  }} />
+                  <Paragraph>
+                    <small>Delivery in <Pill color="blue" marginRight={8}>{pack?.delivery} days</Pill></small>
+                  </Paragraph>
+                  <hr />
+                  <p className='description'>{pack?.description}</p>
+                </div>
+                </Pane>
+              ))}
+            </div>
           </div>
         </div>
+      }
 
-
-        <div className='packs'>
-          <h1 className='title'>Packs</h1>
-          <div className='packs-container'>
-            {packs.map((pack, index) => (
-              <div className='pack' key={index}>
-                <h1 className='name'>{pack?.title}</h1>
-                <Pill color="green" marginRight={8}>{pack?.platform}</Pill>
-                <h1 className='price'>${pack?.price}</h1>
-                <small>Delivery in <Pill color="blue" marginRight={8}>{pack?.delivery} days</Pill></small>
-                <Button text="Book" backgroundColor={CSSVARIABLES.COLORS.GREEN_0} onClick={() => {
-                  window.location.href = `https://buy.stripe.com/8wM8y22PG5zi3Wo3dk`;
-                }} />
-                <p className='description'>{pack?.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <h1 className='title'>Instagram Profile</h1>
+      {packs?.length > 0 && <h1 className='title'>Instagram Profile</h1>}
       <iframe title={influencer?.fullName ? influencer?.fullName : influencer?.first_name} 
         src={`${influencer?.profileUrl ? (influencer?.profileUrl[influencer?.profileUrl.length-1]==="/" ? influencer?.profileUrl 
                 : (influencer?.profileUrl + '/')) : (`https://www.instagram.com/${encodeURI(influencer?.instagram_username 

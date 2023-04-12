@@ -71,7 +71,8 @@ ${({ theme }) => css`
       .packs-container {
         /* background: yellow; */
         display: flex;
-        gap: 2em;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
   
         text-align: center;
         

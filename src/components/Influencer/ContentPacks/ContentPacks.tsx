@@ -18,6 +18,7 @@ interface ContentPack {
   price: number;
   platform: string;
   examples: string;
+  delivery: number;
 }
 
 const ContentPacks: React.FC = () => {
@@ -103,6 +104,8 @@ const ContentPacks: React.FC = () => {
           <p>{contentPack?.description}</p>
           <p>{contentPack?.examples}</p>
         </div>
+        <hr />
+        <small>Delivery in <Pill color="blue" marginRight={8}>{contentPack?.delivery} days</Pill></small>
       </Pane>
       ))}
     </div>
@@ -149,6 +152,7 @@ function CreateContentPack({ isShown, setIsShown, getContentPacks, selectedPack,
       price: selectedPack ? selectedPack?.price : 100,
       platform: selectedPack ? selectedPack?.platform : 'Instagram',
       examples: selectedPack ? selectedPack?.examples : '',
+      delivery: selectedPack ? selectedPack?.delivery : 7,
     },
     validationSchema: Yup.object({
       title: Yup.string().max(300, 'Must be 300 characters or less').required('Required'),
@@ -156,6 +160,7 @@ function CreateContentPack({ isShown, setIsShown, getContentPacks, selectedPack,
       price: Yup.number().min(0, 'Must be greater than 0').required('Required'),
       platform: Yup.string().max(300, 'Must be 300 characters or less').required('Required'),
       examples: Yup.string().max(10000, 'Must be 10000 characters or less'),
+      delivery: Yup.number().min(0, 'Must be greater than 0').required('Required'),
     }),
 
     onSubmit: async (values: any) => {
@@ -341,6 +346,21 @@ function CreateContentPack({ isShown, setIsShown, getContentPacks, selectedPack,
             value={formik.values.examples}
             placeholder="https://instagram.com/post1, https://instagram.com/post2"
             validationMessage={formik.touched.examples && formik.errors.examples ? formik.errors.examples : null}
+          />
+
+          <br />
+
+          <TextInputField
+            label="Delivery Time (in days)"
+            required
+            type="number"
+            name="delivery"
+            id="delivery"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.delivery}
+            placeholder="7"
+            validationMessage={formik.touched.delivery && formik.errors.delivery ? formik.errors.delivery : null}
           />
 
           <Button type="submit" appearance='primary' intent="success">{loading ? 'Saving...' : 'Save'}</Button>

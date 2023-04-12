@@ -11,7 +11,7 @@ import * as Yup from "yup";
 
 // declare interface IContentPacksProps {}
 
-interface ContentPack {
+export interface ContentPack {
   id: string;
   title: string;
   description: string;

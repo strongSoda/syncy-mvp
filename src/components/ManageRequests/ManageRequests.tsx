@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
-import { Avatar, Badge, Heading, Pane, Paragraph, Popover, Position, Pulsar, SideSheet, Spinner, Tab, Tablist, TextInputField, toaster, Tooltip } from 'evergreen-ui';
+import { Avatar, Badge, Heading, Pane, Paragraph, Pill, Popover, Position, Pulsar, SideSheet, Spinner, Tab, Tablist, TextInputField, toaster, Tooltip } from 'evergreen-ui';
 
 import Button from 'components/Button/Button.lazy';
 import Navbar from 'components/Navbar/Navbar.lazy';
@@ -53,6 +53,7 @@ import formatNumber from 'global/functions/formatFollowers';
 import logUsage from 'global/functions/usage-logs';
 import Hamburger from 'hamburger-react';
 import isMobile from 'global/functions/is-mobile';
+import { ContentPack } from 'components/Influencer/ContentPacks/ContentPacks';
 
 const searchClient = algoliasearch('L7PFECEWC3', 'a953f96171e71bef23ebd1760c7dea10');
 
@@ -159,37 +160,6 @@ const Influencers: React.FC = () => {
   );
 }
 
-const packs = [
-  {
-    "id": 0,
-    "name": "Discovery Call",
-    "price": 25,
-    "description": "15 minute call to discuss your brand and how I can help you.",
-    "platform": "Instagram",
-  },
-  {
-    "id": 1,
-    "name": "1 Reel",
-    "price": 250,
-    "description": "One reel filmed with professional videographer and equipment.",
-    "platform": "Instagram",
-  },
-  {
-    "id": 2,
-    "name": "1 Story",
-    "price": 100,
-    "description": "One story video where I present the product/ brand.",
-    "platform": "Instagram",
-  },
-  {
-    "id": 3,
-    "name": "1 Post",
-    "price": 50,
-    "description": "One photo with the product and written information about what you would like to promote.",
-    "platform": "Instagram",
-  },
-]
-
 interface IInfluencerProfileProps {
   influencer: any;
   setShowInfluencerProfile: React.Dispatch<React.SetStateAction<boolean>>;
@@ -201,9 +171,30 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
 
   const user = useContext(AuthContext)
 
+  const [packs, setPacks] = useState<ContentPack[]>([]);
+
+  // get content packs from api and set state /content-packs/:id
+  const getContentPacks = async () => {
+    // setLoading(true);
+    try {
+      const response = await fetch(`${API}/content-packs/${influencer?.email || influencer?.publicEmail || influencer?.mailFound}`);
+      const data = await response.json();
+      console.log(data);
+      
+      setPacks(data?.body.content_packs);
+
+    } catch (error) {
+      console.log(error);
+    }
+
+    // setLoading(false);
+  };
+
   useEffect(() => {
     console.log('influencer', influencer);
     logUsage('BRAND VIEW INFLUENCER PROFILE', { user: {email: user?.email}, influencer: influencer?.fullName });
+
+    getContentPacks();
   }, [influencer]);
 
   return (
@@ -224,7 +215,7 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
       </div>
       </div> */}
 
-      {/* <div className='profile-container'>
+      <div className='profile-container'>
         <div className='profile'>
           <div className='profile-picture'>
             <Avatar src={influencer?.imageUrl} alt="profile" name={influencer?.fullName} size={80} />
@@ -258,19 +249,21 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
           <div className='packs-container'>
             {packs.map((pack, index) => (
               <div className='pack' key={index}>
-                <h1 className='name'>{pack.name}</h1>
-                <h1 className='price'>${pack.price}</h1>
+                <h1 className='name'>{pack?.title}</h1>
+                <Pill color="green" marginRight={8}>{pack?.platform}</Pill>
+                <h1 className='price'>${pack?.price}</h1>
+                <small>Delivery in <Pill color="blue" marginRight={8}>{pack?.delivery} days</Pill></small>
                 <Button text="Book" backgroundColor={CSSVARIABLES.COLORS.GREEN_0} onClick={() => {
                   window.location.href = `https://buy.stripe.com/8wM8y22PG5zi3Wo3dk`;
                 }} />
-                <p className='description'>{pack.description}</p>
+                <p className='description'>{pack?.description}</p>
               </div>
             ))}
           </div>
         </div>
-      </div> */}
+      </div>
 
-      {/* <h1 className='title'>Instagram Profile</h1> */}
+      <h1 className='title'>Instagram Profile</h1>
       <iframe title={influencer?.fullName ? influencer?.fullName : influencer?.first_name} 
         src={`${influencer?.profileUrl ? (influencer?.profileUrl[influencer?.profileUrl.length-1]==="/" ? influencer?.profileUrl 
                 : (influencer?.profileUrl + '/')) : (`https://www.instagram.com/${encodeURI(influencer?.instagram_username 

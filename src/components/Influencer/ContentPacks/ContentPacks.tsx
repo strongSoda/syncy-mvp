@@ -55,7 +55,7 @@ const ContentPacks: React.FC = () => {
       });
       const data = await response.json();
       console.log(data);
-      if(data?.success) {
+      if(data?.status === 'success') {
         toaster.success('Content Pack Deleted');
         getContentPacks();
       }

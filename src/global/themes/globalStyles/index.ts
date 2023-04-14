@@ -45,6 +45,10 @@ ${({ theme }) => css`
   display: flex;
   align-items: center;
 }
+
+.ProseMirror {
+  min-height: 200px;
+}
 .ai-avatar {
   width: 50px;
   height: 50px;

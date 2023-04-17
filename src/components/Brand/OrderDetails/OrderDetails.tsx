@@ -94,10 +94,10 @@ const OrderDetails: React.FC = () => {
       </>
       }
 
-      {order?.script &&
+      {order?.contentScript &&
       <>
         <h2>Content Script</h2>
-        <RichMarkdownEditor defaultValue={order?.script} readOnly={true} />
+        <RichMarkdownEditor defaultValue={order?.contentScript} readOnly={true} />
       </>
       }
 

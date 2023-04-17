@@ -9,6 +9,8 @@ import isMobile from 'global/functions/is-mobile';
 import Syncy from '../../../assets/images/syncy.png';
 import API from 'global/constants/api';
 import { AuthContext } from 'global/context/AuthContext';
+import ROUTES from 'global/constants/routes';
+import { useHistory } from 'react-router';
 
 // declare interface IOrdersProps {}
 
@@ -24,6 +26,8 @@ const Orders: React.FC = () => {
   })
 
   const user  = useContext(AuthContext)
+
+  const history = useHistory()
 
   const getOrders = async () => {
     setLoading(true)
@@ -108,7 +112,7 @@ const Orders: React.FC = () => {
     {loading && <Spinner />}
     {!loading && bookings && <div className='orders'>
       {bookings?.map((booking: any) => (
-        <Pane key={booking?.id} display="flex" padding={16} background={CSSVARIABLES.COLORS.WHITE_0} borderRadius={3} marginBottom={20}>
+        <Pane key={booking?.id} display="flex" padding={16} background={CSSVARIABLES.COLORS.WHITE_0} borderRadius={3} marginBottom={20} onClick={() => history.push(ROUTES.BRAND.ORDER_DETAILS + '/' + booking?.id)}>
         <div className='order'>
           <Heading className='title'>{booking?.contentPack?.title}</Heading>
           <p>$ {booking?.contentPack?.price}</p>

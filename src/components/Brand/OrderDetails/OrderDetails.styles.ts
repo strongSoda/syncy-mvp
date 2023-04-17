@@ -1,7 +1,7 @@
 import CSSVARIABLES from 'global/constants/variables';
 import styled from 'styled-components';
 
-const OrdersWrapper = styled.div`
+const OrderDetailsWrapper = styled.div`
   margin-left: ${CSSVARIABLES.LAYOUT.PRIMARY.MARGIN_LEFT};
   padding: ${CSSVARIABLES.LAYOUT.PRIMARY.PADDING};
 
@@ -59,4 +59,4 @@ const OrdersWrapper = styled.div`
     }
 `;
 
-export default OrdersWrapper;
+export default OrderDetailsWrapper;

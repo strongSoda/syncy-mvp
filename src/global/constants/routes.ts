@@ -12,6 +12,7 @@ const ROUTES = {
     COMPLETE_PROFILE: '/brand/complete-profile',
     FORGOT_PASSWORD: '/brand/forgot-password',
     MESSAGES: '/brand/messages',
+    ORDERS: '/brand/orders',
   },
   INFLUENCER: {
     LOGIN: '/influencer/login',

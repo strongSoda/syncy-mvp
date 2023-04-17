@@ -29,17 +29,17 @@ const Links = [
     path: ROUTES.BRAND.DISCOVER,
   },
   {
+    icon: Shop,
+    text: 'My Orders',
+    id: 3,
+    path: ROUTES.BRAND.ORDERS,
+  },
+  {
     icon: ProfileIcon,
     text: 'Messages',
     id: 1,
     path: ROUTES.BRAND.MESSAGES,
   },
-  // {
-  //   icon: Shop,
-  //   text: 'Campaigns',
-  //   id: 1,
-  //   path: ROUTES.BRAND.CAMPAIGNS,
-  // },
   {
     icon: ProfileIcon,
     text: 'Profile',

@@ -4,7 +4,7 @@ import OrderDetailsWrapper from './OrderDetails.styles';
 import Hamburger from 'hamburger-react';
 import { Avatar, Heading, Pane, Paragraph, Pill, Spinner } from 'evergreen-ui';
 import CSSVARIABLES from 'global/constants/variables';
-import SideBar from 'components/SideBar/SideBar.lazy';
+import SideBar from 'components/Influencer/SideBar/SideBar.lazy';
 import isMobile from 'global/functions/is-mobile';
 import Syncy from '../../../assets/images/syncy.png';
 import API from 'global/constants/api';
@@ -83,10 +83,13 @@ const OrderDetails: React.FC = () => {
       <Paragraph>{order?.contentPack?.description}</Paragraph>
       <Paragraph>Platform: <Pill>{order?.contentPack?.platform}</Pill></Paragraph>
 
-      <h2>Influencer Details</h2>
-      <Avatar src={order?.influencer?.image_url} size={80} name={order?.influencer?.first_name + ' ' + order?.influencer?.last_name} />
-      <Heading>{order?.influencer?.first_name + ' ' + order?.influencer?.last_name}</Heading>
-      <Paragraph>{order?.influencer?.followersCount}</Paragraph>
+      <h2>Brand Details</h2>
+      <Avatar src={order?.brand?.company_logo} name={order?.brand?.first_name + ' ' + order?.brand?.last_name} size={40} />
+      <Heading>{order?.brand?.company_name}</Heading>
+      <Paragraph>{order?.brand?.company_description}</Paragraph>
+      <Paragraph>Contact: {order?.brand?.first_name + ' ' + order?.brand?.last_name}</Paragraph>
+      <a href={order?.brand?.company_website} target="_blank" rel="noreferrer">{order?.brand?.website}</a>
+      <a href={order?.brand?.company_instagram} target="_blank" rel="noreferrer">Instagram</a>
 
       <br /> <br />
       {order?.details &&

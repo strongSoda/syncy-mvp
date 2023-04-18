@@ -35,6 +35,12 @@ const Links = [
     path: ROUTES.INFLUENCER.CONTENT_PACKS,
   },
   {
+    icon: ProfileIcon,
+    text: 'My Orders',
+    id: 4,
+    path: ROUTES.INFLUENCER.ORDERS,
+  },
+  {
     icon: LightChat,
     text: 'Messages',
     id: 0,

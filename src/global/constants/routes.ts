@@ -24,6 +24,8 @@ const ROUTES = {
     FORGOT_PASSWORD: '/influencer/forgot-password',
     MESSAGES: '/influencer/messages',
     CONTENT_PACKS: '/influencer/content-packs',
+    ORDERS: '/influencer/orders',
+    ORDER_DETAILS: '/influencer/order',
   },
   ADMIN: {
     CAMPAIGNS: '/admin/campaigns',

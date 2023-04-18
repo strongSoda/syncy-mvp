@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import OrdersWrapper from './Orders.styles';
 import Hamburger from 'hamburger-react';
 import { Avatar, Button, Heading, Pane, Pill, Spinner } from 'evergreen-ui';
-import SideBar from 'components/SideBar/SideBar.lazy';
+import SideBar from 'components/Influencer/SideBar/SideBar.lazy';
 import CSSVARIABLES from 'global/constants/variables';
 import isMobile from 'global/functions/is-mobile';
 import Syncy from '../../../assets/images/syncy.png';
@@ -33,7 +33,7 @@ const Orders: React.FC = () => {
   const getOrders = async () => {
     setLoading(true)
     try {
-      const response = await fetch(`${API}/bookings/${user?.email}?per_page=${pagination?.per_page}`)
+      const response = await fetch(`${API}/influencer-bookings/${user?.email}?per_page=${pagination?.per_page}`)
       const data = await response.json()
       console.log(data)
   
@@ -102,16 +102,16 @@ const Orders: React.FC = () => {
     {loading && <Spinner />}
     {!loading && bookings && <div className='orders'>
       {bookings?.map((booking: any) => (
-        <Pane key={booking?.id} display="flex" padding={16} background={CSSVARIABLES.COLORS.WHITE_0} borderRadius={3} marginBottom={20} onClick={() => history.push(ROUTES.BRAND.ORDER_DETAILS + '/' + booking?.id)}>
+        <Pane key={booking?.id} display="flex" padding={16} background={CSSVARIABLES.COLORS.WHITE_0} borderRadius={3} marginBottom={20} onClick={() => history.push(ROUTES.INFLUENCER.ORDER_DETAILS + '/' + booking?.id)}>
         <div className='order'>
           <Heading className='title'>{booking?.contentPack?.title}</Heading>
           <p>$ {booking?.contentPack?.price}</p>
           <Pill>{booking?.status}</Pill>
           <Pane display="flex" alignItems="center" gap={4}>
-            <Avatar src={booking?.influencer?.image_url} name={booking?.influencer?.first_name + ' ' + booking?.influencer?.last_name} size={40} />
-            <p>{booking?.influencer?.first_name + ' ' + booking?.influencer?.last_name} </p>
+            <Avatar src={booking?.brand?.company_logo} name={booking?.brand?.first_name + ' ' + booking?.brand?.last_name} size={40} />
+            <p>{booking?.brand?.first_name + ' ' + booking?.brand?.last_name} </p>
           </Pane>
-          <p>Delivery on {addDays(booking?.date, booking?.contentPack?.delivery)}</p>
+          <p>Deliver before: {addDays(booking?.date, booking?.contentPack?.delivery)}</p>
         </div>
         </Pane>
       ))}

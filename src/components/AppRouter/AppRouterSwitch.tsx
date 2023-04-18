@@ -31,7 +31,8 @@ import AdminCampaignsPage from 'pages/AdminCampaignsPage/AdminCampaignsPage.lazy
 import ContentPacksPage from 'pages/Influencer/ContentPacksPage/ContentPacksPage.lazy';
 import OrdersPage from 'pages/Brand/OrdersPage/OrdersPage.lazy';
 import OrderDetailsPage from 'pages/Brand/OrderDetailsPage/OrderDetailsPage.lazy';
-;
+import InfluencerOrdersPage from 'pages/Influencer/OrdersPage/OrdersPage.lazy';
+import InfluencerOrderDetailsPage from 'pages/Influencer/OrderDetailsPage/OrderDetailsPage.lazy';
 
 const StyledNav = styled.nav`
   display: flex;
@@ -94,6 +95,8 @@ const AppRouterSwitch: React.FC = () => {
         <InfluencerAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.MESSAGES} component={ManageMerchantsPage} />
         <InfluencerAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.COMPLETE_PROFILE} component={InfluencerCompleteProfilePage} />
         <InfluencerAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.CONTENT_PACKS} component={ContentPacksPage} />
+        <InfluencerAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.ORDERS} component={InfluencerOrdersPage} />
+        <InfluencerAuthenticatedRoute isAuthenticated={loggedin} path={`${ROUTES.INFLUENCER.ORDER_DETAILS}/:id`} component={InfluencerOrderDetailsPage} />
 
         <InfluencerUnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.REGISTER} component={InfluencerSignupPage} />
         <InfluencerUnAuthenticatedRoute isAuthenticated={loggedin} path={ROUTES.INFLUENCER.LOGIN} component={InfluencerLoginPage} />

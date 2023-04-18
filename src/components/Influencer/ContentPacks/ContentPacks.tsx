@@ -126,6 +126,7 @@ const ContentPacks: React.FC = () => {
 )};
 
 const platforms = [
+  "User Generated Content (UGC)",
   "Instagram",
   "Facebook",
   "Twitter",
@@ -150,10 +151,10 @@ function CreateContentPack({ isShown, setIsShown, getContentPacks, selectedPack,
 
   const formik = useFormik({
     initialValues: {
-      title: selectedPack ? selectedPack?.title : '1 Reel',
-      description: selectedPack ? selectedPack?.description : 'One reel filmed with professional videographer and equipment.',
-      price: selectedPack ? selectedPack?.price : 100,
-      platform: selectedPack ? selectedPack?.platform : 'Instagram',
+      title: selectedPack ? selectedPack?.title : '1 Video (30 seconds)',
+      description: selectedPack ? selectedPack?.description : 'One 30-second video suitable for Tik Tok, Instagram, or YouTube. You own the content and can post to your social media channels.',
+      price: selectedPack ? selectedPack?.price : 150,
+      platform: selectedPack ? selectedPack?.platform : 'User Generated Content (UGC)',
       examples: selectedPack ? selectedPack?.examples : '',
       delivery: selectedPack ? selectedPack?.delivery : 7,
     },
@@ -308,7 +309,7 @@ function CreateContentPack({ isShown, setIsShown, getContentPacks, selectedPack,
 
 
           <TextInputField
-            label="Price"
+            label="Price ($USD)"
             required
             type="number"
             name="price"

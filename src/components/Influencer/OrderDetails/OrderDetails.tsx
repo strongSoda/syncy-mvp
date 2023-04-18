@@ -112,8 +112,8 @@ const OrderDetails: React.FC = () => {
     {!loading &&
     <>
     {order?.submission_url ?     
-    <Pane>
-      <Heading>Submission: {order?.submission_url}</Heading>
+    <Pane display="flex" alignItems="center" justifyContent="center" height={140} background={CSSVARIABLES.COLORS.WHITE_0}>
+      <Heading>Submission: <a href={order?.submission_url} target='_blank' rel='noreferrer'>{order?.submission_url}</a></Heading>
     </Pane>
     :
     <Pane>

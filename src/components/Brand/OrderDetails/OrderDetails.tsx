@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import OrderDetailsWrapper from './OrderDetails.styles';
 import Hamburger from 'hamburger-react';
-import { Avatar, Heading, Pane, Paragraph, Pill, Spinner } from 'evergreen-ui';
+import { Avatar, Heading, Pane, Paragraph, Pill, Spinner, TextInputField } from 'evergreen-ui';
 import CSSVARIABLES from 'global/constants/variables';
 import SideBar from 'components/SideBar/SideBar.lazy';
 import isMobile from 'global/functions/is-mobile';
@@ -68,6 +68,12 @@ const OrderDetails: React.FC = () => {
       </Pane>
     }
     {!loading &&
+    <>
+    {order?.submission_url &&
+    <Pane>
+      <Heading>Submission: {order?.submission_url}</Heading>
+    </Pane>
+    }
     <Pane display="flex" padding={16} marginTop={24} background={CSSVARIABLES.COLORS.WHITE_0} borderRadius={3}>
     <div className='orderDetails'>
       
@@ -112,6 +118,7 @@ const OrderDetails: React.FC = () => {
 
     </div>
     </Pane>
+    </>
     }
   </OrderDetailsWrapper>
 )};

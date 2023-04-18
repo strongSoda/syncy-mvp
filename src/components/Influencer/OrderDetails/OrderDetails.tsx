@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import OrderDetailsWrapper from './OrderDetails.styles';
 import Hamburger from 'hamburger-react';
-import { Avatar, Heading, Pane, Paragraph, Pill, Spinner } from 'evergreen-ui';
+import { Avatar, Button, Heading, Pane, Paragraph, Pill, Spinner, TextInputField, toaster } from 'evergreen-ui';
 import CSSVARIABLES from 'global/constants/variables';
 import SideBar from 'components/Influencer/SideBar/SideBar.lazy';
 import isMobile from 'global/functions/is-mobile';
@@ -17,6 +17,9 @@ const OrderDetails: React.FC = () => {
   const [isOpen, setOpen] = useState(isMobile.any() ? false : true)
   const [loading, setLoading] = useState(false)
   const [order, setOrder] = useState<any>({})
+  const [submissionUrl, setSubmissionUrl] = useState('')
+
+  const [submitting, setSubmitting] = useState(false)
 
   const getOrderDetails = async () => {
     setLoading(true)
@@ -27,6 +30,10 @@ const OrderDetails: React.FC = () => {
   
       setOrder(data?.body?.booking)
 
+      if(data?.body?.booking?.submission_url) {
+        setSubmissionUrl(data?.body?.booking?.submission_url)
+      }
+
     } catch (error) {
       console.log(error)
     } finally {
@@ -34,9 +41,44 @@ const OrderDetails: React.FC = () => {
     }
   }
 
+  const submitSubmission = async () => {
+    if (!submissionUrl) {
+      toaster.danger('Please enter a submission url')
+      return
+    }
+    setSubmitting(true)
+    try {
+      const response = await fetch(`${API}/save-submission-url/${window?.location?.href.split('/').pop()}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          submissionUrl: submissionUrl
+        })
+      })
+      const data = await response.json()
+      console.log(data)
+      if(data?.status === 'success') {
+        setOrder({ ...order, submission_url: data?.body?.submission_url})
+        toaster.success(data?.message)
+      } else {
+        toaster.danger(data?.message)
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
   useEffect(() => {
     getOrderDetails()
   }, [])
+
+  useEffect(() => {
+    console.log('[updates]', order);
+  }, [order])
 
   return (
   <OrderDetailsWrapper data-testid="OrderDetails">
@@ -68,6 +110,24 @@ const OrderDetails: React.FC = () => {
       </Pane>
     }
     {!loading &&
+    <>
+    {order?.submission_url ?     
+    <Pane>
+      <Heading>Submission: {order?.submission_url}</Heading>
+    </Pane>
+    :
+    <Pane>
+      <TextInputField
+        label="Submission URL"
+        description="Please provide the URL to your submission after you have completed the order."
+        placeholder="https://www.youtube.com/watch?v=..."
+        value={submissionUrl}
+        onChange={(e: any) => setSubmissionUrl(e.target.value)}
+      />
+      <Button onClick={submitSubmission} intent="success" appearance='primary' isLoading={submitting}>Submit</Button>
+    </Pane>
+    }
+
     <Pane display="flex" padding={16} marginTop={24} background={CSSVARIABLES.COLORS.WHITE_0} borderRadius={3}>
     <div className='orderDetails'>
       
@@ -115,6 +175,7 @@ const OrderDetails: React.FC = () => {
 
     </div>
     </Pane>
+    </>
     }
   </OrderDetailsWrapper>
 )};

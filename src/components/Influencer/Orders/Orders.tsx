@@ -36,8 +36,10 @@ const Orders: React.FC = () => {
       const response = await fetch(`${API}/influencer-bookings/${user?.email}?per_page=${pagination?.per_page}`)
       const data = await response.json()
       console.log(data)
-  
-      setBookings(data?.body?.bookings)
+      
+      // filter out bookings that are PENDING in status
+      const filteredBookings = data?.body?.bookings.filter((booking: any) => booking.status !== 'PENDING')
+      setBookings(filteredBookings)
       setPagination(data?.pagination)
     } catch (error) {
       console.log(error)
@@ -52,8 +54,11 @@ const Orders: React.FC = () => {
       const response = await fetch(`${API}/bookings/${user?.email}?page=${pagination?.page + 1 > pagination?.total ? pagination?.total : pagination?.page + 1}`)
       const data = await response.json()
       console.log(data)
-
-      setBookings([...bookings, ...data?.body?.bookings] as [])
+      
+      // filter out bookings that are PENDING in status
+      const filteredBookings = data?.body?.bookings.filter((booking: any) => booking.status !== 'PENDING')
+      setBookings([...bookings, ...filteredBookings] as [])
+      setPagination(data?.pagination)
     } catch (error) {
       console.log(error)
     } finally {

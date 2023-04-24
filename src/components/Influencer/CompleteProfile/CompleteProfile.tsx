@@ -1,5 +1,5 @@
 import SideBar from 'components/Influencer/SideBar/SideBar.lazy';
-import { Alert, Button, FormField, Pane, Paragraph, Spinner, Tab, Tablist, TextInputField, toaster, FileUploader, FileCard } from 'evergreen-ui';
+import { Alert, Button, FormField, Pane, Paragraph, Spinner, Tab, Tablist, TextInputField, toaster, FileUploader, FileCard, SelectMenu, Heading } from 'evergreen-ui';
 import { useFormik } from 'formik';
 import API from 'global/constants/api';
 import ROUTES from 'global/constants/routes';
@@ -34,7 +34,7 @@ const InfluencerCompleteProfile: React.FC = () => {
 
 function ProfileTabs() {
   const [selectedIndex, setSelectedIndex] = React.useState(0)
-  const [tabs] = React.useState(['Personal', 'Instagram'])
+  const [tabs] = React.useState(['Personal'])
   
   const [fetchingProfile, setFetchingProfile] = useState<boolean>(false);
   
@@ -153,6 +153,7 @@ interface IProfileDetailsProps {
 
 const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, profile}: IProfileDetailsProps) => {
   const user = useContext(AuthContext);
+  const history = useHistory();
 
   const [Error, setCustomError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -164,6 +165,13 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
   const [imageUrl, setImageUrl] = useState(profile?.image_url || '');
   const [city, setCity] = useState(profile?.city || '');
   const [bookCallInfo, setBookCallInfo] = useState(profile?.calender_url || '');
+
+  const [username, setUsername] = useState(profile?.instagram_username || '');
+  const [followersCount, setFollowersCount] = useState(profile?.followers_count || '');
+  const [category, setCategory] = useState(profile?.category || '');
+  
+  const [paymentMethod, setPaymentMethod] = useState(profile?.payment_method || '');
+  const [paymentDetails, setPaymentDetails] = useState(profile?.payment_method_details || '');
 
   const [files, setFiles] = React.useState<any>([])
   const [fileRejections, setFileRejections] = React.useState<any>([])
@@ -185,15 +193,25 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       imageUrl: imageUrl,
       email: user?.email,
       bookCallInfo: bookCallInfo,
+      username: username,
+      followersCount: followersCount,
+      category: category,
+      paymentMethod: paymentMethod,
+      paymentDetails: paymentDetails,
     },
     validationSchema: Yup.object({
       firstName: Yup.string().required('Required'),
       lastName: Yup.string().required('Required'),
       bio: Yup.string().required('Required').max(500, 'Must be 500 characters or less'),
-      city: Yup.string().required('Required'),
+      city: Yup.string(),
       imageUrl: Yup.string(),
       email: Yup.string().email('Invalid email address'),
-      bookCallInfo: Yup.string().required('Required'),
+      bookCallInfo: Yup.string(),
+      username: Yup.string().required('Required'),
+      followersCount: Yup.string(),
+      category: Yup.string(),
+      paymentMethod: Yup.string(),
+      paymentDetails: Yup.string(),
     }),
 
     onSubmit: async (values: any) => {
@@ -268,7 +286,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       if(data?.status === 'success') {
         toaster.success(data?.message);
         // change to next tab
-        setSelectedIndex(1);
+        history.push(ROUTES.INFLUENCER.CONTENT_PACKS);
       } else {
         toaster.danger(data?.message);
       }
@@ -287,20 +305,17 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
   return (
     <form id="PersonalDetails" onSubmit={formik.handleSubmit}>
       {Error && <p className="error">{Error}</p>}
-      {formik.touched.firstName && formik.errors.firstName ? ( <div className="error">{formik.errors.firstName}</div> ) : null}
       <FormField>
         <TextInputField
           name='firstName'
           label="First Name"
-          required
           // description="This is a description."
           value={formik.values.firstName}
           onChange={(e: any) => formik.setFieldValue('firstName', e.target.value)}
+          validationMessage={formik?.touched?.firstName && formik?.errors?.firstName ? ( <div className="error">{formik?.errors?.firstName}</div> ) : null}
         />
       </FormField>
 
-      {Error && <p className="error">{Error}</p>}
-      {formik.touched.lastName && formik.errors.lastName ? ( <div className="error">{formik.errors.lastName}</div> ) : null}
       <FormField>
         <TextInputField
           name='lastName'
@@ -309,11 +324,10 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
           // description="This is a description."
           value={formik.values.lastName}
           onChange={(e: any) => formik.setFieldValue('lastName', e.target.value)}
+          validationMessage={formik?.touched?.lastName && formik?.errors?.lastName ? ( <div className="error">{formik?.errors?.lastName}</div> ) : null}
         />
       </FormField>
 
-      {Error && <p className="error">{Error}</p>}
-      {formik.touched.bio && formik.errors.bio ? ( <div className="error">{formik.errors.bio}</div> ) : null}
       <FormField>
         <TextInputField
           name='bio'
@@ -322,32 +336,92 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
           // description="This is a description."
           value={formik.values.bio}
           onChange={(e: any) => formik.setFieldValue('bio', e.target.value)}
+          validationMessage={formik?.touched?.bio && formik?.errors?.bio ? ( <div className="error">{formik?.errors?.bio}</div> ) : null}
         />
       </FormField>
 
-      {Error && <p className="error">{Error}</p>}
-      {formik.touched.city && formik.errors.city ? ( <div className="error">{formik.errors.city}</div> ) : null}
+      <FormField>
+        <TextInputField
+          name='username'
+          label="Username"
+          required
+          // description="This is a description."
+          value={formik.values.username}
+          onChange={(e: any) => formik.setFieldValue('username', e.target.value)}
+          validationMessage={formik?.touched?.username && formik?.errors?.username ? ( <div className="error">{formik?.errors?.username}</div> ) : null}
+        />
+      </FormField>
+
+      <FormField>
+        <TextInputField
+          name='followersCount'
+          label="Followers Count"
+          // description="This is a description."
+          value={formik.values.followersCount}
+          onChange={(e: any) => formik.setFieldValue('followersCount', e.target.value)}
+          validationMessage={formik?.touched?.followersCount && formik?.errors?.followersCount ? ( <div className="error">{formik?.errors?.followersCount}</div> ) : null}
+        />
+      </FormField>
+
+      <FormField>
+        <TextInputField
+          name='category'
+          label="Category"
+          // required
+          // description="This is a description."
+          value={formik.values.category}
+          onChange={(e: any) => formik.setFieldValue('category', e.target.value)}
+          validationMessage={formik?.touched?.category && formik?.errors?.category ? ( <div className="error">{formik?.errors?.category}</div> ) : null}
+        />
+      </FormField>
+
+      {/* payment method select menu */}
+      <FormField>
+        <Heading>Add preferred payment method</Heading>
+        <br />
+        <SelectMenu
+          options={["Venmo", "PayPal", "Zelle"].map((label) => ({ label, value: label }))}
+          selected={paymentMethod}
+          onSelect={(item: any) => {
+            setPaymentMethod(item?.value);
+            formik.setFieldValue('paymentMethod', item.value);
+          }}
+        >
+          <Paragraph cursor="pointer" border="1px solid #d8dae5" background="#fff" padding={4} fontSize={12} borderRadius={5}>{paymentMethod || 'Select payment method...'}</Paragraph>
+        </SelectMenu>
+      </FormField>
+
+      {/* payment details */}
+      <FormField>
+        <TextInputField
+          name='paymentDetails'
+          label="Payment Details"
+          // description="This is a description."
+          value={formik?.values?.paymentDetails}
+          onChange={(e: any) => formik.setFieldValue('paymentDetails', e.target.value)}
+          validationMessage={formik?.touched?.paymentDetails && formik?.errors?.paymentDetails ? ( <div className="error">{formik?.errors?.paymentDetails}</div> ) : null}
+        />
+      </FormField>
+
       <FormField>
         <TextInputField
           name='city'
           label="City"
-          required
           // description="This is a description."
           value={formik.values.city}
           onChange={(e: any) => formik.setFieldValue('city', e.target.value)}
+          validationMessage={formik?.touched?.city && formik?.errors?.city ? ( <div className="error">{formik?.errors?.city}</div> ) : null}
         />
       </FormField>
 
-      {Error && <p className="error">{Error}</p>}
-      {formik.touched.bookCallInfo && formik.errors.bookCallInfo ? ( <div className="error">{formik.errors.bookCallInfo}</div> ) : null}
       <FormField>
         <TextInputField
           name='bookCallInfo'
           label="Link to book a call with you"
-          required
           description={<a href='https://calendly.com/signup' target="_blank" rel="noreferrer">Learn More</a>}
           value={formik.values.bookCallInfo}
           onChange={(e: any) => formik.setFieldValue('bookCallInfo', e.target.value)}
+          validationMessage={formik?.touched?.bookCallInfo && formik?.errors?.bookCallInfo ? ( <div className="error">{formik?.errors?.bookCallInfo}</div> ) : null}
         />
       </FormField>
 

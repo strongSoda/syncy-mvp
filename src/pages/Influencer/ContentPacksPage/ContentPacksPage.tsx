@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet';
 const ContentPacksPage: React.FC = () => (
   <>
     <Helmet>
-      <title>Content Packs | Influencer Syncy</title>
+      <title>My Deliverables | Influencer Syncy</title>
     </Helmet>
     <div data-testid="ContentPacksPage">
       <ContentPacks />

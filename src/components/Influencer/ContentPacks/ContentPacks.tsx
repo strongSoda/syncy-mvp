@@ -76,10 +76,9 @@ const ContentPacks: React.FC = () => {
   <ContentPacksWrapper data-testid="ContentPacks">
     <SideBar lightColor={CSSVARIABLES.COLORS.YELLOW_GREEN_1} darkColor={CSSVARIABLES.COLORS.YELLOW_GREEN_0} />
     
-    <h1>My Content Deliverables
-    </h1>
+    <h1>My Deliverables</h1>
     <Button appearance='primary' onClick={() => setShowCreateContentPack(true)}>
-      Create Content Deliverable
+      Create Deliverable
     </Button>
     {loading ? 
     <Pane display="flex" alignItems="center" justifyContent="center" height={240}>
@@ -110,7 +109,15 @@ const ContentPacks: React.FC = () => {
       ))}
     </div>
     :
-    <p>You have no content deliverables</p>}
+    <Pane display="flex" alignItems="center" justifyContent="center" height={240} background='#fff' marginTop={12}>
+      <div style={{textAlign: 'center'}}>
+        <p>You have no deliverables</p>
+        <Button appearance='primary' onClick={() => setShowCreateContentPack(true)}>
+          Create Deliverable
+        </Button>
+      </div>
+    </Pane>
+    }
     </>
   }
 
@@ -151,9 +158,9 @@ function CreateContentPack({ isShown, setIsShown, getContentPacks, selectedPack,
 
   const formik = useFormik({
     initialValues: {
-      title: selectedPack ? selectedPack?.title : '1 Video (30 seconds)',
-      description: selectedPack ? selectedPack?.description : 'One 30-second video suitable for Tik Tok, Instagram, or YouTube. You own the content and can post to your social media channels.',
-      price: selectedPack ? selectedPack?.price : 150,
+      title: selectedPack ? selectedPack?.title : '1 Still Image',
+      description: selectedPack ? selectedPack?.description : 'A still image for Instagram or Facebook. You own the content and can post to your social media accounts.',
+      price: selectedPack ? selectedPack?.price : 100,
       platform: selectedPack ? selectedPack?.platform : 'User Generated Content (UGC)',
       examples: selectedPack ? selectedPack?.examples : '',
       delivery: selectedPack ? selectedPack?.delivery : 7,

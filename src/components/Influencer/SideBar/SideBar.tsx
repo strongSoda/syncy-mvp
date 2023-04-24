@@ -30,7 +30,7 @@ const Links = [
   },
   {
     icon: ProfileIcon,
-    text: 'Content Packs',
+    text: 'My Deliverables',
     id: 3,
     path: ROUTES.INFLUENCER.CONTENT_PACKS,
   },

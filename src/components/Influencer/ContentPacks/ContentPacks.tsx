@@ -9,6 +9,8 @@ import { Button, Card, EditIcon, Heading, IconButton, Pane, Pill, Select, Select
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 
+import emailjs from '@emailjs/browser';
+
 // declare interface IContentPacksProps {}
 
 export interface ContentPack {
@@ -215,6 +217,22 @@ function CreateContentPack({ isShown, setIsShown, getContentPacks, selectedPack,
         setIsShown(false);
         toaster.success('Content Pack Created');
         getContentPacks()
+        // send email with emailjs
+        const templateParams = {
+          email: user?.email,
+          title: values?.title,
+          description: values?.description,
+          price: values?.price,
+          platform: values?.platform,
+          delivery: values?.delivery,
+          examples: values?.examples,
+        };
+        emailjs.send('service_5qbdzev', 'template_srfsve9', templateParams, 'Wpls9Y0SfcmtgJKO5')
+        .then((result) => {
+            console.log(result.text);
+        } , (error) => {
+            console.log(error.text);
+        });
       }
     } catch (error) {
       console.log(error);

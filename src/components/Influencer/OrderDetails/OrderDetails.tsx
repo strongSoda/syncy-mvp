@@ -10,6 +10,7 @@ import Syncy from '../../../assets/images/syncy.png';
 import API from 'global/constants/api';
 import RichMarkdownEditor from 'rich-markdown-editor';
 import addDays from 'global/functions/add-days-to-date';
+import emailjs from '@emailjs/browser';
 
 // declare interface IOrderDetailsProps {}
 
@@ -62,6 +63,22 @@ const OrderDetails: React.FC = () => {
       if(data?.status === 'success') {
         setOrder({ ...order, submission_url: data?.body?.submission_url})
         toaster.success(data?.message)
+        // send email to brand about submission with emailjs
+        emailjs.send('service_5qbdzev', 'template_9rf4gif', {
+          creator: order?.influencer?.first_name,
+          submission_url: submissionUrl,
+          order_id: order?.id,
+          order_title: order?.contentPack?.title,
+          delivery: order?.delivery,
+          date: order?.date,
+          to_name: order?.brand?.first_name,
+          to_email: order?.brand?.email,
+        }, 'Wpls9Y0SfcmtgJKO5')
+        .then((result: any) => {
+            console.log(result.text);
+        }, (error: any) => {
+            console.log(error.text);
+        });
       } else {
         toaster.danger(data?.message)
       }

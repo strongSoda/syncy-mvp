@@ -25,6 +25,8 @@ import getInfluencerProfile from 'global/functions/get-influencer-profile';
 import formatNumber from 'global/functions/formatFollowers';
 
 import { Spin as Hamburger } from 'hamburger-react'
+
+import emailjs from '@emailjs/browser';
 // import Button from 'components/Button/Button.lazy';
 
 // import { useMediaQuery } from 'react-responsive';
@@ -87,11 +89,22 @@ const InfluencerDashboard: React.FC = () => {
       console.log('sendProposal', data);
   
       if(data?.status === 'success') {
-        toaster.success('Proposal sent successfully');
-        // send email with zapier
-        fetch(`https://hooks.zapier.com/hooks/catch/14836002/335ckfi/?email=${user?.email}&campaignName=${campaignName}`, {
-          method: 'POST',
-        })
+        // toaster.success('Proposal sent successfully');
+        // send email with emailjs
+        const templateParams = {
+          email: user?.email,
+          campaignName,
+        };
+
+        // @ts-ignore
+        emailjs.send('service_5qbdzev', 'template_6fm5oud', templateParams, 'Wpls9Y0SfcmtgJKO5')
+          .then((response: any) => {
+              console.log('SUCCESS!', response.status, response.text);
+              toaster.success('Proposal sent successfully');
+            }, (error: any) => {    
+              console.log('FAILED...', error);
+              toaster.danger('Error sending proposal');
+          });
       }
     }
     catch (error) {

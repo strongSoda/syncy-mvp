@@ -343,7 +343,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       <FormField>
         <TextInputField
           name='username'
-          label="Username"
+          label="Instagram Username"
           required
           // description="This is a description."
           value={formik.values.username}
@@ -366,7 +366,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       <FormField>
         <TextInputField
           name='category'
-          label="Category"
+          label="Categories (comma separated)"
           // required
           // description="This is a description."
           value={formik.values.category}
@@ -377,7 +377,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
 
       {/* payment method select menu */}
       <FormField>
-        <Heading>Add preferred payment method</Heading>
+        <Heading>Preferred payment method</Heading>
         <br />
         <SelectMenu
           options={["Venmo", "PayPal", "Zelle"].map((label) => ({ label, value: label }))}
@@ -395,7 +395,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       <FormField>
         <TextInputField
           name='paymentDetails'
-          label="Payment Details"
+          label="Payment contact (email or phone)"
           // description="This is a description."
           value={formik?.values?.paymentDetails}
           onChange={(e: any) => formik.setFieldValue('paymentDetails', e.target.value)}

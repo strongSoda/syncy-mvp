@@ -381,13 +381,12 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
         <br />
         <SelectMenu
           options={["Venmo", "PayPal", "Zelle"].map((label) => ({ label, value: label }))}
-          selected={paymentMethod}
+          selected={formik?.values?.paymentMethod}
           onSelect={(item: any) => {
-            setPaymentMethod(item?.value);
             formik.setFieldValue('paymentMethod', item.value);
           }}
         >
-          <Paragraph cursor="pointer" border="1px solid #d8dae5" background="#fff" padding={4} fontSize={12} borderRadius={5}>{paymentMethod || 'Select payment method...'}</Paragraph>
+          <Paragraph cursor="pointer" border="1px solid #d8dae5" background="#fff" padding={4} fontSize={12} borderRadius={5}>{formik?.values?.paymentMethod || 'Select payment method...'}</Paragraph>
         </SelectMenu>
       </FormField>
 

@@ -273,6 +273,11 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
         values.imageUrl = link;
       }
 
+      if(values?.followersCount) {
+        // convert the string to number and if it has commas, remove them
+        values.followersCount = Number(values.followersCount.replace(/,/g, ''));
+      }
+
       const res = await fetch(`${API}/influencer-profile-personal`, {
         method: 'POST',
         headers: {
@@ -357,7 +362,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
           name='followersCount'
           label="Followers Count"
           // description="This is a description."
-          value={formik.values.followersCount}
+          value={formik?.values?.followersCount}
           onChange={(e: any) => formik.setFieldValue('followersCount', e.target.value)}
           validationMessage={formik?.touched?.followersCount && formik?.errors?.followersCount ? ( <div className="error">{formik?.errors?.followersCount}</div> ) : null}
         />

@@ -36,6 +36,12 @@ const Links = [
   },
   {
     icon: ProfileIcon,
+    text: 'My Campaigns',
+    id: 4,
+    path: ROUTES.BRAND.CAMPAIGNS,
+  },
+  {
+    icon: ProfileIcon,
     text: 'Messages',
     id: 1,
     path: ROUTES.BRAND.MESSAGES,

@@ -182,6 +182,19 @@ ${({ theme }) => css`
       cursor: pointer;
     }
   }
+
+  input[type='submit'] {
+    background-color: ${CSSVARIABLES.COLORS.GREEN_0};
+    color: ${CSSVARIABLES.COLORS.WHITE_1};
+    border: none;
+    border-radius: 0.2rem;
+    width: 100%;
+    padding: .8em 0em;
+    margin-top: 3vh;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
   
 @media only screen and (max-width: 768px) {
   .query-input-container {

@@ -46,7 +46,7 @@ const Campaigns: React.FC = () => {
   // delete campaign /brand/campaign/:id DELETE
   const deleteCampaign = async (id: string) => {
     try {
-      setLoadingCampaigns(true);
+      // setLoadingCampaigns(true);
       const res = await fetch(`${API}/brand/campaign/${id}`, {
         method: 'DELETE',
       });
@@ -63,7 +63,7 @@ const Campaigns: React.FC = () => {
       const errorMessage = error?.message;
       console.log(error);
     } finally {
-      setLoadingCampaigns(false);
+      // setLoadingCampaigns(false);
     }
   }
 

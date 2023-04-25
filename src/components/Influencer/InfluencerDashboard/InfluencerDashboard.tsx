@@ -47,7 +47,22 @@ const InfluencerDashboard: React.FC = () => {
   const [showBookCall, setShowBookCall] = React.useState(false);
   const [selectedInvite, setSelectedInvite] = React.useState<any>(null);
   
+  
   const [isOpen, setOpen] = useState(true)
+
+  // get influencer profile
+  const [influencerProfile, setInfluencerProfile] = useState<any>(null);
+
+  const getInfluencerProfileData = async () => {
+    try {
+      const response = await fetch(`${API}/influencer-profile?email=${user?.email}`);
+      const data = await response.json();
+      console.log('influencer profile', data);
+      setInfluencerProfile(data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   // get invites by influencer email
   const getInvites = async () => {
@@ -80,7 +95,7 @@ const InfluencerDashboard: React.FC = () => {
     }
   }
 
-  const sendProposal = async (campaignId: string, campaignName: string) => {
+  const sendProposal = async (campaignId: string, campaignName: string, email: string) => {
     setApplyLoading(campaignId);
     try {
       const res = await fetch(`${API}/campaign/apply?campaignId=${campaignId}&email=${user?.email}`)
@@ -93,11 +108,15 @@ const InfluencerDashboard: React.FC = () => {
         // send email with emailjs
         const templateParams = {
           email: user?.email,
-          campaignName,
+          campaign: campaignName,
+          to_email: email,
+          name: influencerProfile?.first_name + ' ' + influencerProfile?.last_name,
+          instagram: 'https://www.instagram.com/' + influencerProfile?.instagram_username,
+          followers: influencerProfile?.followers_count,
         };
 
         // @ts-ignore
-        emailjs.send('service_5qbdzev', 'template_6fm5oud', templateParams, 'Wpls9Y0SfcmtgJKO5')
+        await emailjs.send('service_5qbdzev', 'template_6fm5oud', templateParams, 'Wpls9Y0SfcmtgJKO5')
           .then((response: any) => {
               console.log('SUCCESS!', response.status, response.text);
               toaster.success('Proposal sent successfully');
@@ -120,13 +139,10 @@ const InfluencerDashboard: React.FC = () => {
   useEffect(() => {
     if(user?.email) {
       getInvites();
+      getInfluencerProfileData();
+      getCampaigns();
     }
   }, [user])
-
-  useEffect(() => {
-    getCampaigns();
-  }, [])
-
 
   return (
   <InfluencerDashboardWrapper data-testid="InfluencerDashboard">
@@ -197,7 +213,7 @@ const InfluencerDashboard: React.FC = () => {
                     intent="success"
                     onClick={() => {
                       // setShowBrandProfile(true);
-                      sendProposal(campaign?.id, campaign?.name);
+                      sendProposal(campaign?.id, campaign?.name, campaign?.email);
                     }}
                   >
                     {applyLoading === campaign?.id ? "Applying..." : "Apply"}

@@ -5,7 +5,7 @@ import SideBar from '../SideBar/SideBar.lazy';
 import CSSVARIABLES from 'global/constants/variables';
 import { AuthContext } from 'global/context/AuthContext';
 import API from 'global/constants/api';
-import { Button, Card, EditIcon, Heading, IconButton, Pane, Pill, Select, SelectField, SideSheet, Spinner, TextInputField, TrashIcon, majorScale, toaster } from 'evergreen-ui';
+import { Alert, Button, Card, EditIcon, Heading, IconButton, Pane, Paragraph, Pill, Select, SelectField, SideSheet, Spinner, TextInputField, TrashIcon, majorScale, toaster } from 'evergreen-ui';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 
@@ -27,12 +27,13 @@ const ContentPacks: React.FC = () => {
   const user = useContext(AuthContext);
 
   const [contentPacks, setContentPacks] = useState<ContentPack[]>([]);
-
   const [selectedPack, setSelectedPack] = useState<ContentPack | undefined>();
-
   const [showCreateContentPack, setShowCreateContentPack] = useState(false);
 
+  const [myLink, setMyLink] = useState('')
+
   const [loading, setLoading] = useState(false);
+  
 
   // get content packs from api and set state /content-packs/:id
   const getContentPacks = async () => {
@@ -67,9 +68,18 @@ const ContentPacks: React.FC = () => {
     }
   };
 
+  const getUserProfile = async () => {
+    const res = await fetch(`${API}/influencer-profile-personal?email=${user?.email}`);
+    const data = await res?.json()
+
+    console.log(data?.data);
+    setMyLink(`https://syncy.net/creator?u=${data?.data?.instagram_username}`)
+  }
+
   useEffect(() => {
     if(user?.email) {
       getContentPacks();
+      getUserProfile()
     }
   }, [user]);
 
@@ -78,6 +88,15 @@ const ContentPacks: React.FC = () => {
   <ContentPacksWrapper data-testid="ContentPacks">
     <SideBar lightColor={CSSVARIABLES.COLORS.YELLOW_GREEN_1} darkColor={CSSVARIABLES.COLORS.YELLOW_GREEN_0} />
     
+  {contentPacks.length > 0 &&
+    <Pane>
+      <Alert
+        intent="none"
+        title={<Paragraph>Share your booking page with the world 👉 <a href={myLink} target='_blank' rel='noreferrer'>{myLink}</a></Paragraph>}
+        marginBottom={32}
+      />
+      {/* <Paragraph>Share your booking page with the world <a href={myLink}>{myLink}</a></Paragraph> */}
+    </Pane>}
     <h1>My Deliverables</h1>
     <Button appearance='primary' onClick={() => setShowCreateContentPack(true)}>
       Create Deliverable

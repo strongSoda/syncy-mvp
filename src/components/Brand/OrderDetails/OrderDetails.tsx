@@ -103,7 +103,7 @@ const OrderDetails: React.FC = () => {
 
   useEffect(() => {
     if (order?.id) {
-      sendEmail(order?.id, order?.brand, order?.influencer, order?.content_pack, order?.date, order?.delivery, order?.submission_url)
+      sendEmail(order?.id, order?.brand, order?.influencer, order?.contentPack, order?.date, order?.delivery, order?.submission_url)
     }
   }, [order])
 

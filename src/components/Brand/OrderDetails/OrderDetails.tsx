@@ -10,6 +10,7 @@ import Syncy from '../../../assets/images/syncy.png';
 import API from 'global/constants/api';
 import RichMarkdownEditor from 'rich-markdown-editor';
 import addDays from 'global/functions/add-days-to-date';
+import emailjs from '@emailjs/browser';
 
 // declare interface IOrderDetailsProps {}
 
@@ -34,9 +35,77 @@ const OrderDetails: React.FC = () => {
     }
   }
 
+  // check if email has been sent
+  function sendEmail(id: string, brand: any, influencer: any, contentPack: any, date:string, delivery:string, submission_url:string) {
+    fetch(`${API}/check-email-sent/${id}`)
+      .then(res => res.json())
+      .then(data => {
+          console.log(data);
+          if (data?.body?.email_sent_to_brand) {
+              return;
+          }
+
+          // send with to creator about new order
+          emailjs.send("service_5qbdzev", "template_9rf93fd", {
+              brand_name: brand?.first_name + ' ' + brand?.last_name,
+              influencer_name: influencer?.first_name,
+              content_pack_title: contentPack?.title,
+              content_pack_description: contentPack?.description,
+              content_pack_platform: contentPack?.platform,
+              content_pack_price: contentPack?.price,
+              date: new Date(date).toLocaleDateString(),
+              delivery: new Date(addDays(date, delivery)).toLocaleDateString(),
+              submission_url: submission_url,
+              orderlink: `https://app.syncy.net/influencer/order?id=${id}`,
+              to_email: influencer?.email,
+          }, 'Wpls9Y0SfcmtgJKO5').then(res => {
+              console.log(res);
+          }).catch(err => {
+              console.log(err);
+          });
+
+      }).catch(err => {
+          console.log(err);
+      });
+
+
+      // send with emailjs to brand
+      emailjs.send("service_5qbdzev", "template_w0hd4v9", {
+          brand_name: brand?.first_name + ' ' + brand?.last_name,
+          influencer_name: influencer?.first_name + ' ' + influencer?.last_name,
+          content_pack_title: contentPack?.title,
+          content_pack_description: contentPack?.description,
+          content_pack_platform: contentPack?.platform,
+          content_pack_price: contentPack?.price,
+          date: new Date(date).toLocaleDateString(),
+          delivery: new Date(addDays(date, delivery)).toLocaleDateString(),
+          submission_url: submission_url,
+          orderlink: `https://syncy.net/order?id=${id}`,
+          to_email: brand?.email,
+      }, 'Wpls9Y0SfcmtgJKO5').then(res => {
+          console.log(res);
+          // update email sent to brand
+          fetch(`${API}/set-email-sent/${id}`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+          }).then(res => res.json())
+      }).catch(err => {
+          console.log(err);
+      });
+
+}
+
   useEffect(() => {
     getOrderDetails()
   }, [])
+
+  useEffect(() => {
+    if (order?.id) {
+      sendEmail(order?.id, order?.brand, order?.influencer, order?.content_pack, order?.date, order?.delivery, order?.submission_url)
+    }
+  }, [order])
 
   return (
   <OrderDetailsWrapper data-testid="OrderDetails">

@@ -190,7 +190,7 @@ const getReview = async () => {
   useEffect(() => {
     if (order?.id) {
       getReview()
-      // sendEmail(order?.id, order?.brand, order?.influencer, order?.contentPack, order?.date, order?.delivery, order?.submission_url)
+      sendEmail(order?.id, order?.brand, order?.influencer, order?.contentPack, order?.date, order?.delivery, order?.submission_url)
     }
   }, [order])
 

@@ -76,6 +76,7 @@ const OrderDetails: React.FC = () => {
           date: order?.date,
           to_name: order?.brand?.first_name,
           to_email: order?.brand?.email,
+          orderlink: `https://syncy.net/brand/order/${order?.id}`
         }, 'Wpls9Y0SfcmtgJKO5')
         .then((result: any) => {
             console.log(result.text);

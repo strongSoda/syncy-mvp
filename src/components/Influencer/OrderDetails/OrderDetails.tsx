@@ -22,6 +22,9 @@ const OrderDetails: React.FC = () => {
 
   const [submitting, setSubmitting] = useState(false)
 
+  const [rating, setRating] = useState(0)
+  const [review, setReview] = useState('')
+
   const getOrderDetails = async () => {
     setLoading(true)
     try {
@@ -89,8 +92,29 @@ const OrderDetails: React.FC = () => {
     }
   }
 
+  const getReview = async () => {
+  try {
+    const response = await fetch(`${API}/review/${window?.location?.href.split('/').pop()}`)
+    const data = await response.json()
+    console.log(data)
+
+    if (data?.status === 'success') {
+      setRating(data?.body?.review?.rating)
+      setReview(data?.body?.review?.review)
+
+    } else {
+      setRating(0)
+      setReview('')
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
   useEffect(() => {
     getOrderDetails()
+    getReview()
   }, [])
 
   useEffect(() => {
@@ -129,8 +153,18 @@ const OrderDetails: React.FC = () => {
     {!loading &&
     <>
     {order?.submission_url ?     
-    <Pane display="flex" alignItems="center" justifyContent="center" height={140} background={CSSVARIABLES.COLORS.WHITE_0}>
+    <Pane display="flex" flexDirection='column'  alignItems="center" justifyContent="center"
+      height={140} background={CSSVARIABLES.COLORS.WHITE_0} padding={24}>
       <Heading>Submission: <a href={order?.submission_url} target='_blank' rel='noreferrer'>{order?.submission_url}</a></Heading>
+      {/* review */}
+      {review?.length ?
+      <Pane display="flex" flexDirection="column"  alignItems="center" justifyContent="center" height={140} background={CSSVARIABLES.COLORS.WHITE_0}>
+        <Heading>Rating: {'⭐️'.repeat(rating)}</Heading>
+        <Paragraph>Review: {review}</Paragraph>
+      </Pane>
+      :
+      ''
+      }
     </Pane>
     :
     <Pane>

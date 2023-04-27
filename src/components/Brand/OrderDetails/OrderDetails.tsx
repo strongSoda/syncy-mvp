@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import OrderDetailsWrapper from './OrderDetails.styles';
 import Hamburger from 'hamburger-react';
-import { Avatar, Heading, Pane, Paragraph, Pill, Spinner, TextInputField } from 'evergreen-ui';
+import { Avatar, Button, Heading, Pane, Paragraph, Pill, Spinner, TextInputField, Textarea, toaster } from 'evergreen-ui';
 import CSSVARIABLES from 'global/constants/variables';
 import SideBar from 'components/SideBar/SideBar.lazy';
 import isMobile from 'global/functions/is-mobile';
@@ -11,6 +11,7 @@ import API from 'global/constants/api';
 import RichMarkdownEditor from 'rich-markdown-editor';
 import addDays from 'global/functions/add-days-to-date';
 import emailjs from '@emailjs/browser';
+import { Rating } from 'react-simple-star-rating';
 
 // declare interface IOrderDetailsProps {}
 
@@ -18,6 +19,24 @@ const OrderDetails: React.FC = () => {
   const [isOpen, setOpen] = useState(isMobile.any() ? false : true)
   const [loading, setLoading] = useState(false)
   const [order, setOrder] = useState<any>({})
+
+  const [rating, setRating] = useState(0)
+  const [review, setReview] = useState('')
+
+  const [submittingReview, setSubmittingReview] = useState(false)
+
+  const [reviewExists, setReviewExists] = useState(false)
+
+  // Catch Rating value
+  const handleRating = (rate: number) => {
+    setRating(rate)
+
+    // other logic
+  }
+  // Optinal callback functions
+  const onPointerEnter = () => console.log('Enter')
+  const onPointerLeave = () => console.log('Leave')
+  const onPointerMove = (value: number, index: number) => console.log(value, index)
 
   const getOrderDetails = async () => {
     setLoading(true)
@@ -97,13 +116,81 @@ const OrderDetails: React.FC = () => {
 
 }
 
+const submitReview = async () => {
+  setSubmittingReview(true)
+  try {
+    const response = await fetch(`${API}/review/${window?.location?.href.split('/').pop()}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        rating: rating,
+        review: review
+      })
+    })
+    const data = await response.json()
+    console.log(data)
+    if (data?.status === 'success') {
+      // send email to influencer about review
+      emailjs.send("service_5qbdzev", "template_e3thib6", {
+        brand_name: order?.brand?.first_name + ' ' + order?.brand?.last_name,
+        to_name: order?.influencer?.first_name,
+        content_pack_title: order?.contentPack?.title,
+        review: data?.body?.review?.review,
+        rating: data?.body?.review?.rating,
+        orderlink: `https://app.syncy.net/influencer/order/${window?.location?.href.split('/').pop()}`,
+        to_email: order?.influencer?.email,
+      }, 'Wpls9Y0SfcmtgJKO5').then(res => {
+        console.log(res);
+      }).catch(err => {
+        console.log(err);
+      });
+      
+      toaster.success('Review submitted successfully')
+
+      getReview()
+
+    } else {
+      toaster.danger('Something went wrong')
+    }
+  } catch (error) {
+    console.log(error)
+    toaster.danger('Something went wrong')
+  } finally {
+    setSubmittingReview(false)
+  }
+}
+
+const getReview = async () => {
+  try {
+    const response = await fetch(`${API}/review/${window?.location?.href.split('/').pop()}`)
+    const data = await response.json()
+    console.log(data)
+
+    if (data?.status === 'success') {
+      setRating(data?.body?.review?.rating)
+      setReview(data?.body?.review?.review)
+
+      setReviewExists(true)
+    } else {
+      setRating(0)
+      setReview('')
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
   useEffect(() => {
     getOrderDetails()
   }, [])
 
   useEffect(() => {
     if (order?.id) {
-      sendEmail(order?.id, order?.brand, order?.influencer, order?.contentPack, order?.date, order?.delivery, order?.submission_url)
+      getReview()
+      // sendEmail(order?.id, order?.brand, order?.influencer, order?.contentPack, order?.date, order?.delivery, order?.submission_url)
     }
   }, [order])
 
@@ -139,8 +226,45 @@ const OrderDetails: React.FC = () => {
     {!loading &&
     <>
     {order?.submission_url &&
-    <Pane display="flex" alignItems="center" justifyContent="center" height={140} background={CSSVARIABLES.COLORS.WHITE_0}>
+    <Pane background={CSSVARIABLES.COLORS.WHITE_0} display="flex" alignItems="center" justifyContent="center" padding={24}>
+    <Pane>
       <Heading>Submission: <a href={order?.submission_url} target='_blank' rel='noreferrer'>{order?.submission_url}</a></Heading>
+      <br/>
+
+      {reviewExists ?
+      <>
+      <Heading>Rating: {'⭐️'.repeat(rating)}</Heading>
+      <Paragraph>Review: {review}</Paragraph>
+      </>
+      :
+      <>
+      <Rating
+        onClick={handleRating}
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
+        onPointerMove={onPointerMove}
+        /* Available Props */
+        />
+
+        <br/>
+
+        <Textarea
+          placeholder="Leave a review"
+          onChange={(e: any) => setReview(e.target.value)}
+          value={review}
+          width={300}
+          height={100}
+          resize="none"
+          marginTop={16}
+          maxLength={500}
+        />
+
+        <br/>
+
+        <Button onClick={submitReview} intent='success' appearance='primary'>{submittingReview ? 'Submitting...' : 'Submit Review'}</Button>
+      </>
+    }
+    </Pane>
     </Pane>
     }
     <Pane display="flex" padding={16} marginTop={24} background={CSSVARIABLES.COLORS.WHITE_0} borderRadius={3}>

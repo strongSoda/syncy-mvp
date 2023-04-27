@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet';
 const OrderDetailsPage: React.FC = () => (
   <>
     <Helmet>
-      <title>OrderDetailsPage</title>
+      <title>Order Details | Syncy</title>
     </Helmet>
     <div data-testid="OrderDetailsPage">
       <OrderDetails />

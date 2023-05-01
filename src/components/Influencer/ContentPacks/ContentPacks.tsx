@@ -92,7 +92,12 @@ const ContentPacks: React.FC = () => {
     <Pane>
       <Alert
         intent="none"
-        title={<Paragraph>Share your booking page with the world 👉 <a href={myLink} target='_blank' rel='noreferrer'>{myLink}</a></Paragraph>}
+        title={
+        <Paragraph>
+          Share your booking page with the world 👉 <a href={myLink} target='_blank' rel='noreferrer'>{myLink}</a>
+          <br/>
+          <small>Get more sales by adding to your link in bio on Instagram and other platforms.</small>
+        </Paragraph>}
         marginBottom={32}
       />
       {/* <Paragraph>Share your booking page with the world <a href={myLink}>{myLink}</a></Paragraph> */}

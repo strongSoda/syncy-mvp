@@ -40,12 +40,12 @@ const Links = [
     id: 4,
     path: ROUTES.INFLUENCER.ORDERS,
   },
-  {
-    icon: LightChat,
-    text: 'Messages',
-    id: 0,
-    path: ROUTES.INFLUENCER.MESSAGES,
-  },
+  // {
+  //   icon: LightChat,
+  //   text: 'Messages',
+  //   id: 0,
+  //   path: ROUTES.INFLUENCER.MESSAGES,
+  // },
   {
     icon: ProfileIcon,
     text: 'Profile',

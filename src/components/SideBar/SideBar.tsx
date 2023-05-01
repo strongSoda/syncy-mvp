@@ -40,12 +40,12 @@ const Links = [
     id: 4,
     path: ROUTES.BRAND.CAMPAIGNS,
   },
-  {
-    icon: ProfileIcon,
-    text: 'Messages',
-    id: 1,
-    path: ROUTES.BRAND.MESSAGES,
-  },
+  // {
+  //   icon: ProfileIcon,
+  //   text: 'Messages',
+  //   id: 1,
+  //   path: ROUTES.BRAND.MESSAGES,
+  // },
   {
     icon: ProfileIcon,
     text: 'Profile',

@@ -6,7 +6,7 @@ import { auth } from 'global/constants/firebase';
 import ROUTES from 'global/constants/routes';
 import logUsage from 'global/functions/usage-logs';
 import { useAppDispatch } from 'hooks/storeHooks';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import * as Yup from "yup";
 import SignupWrapper from './Signup.styles';
@@ -62,9 +62,25 @@ const Signup: React.FC = () => {
       const user = userCredential.user;
       await sendEmailVerification(user)
 
+      const deliverable_id = window.location?.hash?.split('#')[1];
+      console.log('deliverable', deliverable_id?.split('-')[1]);
+    
+      // get the influencers%5Bquery%5D from the query string
+      const query = window.location?.search?.split('influencers%5Bquery%5D=')[1];
+      console.log('query', query);
+
       dispatch(login());
       logUsage('BRAND SIGNUP', {user: values?.email});
+
+      if(deliverable_id?.split('-')[1]) {
+        // if there is a deliverable_id, then redirect to discover page
+        history.push(ROUTES.BRAND.DISCOVER + `?influencers%5Bquery%5D=${query}#deliverable-${deliverable_id?.split('-')[1]}`);
+        return
+      }
+      
       history.push(ROUTES.BRAND.COMPLETE_PROFILE);
+
+
 
     } catch (error: any) {
       console.error(error);
@@ -75,6 +91,15 @@ const Signup: React.FC = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const deliverable_id = window.location?.hash?.split('#')[1];
+    console.log('deliverable', deliverable_id?.split('-')[1]);
+    
+    // get the influencers%5Bquery%5D from the query string
+    const query = window.location?.search?.split('influencers%5Bquery%5D=')[1];
+    console.log('query', query);
+  }, []);
 
   return (
   <SignupWrapper data-testid="Signup">

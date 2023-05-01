@@ -166,9 +166,10 @@ interface IInfluencerProfileProps {
   setShowInfluencerProfile: React.Dispatch<React.SetStateAction<boolean>>;
   setShowBookCall: React.Dispatch<React.SetStateAction<boolean>>;
   setShowReachout: React.Dispatch<React.SetStateAction<boolean>>;
+  deliverable?: string;
 }
 
-const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setShowInfluencerProfile, setShowBookCall, setShowReachout}: IInfluencerProfileProps) => {
+const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setShowInfluencerProfile, setShowBookCall, setShowReachout, deliverable}: IInfluencerProfileProps) => {
 
   const user = useContext(AuthContext)
 
@@ -186,6 +187,12 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
       console.log(data);
       
       setPacks(data?.body.content_packs);
+
+      data?.body.content_packs?.map((pack: ContentPack) => {
+        if (pack?.id === deliverable) {
+          setSelectedPack(pack);
+        }
+      });
 
     } catch (error) {
       console.log(error);
@@ -289,6 +296,8 @@ interface ICardProps {
 
 const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
   const user = useContext(AuthContext)
+
+  const [deliverable, setDeliverable] = useState('');
   
   useEffect(() => {
     console.log('hit', hit);
@@ -323,8 +332,6 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
       }),
     });
 
-
-
   }
 
   useEffect(() => {
@@ -333,6 +340,20 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
       // fixProfileUrl();
     }
   },[])
+
+  useEffect(() => {
+    const deliverable_id = window.location.hash.split('#')[1];
+    console.log('deliverable', deliverable_id.split('-')[1]);
+    setDeliverable(deliverable_id.split('-')[1]);
+    
+    // get the influencers%5Bquery%5D from the query string
+    const query = window.location.search.split('influencers%5Bquery%5D=')[1];
+    console.log('query', query, hit?.instagramUsername);
+
+    if(query === hit?.instagramUsername) {
+      setShowInfluencerProfile(true);
+    }
+  }, [hit]);
 
   return (
   <>
@@ -369,7 +390,7 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
         preventBodyScrolling
         width={1300}
       >
-        <InfluencerProfile influencer={hit} setShowInfluencerProfile={setShowInfluencerProfile} setShowBookCall={setShowBookCall} setShowReachout={setShowReachout} />
+        <InfluencerProfile influencer={hit} setShowInfluencerProfile={setShowInfluencerProfile} setShowBookCall={setShowBookCall} setShowReachout={setShowReachout} deliverable={deliverable} />
       </SideSheet>
     {showBookCall && <BookCall influencer={hit} setShowBookCall={setShowBookCall} />}
     {showReachout && <Reachout influencer={hit} setShowReachout={setShowReachout} />}

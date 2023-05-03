@@ -83,36 +83,37 @@ const OrderDetails: React.FC = () => {
               console.log(err);
           });
 
+          // send with emailjs to brand
+          emailjs.send("service_5qbdzev", "template_w0hd4v9", {
+              brand_name: brand?.first_name + ' ' + brand?.last_name,
+              influencer_name: influencer?.first_name + ' ' + influencer?.last_name,
+              content_pack_title: contentPack?.title,
+              content_pack_description: contentPack?.description,
+              content_pack_platform: contentPack?.platform,
+              content_pack_price: contentPack?.price,
+              date: new Date(date).toLocaleDateString(),
+              delivery: new Date(addDays(date, delivery)).toLocaleDateString(),
+              submission_url: submission_url,
+              orderlink: `https://syncy.net/order?id=${id}`,
+              to_email: brand?.email,
+          }, 'Wpls9Y0SfcmtgJKO5').then(res => {
+              console.log(res);
+              // update email sent to brand
+              fetch(`${API}/set-email-sent/${id}`, {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+              }).then(res => res.json())
+          }).catch(err => {
+              console.log(err);
+          });
+        
       }).catch(err => {
           console.log(err);
       });
 
 
-      // send with emailjs to brand
-      emailjs.send("service_5qbdzev", "template_w0hd4v9", {
-          brand_name: brand?.first_name + ' ' + brand?.last_name,
-          influencer_name: influencer?.first_name + ' ' + influencer?.last_name,
-          content_pack_title: contentPack?.title,
-          content_pack_description: contentPack?.description,
-          content_pack_platform: contentPack?.platform,
-          content_pack_price: contentPack?.price,
-          date: new Date(date).toLocaleDateString(),
-          delivery: new Date(addDays(date, delivery)).toLocaleDateString(),
-          submission_url: submission_url,
-          orderlink: `https://syncy.net/order?id=${id}`,
-          to_email: brand?.email,
-      }, 'Wpls9Y0SfcmtgJKO5').then(res => {
-          console.log(res);
-          // update email sent to brand
-          fetch(`${API}/set-email-sent/${id}`, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-          }).then(res => res.json())
-      }).catch(err => {
-          console.log(err);
-      });
 
 }
 

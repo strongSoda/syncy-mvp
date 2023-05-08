@@ -503,7 +503,7 @@ const InstagramDetails: React.FC<IProfileDetailsProps> = ({ setSelectedIndex, pr
     validationSchema: Yup.object({
       username: Yup.string().required('Required'),
       rate: Yup.number(),
-      followersCount: Yup.string(),
+      followersCount: Yup.string().required('Required'),
       category: Yup.string(),
       hashtags: Yup.string(),
       topPostUrl1: Yup.string(),

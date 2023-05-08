@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import * as Yup from "yup";
 import SignupWrapper from './Signup.styles';
+import emailjs from '@emailjs/browser';
 
 // declare interface ISignupProps {}
 
@@ -71,6 +72,13 @@ const Signup: React.FC = () => {
 
       dispatch(login());
       logUsage('BRAND SIGNUP', {user: values?.email});
+
+      // send email with emailjs
+      const templateParams = {
+        email: values?.email,
+      };
+      await emailjs.send('service_5qbdzev', 'template_8lv9uek', templateParams, 'Wpls9Y0SfcmtgJKO5')
+
 
       if(deliverable_id?.split('-')[1]) {
         // if there is a deliverable_id, then redirect to discover page

@@ -19,6 +19,7 @@ const AiPoc: React.FC = () => {
 
   const [text, setText] = useState<string>("");
   const [tagline, setTagline] = useState<string>("");
+  const [benefits, setBenefits] = useState<string[]>([]);
   const [showImage, setShowImage] = useState(false);
   const [productName, setProductName] = useState<string>("");
   const [productDescription, setProductDescription] = useState<string>("");
@@ -38,12 +39,14 @@ const AiPoc: React.FC = () => {
     
     1. A social media post that promotes the product. The post should be 1-2 sentences long and should be written in the style of the brand's social media posts.
     2. Tagline foe the product banner. At most 5 words.
+    3. 5 Adjects of the product. Each with at most 3 words. Each is cool and catchy.
 
     return the post and the tagline in JSON format with the following keys:
 
     {
       "post": "The post goes here",
-      "tagline": "The tagline goes here"
+      "tagline": "The tagline goes here",
+      "benefits": ["benefit 1", "benefit 2", "benefit 3"]
     }
     
     -----------------
@@ -64,6 +67,7 @@ const AiPoc: React.FC = () => {
     console.log(data);
     setText(data?.post);
     setTagline(data?.tagline);
+    setBenefits(data?.benefits);
     setShowImage(true);
   }
 
@@ -72,6 +76,10 @@ const AiPoc: React.FC = () => {
     
     // TODO: generate text with 
     getText()
+  }
+
+  const htmlToImage = async () => {
+    // TODO: generate image with html2canvas
   }
 
   
@@ -130,11 +138,12 @@ const AiPoc: React.FC = () => {
     <Button marginBottom={20} onClick={generate}>Generate</Button>
     </Pane>
 
-    <Pane background='#fff' width={900} style={{margin: "0 auto"}} padding={20}>
+      {showImage && 
+      <>
+      <Pane background='#fff' width={900} style={{margin: "0 auto"}} padding={20}>
       <h2>Generated Social Media Post</h2>
       <hr />
       <Paragraph>{text}</Paragraph>
-      {showImage && 
       
         <Pane width={800} padding={20} className='productImageWrapper' background='yellow'>
           <div style={{width: '100%'}}>
@@ -144,9 +153,25 @@ const AiPoc: React.FC = () => {
 
           <img className='productImage' src={URL.createObjectURL(files[0])} />
         </Pane>
-      }
-    </Pane>
+      </Pane>
 
+
+      <Pane width={900} padding={0} className='productImageWrapper2' background='#fff'>
+        <div className='left'>
+          <Heading className='tagline2'>{tagline}</Heading>
+          <ul className='benefits'>
+            {benefits?.map((benefit: string) => (
+              <li className='benefit' key={benefit}>{benefit}</li>
+            ))}
+          </ul>
+        </div>
+        <div className='right'>
+          <img className='productImage2' src={URL.createObjectURL(files[0])} />
+          <Heading className='title2'>{productName}</Heading>
+        </div>
+      </Pane>
+      </>
+      }
 
     
   </AiPocWrapper>

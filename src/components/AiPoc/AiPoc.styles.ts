@@ -10,34 +10,84 @@ const AiPocWrapper = styled.div`
         background-size: contain;
         position: relative;
 
+        
         .title {
             position: absolute;
             bottom: 10%;
-            font-size: 2rem;
+            font-size: 1rem;
         }
         .tagline {
             padding-top: 4rem;
             text-align: center;
-            /* position: absolute;
-            top: 15%;
-            left: 25%; */
             font-size: 2.5rem;
-            font-family: 'Permanent Marker', cursive;
+            font-family: 'Montez', cursive;
         }
         .productImage {
-            /* width: 30%; */
-            position: absolute;
-            top: 25%;
-            left: 45%;
-            height: 60%;
-            /* object-fit: cover; */
-            /* opacity: 0.5; */
             background: transparent;
-            background-blend-mode: darken;
-            /* border-radius: 500em; */
+            margin: 0 auto;
+            display: block;
+            height: 40vh;
+            margin-top: 5vh;
         }
     }
 
+    .productImageWrapper2 {
+        height: 600px;
+        margin: 0 auto;
+        margin-top: 5vh;
+        
+
+        display: flex;
+        justify-content: space-between;
+        overflow-x: hidden;
+
+        .left {
+            width: 50%;
+            color: black;
+
+            padding-left: 5%;
+
+            .tagline2 {
+                padding-top: 4rem;
+                text-align: center;
+                font-size: 3.5rem;
+                line-height: 1.2;
+                font-family: 'Montez', cursive;
+            }
+            .benefits {
+                font-size: 1.5rem;
+                font-family: 'Montserrat', sans-serif;
+
+                .benefit {
+                    list-style: '✓';
+                    margin-top: 1rem;
+                }
+            }
+        }
+        .right {
+            width: 70%;
+            height: 100%;
+            position: relative;
+            
+            background: linear-gradient(105deg, white 25%, yellow 25%);
+            
+            
+            .productImage2 {
+                /* background-clip: content-box; */
+                margin: 0 auto;
+                /* float: right; */
+                display: block;
+                height: 80%;
+                margin-top: 5vh;
+            }
+            .title2 {
+                position: absolute;
+                bottom: 2%;
+                font-size: 1rem;
+                right: 3%;
+            }
+        }
+    }
 `;
 
 export default AiPocWrapper;

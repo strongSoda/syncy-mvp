@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import AiPocWrapper from './AiPoc.styles';
 import { Button, FileCard, FilePicker, FileUploader, Heading, Pane, Paragraph, TextInputField } from 'evergreen-ui';
 import query from 'global/ai/model';
+import { useScreenshot } from "use-react-screenshot";
 
 // declare interface IAiPocProps {}
 
@@ -25,9 +26,29 @@ const AiPoc: React.FC = () => {
   const [productDescription, setProductDescription] = useState<string>("");
   const [productType, setProductType] = useState<string>("");
 
+  const [ss, takeScreenShot] = useScreenshot();
+
+  const ref = useRef(null);
+  const ref2 = useRef(null);
+  const getImage = (ref: any) => takeScreenShot(ref?.current);
+
   useEffect(() => {
     setTemp(true);
   }, []);
+
+  useEffect(() => {
+    if(ss) {
+      // download screenshot ss
+      const link = document.createElement('a');
+      link.href = ss;
+      link.setAttribute('download', 'image.png');
+
+      document.body.appendChild(link);
+
+      link.click();
+
+    }
+  }, [ss]);
 
   const getText = async () => {
     console.log('here');
@@ -76,10 +97,6 @@ const AiPoc: React.FC = () => {
     
     // TODO: generate text with 
     getText()
-  }
-
-  const htmlToImage = async () => {
-    // TODO: generate image with html2canvas
   }
 
   
@@ -136,6 +153,7 @@ const AiPoc: React.FC = () => {
     </Pane>
 
     <Button marginBottom={20} onClick={generate}>Generate</Button>
+
     </Pane>
 
       {showImage && 
@@ -145,7 +163,7 @@ const AiPoc: React.FC = () => {
       <hr />
       <Paragraph>{text}</Paragraph>
       
-        <Pane width={800} padding={20} className='productImageWrapper' background='yellow'>
+        <Pane ref={ref} width={800} padding={20} className='productImageWrapper' background='yellow'>
           <div style={{width: '100%'}}>
             <Heading className='tagline' color="#fff">{tagline}</Heading>
           </div>
@@ -153,15 +171,17 @@ const AiPoc: React.FC = () => {
 
           <img className='productImage' src={URL.createObjectURL(files[0])} />
         </Pane>
+
+        <Button onClick={() => getImage(ref)}>Download</Button>
       </Pane>
 
 
-      <Pane width={900} padding={0} className='productImageWrapper2' background='#fff'>
+      <Pane ref={ref2} width={900} padding={0} className='productImageWrapper2' background='#fff'>
         <div className='left'>
           <Heading className='tagline2'>{tagline}</Heading>
           <ul className='benefits'>
             {benefits?.map((benefit: string) => (
-              <li className='benefit' key={benefit}>{benefit}</li>
+              <li className='benefit' key={benefit}>&#10004; {benefit}</li>
             ))}
           </ul>
         </div>
@@ -170,6 +190,8 @@ const AiPoc: React.FC = () => {
           <Heading className='title2'>{productName}</Heading>
         </div>
       </Pane>
+
+      <Button onClick={() => getImage(ref2)}>Download</Button>
       </>
       }
 

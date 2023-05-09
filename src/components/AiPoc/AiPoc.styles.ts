@@ -5,9 +5,15 @@ const AiPocWrapper = styled.div`
 
     .productImageWrapper {
         min-height: 600px;
-        background: url("https://img.freepik.com/free-photo/black-wall-product-background_53876-89515.jpg")
-            no-repeat center center;
-        background-size: contain;
+        /* shades of black radial gradient towards right */
+        background: hsla(354, 95%, 24%, 1);
+
+        background: linear-gradient(90deg, hsla(354, 95%, 24%, 1) 0%, hsla(234, 70%, 24%, 1) 100%);
+
+        background: -moz-linear-gradient(90deg, hsla(354, 95%, 24%, 1) 0%, hsla(234, 70%, 24%, 1) 100%);
+
+        background: -webkit-linear-gradient(90deg, hsla(354, 95%, 24%, 1) 0%, hsla(234, 70%, 24%, 1) 100%);
+
         position: relative;
 
         
@@ -59,7 +65,7 @@ const AiPocWrapper = styled.div`
                 font-family: 'Montserrat', sans-serif;
 
                 .benefit {
-                    list-style: '✓';
+                    list-style: none;
                     margin-top: 1rem;
                 }
             }

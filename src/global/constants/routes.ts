@@ -3,6 +3,7 @@ const ROUTES = {
     LOGIN: '/login',
     DISCOVER: '/discover',
     MANAGE_MENU: '/menu',
+    POC: '/poc',
   },
   BRAND: {
     LOGIN: '/brand/login',

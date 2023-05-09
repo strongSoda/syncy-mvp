@@ -34,6 +34,7 @@ import OrderDetailsPage from 'pages/Brand/OrderDetailsPage/OrderDetailsPage.lazy
 import InfluencerOrdersPage from 'pages/Influencer/OrdersPage/OrdersPage.lazy';
 import InfluencerOrderDetailsPage from 'pages/Influencer/OrderDetailsPage/OrderDetailsPage.lazy';
 import CampaignsPage from 'pages/Brand/CampaignsPage/CampaignsPage.lazy';
+import AiPocPage from 'pages/AiPocPage/AiPocPage.lazy';
 
 const StyledNav = styled.nav`
   display: flex;
@@ -69,6 +70,7 @@ const AppRouterSwitch: React.FC = () => {
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/counter" component={Counter} />
+        <Route exact path={ROUTES.GENERAL.POC} component={AiPocPage} />
         {/* <Route exact path={ROUTES.BRAND.DISCOVER} component={ManageRequestsPage} /> */}
         {/* <Route path={`${ROUTES.GENERAL.MANAGE_MERCHANTS}/:id`} component={ManageMerchantsPage} /> */}
         {/* <Route path={`${ROUTES.GENERAL.MANAGE_MENU}/:id`} component={MenuPage} /> */}

@@ -11,7 +11,7 @@ async function query(prompt, maxTokens = 200) {
     model: "text-davinci-003",
     prompt,
     max_tokens: maxTokens,
-    temperature: 0,
+    temperature: 1,
   });
   return response.data.choices[0].text;
 }
@@ -124,3 +124,5 @@ export function ModelConfiguration({ openAiKey, setOpenAiKey }) {
     </div>
   );
 }
+
+export default query;

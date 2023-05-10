@@ -60,7 +60,7 @@ const AiPoc: React.FC = () => {
     
     1. A social media post that promotes the product. The post should be 1-2 sentences long and should be written in the style of the brand's social media posts.
     2. Tagline foe the product banner. At most 5 words.
-    3. 5 Adjects of the product. Each with at most 3 words. Each is cool and catchy.
+    3. 5 Adjectives of the product. Each with at most 3 words. Each is cool and catchy.
 
     return the post and the tagline in JSON format with the following keys:
 

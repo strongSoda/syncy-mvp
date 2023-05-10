@@ -4,6 +4,8 @@ import AiPocWrapper from './AiPoc.styles';
 import { Button, FileCard, FilePicker, FileUploader, Heading, Pane, Paragraph, TextInputField } from 'evergreen-ui';
 import query from 'global/ai/model';
 import { useScreenshot } from "use-react-screenshot";
+import CSSVARIABLES from 'global/constants/variables';
+import Syncy from '../../assets/images/syncy.png';
 
 // declare interface IAiPocProps {}
 
@@ -103,9 +105,25 @@ const AiPoc: React.FC = () => {
   return (
   <AiPocWrapper data-testid="AiPoc">
 
+
     <Pane  alignItems="center" justifyContent="center" width={900} style={{margin: "0 auto"}}>
+      <Pane display="flex" padding={16} marginTop={24} background={CSSVARIABLES.COLORS.YELLOW_GREEN_1} borderRadius={3}>
+        <img src={Syncy} alt="Syncy" width="50" height="50" />
+        <Pane>
+          <Heading size={800} flex={1} alignItems="center" display="flex">
+            Syncy
+          </Heading>
+          <Heading size={400}>
+            Where brands connect with quality micro-influencers
+          </Heading>
+        </Pane>
+        <Pane>
+        </Pane>
+      </Pane>
+      
+      <Pane padding={20} background={CSSVARIABLES.COLORS.WHITE_0} borderRadius={3} marginTop={24}>
       <h1>Generate social media post with Syncy GPT</h1>
-      <Paragraph>Syncy GPT is a text generation model that can generate text based on a prompt. It is trained on a large corpus of social media posts and can generate text in the style of the training data.</Paragraph>
+      {/* <Paragraph>Syncy GPT is a text generation model that can generate text based on a prompt. It is trained on a large corpus of social media posts and can generate text in the style of the training data.</Paragraph> */}
 
       <br />
       {/* Input field for product name */}
@@ -152,9 +170,11 @@ const AiPoc: React.FC = () => {
       />
     </Pane>
 
-    <Button marginBottom={20} onClick={generate}>Generate</Button>
+    <Button width={'100%'} intent='success' appearance='primary' marginBottom={20} onClick={generate}>Generate</Button>
 
     </Pane>
+
+  </Pane>
 
       {showImage && 
       <>
@@ -175,7 +195,8 @@ const AiPoc: React.FC = () => {
         <Button onClick={() => getImage(ref)}>Download</Button>
       </Pane>
 
-
+      
+      <Pane width={900} marginRight="auto" marginLeft="auto">
       <Pane ref={ref2} width={900} padding={0} className='productImageWrapper2' background='#fff'>
         <div className='left'>
           <Heading className='tagline2'>{tagline}</Heading>
@@ -192,6 +213,7 @@ const AiPoc: React.FC = () => {
       </Pane>
 
       <Button onClick={() => getImage(ref2)}>Download</Button>
+      </Pane>
       </>
       }
 

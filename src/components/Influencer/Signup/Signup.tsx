@@ -131,6 +131,7 @@ const Signup: React.FC = () => {
           <p>
             Already have an account? <a href={ROUTES.INFLUENCER.LOGIN}>Log In!</a>
           </p>
+          <small>By signing up you agree to our <a href="https://syncy.net/terms">Terms of Service</a> and <a href="https://syncy.net/privacy">Privacy Policy</a></small>
         </form>
       </div>
       <div className="banner">

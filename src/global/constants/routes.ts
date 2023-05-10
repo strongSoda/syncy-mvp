@@ -3,7 +3,7 @@ const ROUTES = {
     LOGIN: '/login',
     DISCOVER: '/discover',
     MANAGE_MENU: '/menu',
-    POC: '/poc',
+    POC: '/syncy-gpt',
   },
   BRAND: {
     LOGIN: '/brand/login',

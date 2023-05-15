@@ -27,7 +27,6 @@ const AuthenticatedRoute: React.FC<IAuthenticatedRouteProps> = (props: IAuthenti
   return (
     <AuthenticatedRouteWrapper data-testid="AuthenticatedRoute">
       <Route
-        search={window.location?.search + (deliverable_id ? `#deliverable-${deliverable_id?.split('-')[1]}` : '')}
         {...componentProps}
         render={() =>
           isAuthenticated ? (

@@ -52,6 +52,15 @@ const AppRouterSwitch: React.FC = () => {
   usePageViews();
 
   const loggedin = useAppSelector((state) => state.user.loggedin);
+
+
+  const deliverable_id = window.location?.hash?.split('#')[1];
+  console.log('deliverable', deliverable_id?.split('-')[1]);
+
+  // get the influencers%5Bquery%5D from the query string
+  const query = window.location?.search?.split('influencers%5Bquery%5D=')[1];
+  console.log('query', query);
+
   // const user = useContext(AuthContext);
   // const [loggedin, setLoggedin] = useState(() => false);
 

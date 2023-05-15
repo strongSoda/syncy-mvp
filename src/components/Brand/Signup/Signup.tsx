@@ -21,6 +21,15 @@ const Signup: React.FC = () => {
   const history = useHistory();
   // const [confirmPassword, setConfirmPassword] = useState<string>('');
 
+
+  const deliverable_id = window.location?.hash?.split('#')[1];
+  console.log('deliverable', deliverable_id?.split('-')[1]);
+
+  // get the influencers%5Bquery%5D from the query string
+  const query = window.location?.search?.split('influencers%5Bquery%5D=')[1];
+  console.log('query', query);
+  
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -63,13 +72,6 @@ const Signup: React.FC = () => {
       const user = userCredential.user;
       await sendEmailVerification(user)
 
-      const deliverable_id = window.location?.hash?.split('#')[1];
-      console.log('deliverable', deliverable_id?.split('-')[1]);
-    
-      // get the influencers%5Bquery%5D from the query string
-      const query = window.location?.search?.split('influencers%5Bquery%5D=')[1];
-      console.log('query', query);
-
       dispatch(login());
       logUsage('BRAND SIGNUP', {user: values?.email});
 
@@ -82,7 +84,11 @@ const Signup: React.FC = () => {
 
       if(deliverable_id?.split('-')[1]) {
         // if there is a deliverable_id, then redirect to discover page
-        history.push(ROUTES.BRAND.DISCOVER + `?influencers%5Bquery%5D=${query}#deliverable-${deliverable_id?.split('-')[1]}`);
+        history.push(ROUTES.BRAND.COMPLETE_PROFILE + `?influencers%5Bquery%5D=${query}#deliverable-${deliverable_id?.split('-')[1]}`);
+        return
+      } else if (query) {
+        history.push(ROUTES.BRAND.COMPLETE_PROFILE + `?influencers%5Bquery%5D=${query}`);
+        setLoading(false);
         return
       }
       
@@ -113,7 +119,7 @@ const Signup: React.FC = () => {
   <SignupWrapper data-testid="Signup">
     <header>
         <h3 className="brand">SYNCY</h3>
-        <a href={ROUTES.BRAND.LOGIN}>
+        <a href={ROUTES.BRAND.LOGIN + (query ? `?influencers%5Bquery%5D=${query}` : '') + (deliverable_id ? `#deliverable-${deliverable_id?.split('-')[1]}` : '')}>
           <button className="login_btn">log in</button>
         </a>
     </header>
@@ -162,7 +168,7 @@ const Signup: React.FC = () => {
           <br /> */}
           <input type="submit" value={loading ? 'loading...' : 'Register'} />
           <p>
-            Already have an account? <a href={ROUTES.BRAND.LOGIN}>Log In!</a>
+            Already have an account? <a href={ROUTES.BRAND.LOGIN + (query ? `?influencers%5Bquery%5D=${query}` : '') + (deliverable_id ? `#deliverable-${deliverable_id?.split('-')[1]}` : '')}>Log In!</a>
           </p>
         </form>
       </div>

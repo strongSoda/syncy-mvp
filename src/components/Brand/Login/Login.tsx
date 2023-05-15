@@ -17,6 +17,13 @@ import LoginWrapper from './Login.styles';
 const Login: React.FC = () => {
   const [Error, setCustomError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const deliverable_id = window.location?.hash?.split('#')[1];
+  console.log('deliverable', deliverable_id?.split('-')[1]);
+
+  // get the influencers%5Bquery%5D from the query string
+  const query = window.location?.search?.split('influencers%5Bquery%5D=')[1];
+  console.log('query', query);
   
   const dispatch = useAppDispatch();
   const history = useHistory();
@@ -57,20 +64,16 @@ const Login: React.FC = () => {
       values?.password,
     );
 
-
-    const deliverable_id = window.location?.hash?.split('#')[1];
-    console.log('deliverable', deliverable_id?.split('-')[1]);
-
-    // get the influencers%5Bquery%5D from the query string
-    const query = window.location?.search?.split('influencers%5Bquery%5D=')[1];
-    console.log('query', query);
-
     dispatch(login());
     logUsage('BRAND LOGIN', {user: values?.email});
 
     if(deliverable_id?.split('-')[1]) {
       // if there is a deliverable_id, then redirect to discover page
       history.push(ROUTES.BRAND.DISCOVER + `?influencers%5Bquery%5D=${query}#deliverable-${deliverable_id?.split('-')[1]}`);
+      setLoading(false);
+      return
+    } else if (query) {
+      history.push(ROUTES.BRAND.DISCOVER + `?influencers%5Bquery%5D=${query}`);
       setLoading(false);
       return
     }
@@ -92,7 +95,7 @@ const Login: React.FC = () => {
   <LoginWrapper data-testid="Login">
     <header>
         <h3 className="brand">SYNCY</h3>
-        <a href={ROUTES.BRAND.REGISTER}>
+        <a href={ROUTES.BRAND.REGISTER + (query ? `?influencers%5Bquery%5D=${query}` : '') + (deliverable_id ? `#deliverable-${deliverable_id?.split('-')[1]}` : '')}>
           <button className="login_btn">register</button>
         </a>
     </header>
@@ -122,7 +125,7 @@ const Login: React.FC = () => {
           <br />
           <input type="submit" value={loading ? 'loading...' : 'Log In'} />
           <p>
-            Don't have an account? <a href={ROUTES.BRAND.REGISTER}>Register!</a>
+            Don't have an account? <a href={ROUTES.BRAND.REGISTER + (query ? `?influencers%5Bquery%5D=${query}` : '') + (deliverable_id ? `#deliverable-${deliverable_id?.split('-')[1]}` : '')}>Register!</a>
           </p>
           <p>
             Forgot Password? <a href={ROUTES.BRAND.FORGOT_PASSWORD}>Reset!</a>

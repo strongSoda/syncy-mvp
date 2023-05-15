@@ -16,8 +16,12 @@ const AuthenticatedRoute: React.FC<IAuthenticatedRouteProps> = (props: IAuthenti
   const { isAuthenticated } = props;
   const { componentProps } = props;
 
+  const deliverable_id = window.location?.hash?.split('#')[1];
+  console.log('deliverable', deliverable_id?.split('-')[1]);
+
   useEffect(() => {
     console.log('AuthenticatedRoute', props);
+    
   }, [props]);
 
   return (
@@ -28,7 +32,7 @@ const AuthenticatedRoute: React.FC<IAuthenticatedRouteProps> = (props: IAuthenti
           isAuthenticated ? (
               <C {...props} {...componentProps} />
           ) : (
-            <Redirect to={ROUTES.BRAND.LOGIN} />
+            <Redirect to={{ pathname: ROUTES.BRAND.LOGIN + (deliverable_id ? `#deliverable-${deliverable_id?.split('-')[1]}` : ''), search: window.location?.search }} />
           )
         }
       />

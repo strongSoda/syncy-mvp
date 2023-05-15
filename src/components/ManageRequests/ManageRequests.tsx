@@ -372,7 +372,7 @@ const Card: React.FC<ICardProps> = ({hit}: ICardProps) => {
         <div className='actions'>          
           {hit?.bookCallInfo && hit?.bookCallInfo.includes('calendly') && <img className='icon' src={PhoneIcon} alt="eye" onClick={() => setShowBookCall(true) } />}
           <img className='icon' src={EyeIcon} alt="eye" onClick={() => setShowInfluencerProfile(true) } />
-          {/* <img className='icon' src={EmailIcon} alt="eye" onClick={() => setShowReachout(true) } /> */}
+          <img className='icon' src={EmailIcon} alt="eye" onClick={() => setShowReachout(true) } />
           {/* <img className='icon' src={SaveIcon} alt="eye" /> */}
         </div>
       </div>
@@ -486,31 +486,30 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     setLoading(false);
 
     setMessageGenerating(true);
-    const msg = await createReachout(influencer, brandUserProfile);
+    const msg: string = await createReachout(influencer, brandUserProfile) as string;
     console.log(msg);
 
+    const msg_json = JSON.parse(msg)
+
+    if(!msg_json) load()
+    
     logUsage('BRAND GENERATED AI REACHOUT MESSAGE NOT YET SENT', {user: {email: user?.email}, influencer: influencer?.fullName, meesage: msg});
 
-    setMessage(msg);
+    setMessage(`
+    Subject: ${msg_json?.subject}\n
+    \n
+    ${msg_json?.plain_text_body}
+    `);
     setMessageGenerated(true);
-    setMessageGenerating(false);
+    setMessageGenerating(false);    
 
-    // extract subject and body from msg string
-    const lines = msg?.trim().split('\n') || [];
-    const subject = lines?.shift();
-
-    // collect all lines into an array except first line (subject) and join them with new line character to form body of email message. URLencode the body.
-    const body = lines?.slice(1).join(`%0D%0A`);
-
-    
-
-    console.log(subject);
+    console.log(msg_json?.subject);
     console.log('%%%%%%%%%%%%%%%%');
-    console.log(encodeURI(body));
+    console.log(msg_json?.body);
     
     
-    setSubject(subject);
-    setBody(body);
+    setSubject(msg_json?.subject);
+    setBody(msg_json?.body);
   };
 
   const sendEmail = async () => {
@@ -519,18 +518,19 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
 
     // emailjs send email
     const templateParams = {
-      to_name: influencer?.fullName,
+      subject: subject,
       // todo: use email of influencer
       to_email: influencer?.email || influencer?.publicEmail || influencer?.mailFound,
-      brand_name: brandUserProfile?.company_name,
-      contact_name: brandUserProfile?.first_name + ' ' + brandUserProfile?.last_name,
+      body: body,
+      from_name: brandUserProfile?.first_name + ' ' + brandUserProfile?.last_name,
+      reply_to: user?.email
     };
 
-    emailjs.send('service_p835il9', 'template_adclu1d', templateParams, 'wo1FnANWwcN5Nav88')
+    emailjs.send('service_5qbdzev', 'template_flvtyhn', templateParams, 'Wpls9Y0SfcmtgJKO5')
     .then(function(response) {
        console.log('SUCCESS!', response.status, response.text);
-      //  setShowReachout(false);
        toaster.success('Email sent successfully');
+        setShowReachout(false);
     }, function(error) {
        console.log('FAILED...', error);
        toaster.danger('Something went wrong. Try again later.');
@@ -540,8 +540,8 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
   const reachout = async () => {
     setSendingMessage(true);
     console.log('reachout');
-    sendEmail();
-    await createBrandInfluencerChannel();
+    await sendEmail();
+    // await createBrandInfluencerChannel();
     setSendingMessage(false);
     // load()
   }
@@ -684,7 +684,7 @@ const Reachout: React.FC<IReachoutProps> = ({influencer, setShowReachout}: IReac
     console.log(user, influencer);
     logUsage('BRAND REACHOUT BUTTON CLICKED', {user: {email: user?.email}, influencer: influencer?.fullName});
     if(user) {
-      checkMapping();
+      // checkMapping();
     }
   }, [user]);
 

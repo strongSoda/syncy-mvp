@@ -46,7 +46,7 @@ export async function createReachout(influencer, brandUserProfile) {
     Followers: ${influencer?.followers} followers.
     --------------------
 
-    Keep the email short and sweet. The goal is to get the influencer to respond to you. Include the subject line in the response. Separate the subject line and the body of the email with a newline character \n.
+    Keep the email short and sweet. The goal is to get the influencer to respond to you. Include the subject line in the response.
 
     Write the email on behalf of the person below.
     --------------------
@@ -57,9 +57,19 @@ export async function createReachout(influencer, brandUserProfile) {
     Company Website: ${brandUserProfile?.company_website}.
     Company Address: ${brandUserProfile?.company_address}.
     --------------------
+
+    Please return the result in a valid JSON object as below. Do not include any text in the output string other than the valid JSON object neither after the JSON not before it. If you cannot return a valid JSON array, please return an empty object.
+    
+    {
+      "subject": "",
+      "body": "html of body",
+      "plain_text_body": "body in plain text" 
+    }
+    
+    Note: Format the body as html. Format the plain_text_body with new line characters for line breaks.
     `
     ,
-    200
+    500
   );
 }
 

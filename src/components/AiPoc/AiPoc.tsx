@@ -6,8 +6,14 @@ import query from 'global/ai/model';
 import { useScreenshot } from "use-react-screenshot";
 import CSSVARIABLES from 'global/constants/variables';
 import Syncy from '../../assets/images/syncy.png';
+import PostTemplates from 'components/PostTemplates/PostTemplates.lazy';
 
 // declare interface IAiPocProps {}
+
+function splitOnce(str: string, sep: string) {
+  const idx = str.indexOf(sep);
+  return [str.slice(0, idx), str.slice(idx+1)];
+}
 
 const AiPoc: React.FC = () => {
   const [temp, setTemp] = useState(false);
@@ -28,11 +34,14 @@ const AiPoc: React.FC = () => {
   const [productDescription, setProductDescription] = useState<string>("");
   const [productType, setProductType] = useState<string>("");
 
-  const [ss, takeScreenShot] = useScreenshot();
+  const [posts, setPosts] = useState<any[]>([]);
 
-  const ref = useRef(null);
-  const ref2 = useRef(null);
-  const getImage = (ref: any) => takeScreenShot(ref?.current);
+  const [ss, takeScreenShot] = useScreenshot();
+  
+  const getImage = (ref: any) => {
+    console.log('here', ref?.current);
+    takeScreenShot(ref?.current)
+  };
 
   useEffect(() => {
     setTemp(true);
@@ -43,7 +52,8 @@ const AiPoc: React.FC = () => {
       // download screenshot ss
       const link = document.createElement('a');
       link.href = ss;
-      link.setAttribute('download', 'image.png');
+      // create random image name
+      link.setAttribute('download', `syncy-${new Date().getTime()}.png`);
 
       document.body.appendChild(link);
 
@@ -58,19 +68,25 @@ const AiPoc: React.FC = () => {
     const res = await query(`
     You are an expert social media content creator responsible for creating content to promote any brand's products on social media.
 
-    Given the product details below the line generate 
-    
-    1. A social media post that promotes the product. The post should be 1-2 sentences long and should be written in the style of the brand's social media posts.
-    2. Tagline for the product banner. At most 5 words.
-    3. 5 Adjectives of the product. Each with at most 3 words. Each is cool and catchy.
+    Given the product details below the line generate a valid json array for 2 social media posts for the product. If you cant return a valid json array return an empty array.
 
-    return the post and the tagline in JSON format with the following keys:
+    Return the posts in JSON format with the following keys:
 
-    {
-      "post": "The post goes here",
+    [
+      {
+      "text": "The post text goes here",
       "tagline": "The tagline goes here",
-      "benefits": ["benefit 1", "benefit 2", "benefit 3"]
+      "backgroundGradientCss": "linear-gradient(to top, #30cfd0 0%, #330867 100%)",
+      "textColor": "white"
+    },
+    {
+      "text": "The post text goes here",  
+      "tagline": "The tagline goes here",
+      "benefits": ["benefit 1", "benefit 2", "benefit 3"],
+      "backgroundGradientCss": "linear-gradient(105deg, white 25%, yellow 25%)",
+      "textColor": "white"
     }
+    ]
     
     -----------------
     Product name: ${productName}
@@ -78,19 +94,30 @@ const AiPoc: React.FC = () => {
     Product type: ${productType}
     -----------------
 
-    Make the post witty and catchy.
-    The sentiment of the post should be positive. The post should be written to be viral. Do not include any hashtags or links in the post.
+    Make each post witty and catchy.
+    The sentiment of the all posts should be positive. The posts should be written to be viral. Do not include any hashtags or links in the posts.
 
-    At most 50 words.
+    1. Each post is at most 50 words and should be written in the style of the brand's social media posts.
+    2. Tagline for the product banner. At most 5 words.
+    3. 5 Adjectives of the product. Each adjective with at most 3 words. Each is cool and catchy. Return as the benfits only in the second post.
+    4. The background gradient for the product banner. Return as a css string. Different for each post. Randomly generated colors.
+     For the second post the pecentage of the gradient and the first color(white) should be same as provided but randomize the second color.
+    5. The text-color should be white or black depending on the background gradient.
 
-    `, 100);
+    `, 400);
 
-    const data = JSON.parse(res as string);
+    console.log(res);
+    const processed = splitOnce(res as string, '[')[1];
+    console.log(processed);
+    
+    const data = JSON.parse('[' + processed as string);
 
     console.log(data);
-    setText(data?.post);
-    setTagline(data?.tagline);
-    setBenefits(data?.benefits);
+
+    setPosts(data);
+    // setText(data?.post);
+    // setTagline(data?.tagline);
+    // setBenefits(data?.benefits);
     setShowImage(true);
   }
 
@@ -178,42 +205,14 @@ const AiPoc: React.FC = () => {
 
       {showImage && 
       <>
-      <Pane background='#fff' width={900} style={{margin: "0 auto"}} padding={20}>
-      <h2>Generated Social Media Post</h2>
-      <hr />
-      <Paragraph>{text}</Paragraph>
-      
-        <Pane ref={ref} width={800} padding={20} className='productImageWrapper' background='yellow'>
-          <div style={{width: '100%'}}>
-            <Heading className='tagline' color="#fff">{tagline}</Heading>
-          </div>
-          <Heading className='title' color="#fff">{productName}</Heading>
 
-          <img className='productImage' src={URL.createObjectURL(files[0])} />
-        </Pane>
+      <PostTemplates 
+        posts={posts}
+        productName={productName} productDescription={productDescription} productType={productType}
+        getImage={getImage}
+        file={files[0]}
+        />
 
-        <Button onClick={() => getImage(ref)}>Download</Button>
-      </Pane>
-
-      
-      <Pane width={900} marginRight="auto" marginLeft="auto">
-      <Pane ref={ref2} width={900} padding={0} className='productImageWrapper2' background='#fff'>
-        <div className='left'>
-          <Heading className='tagline2'>{tagline}</Heading>
-          <ul className='benefits'>
-            {benefits?.map((benefit: string) => (
-              <li className='benefit' key={benefit}>&#10004; {benefit}</li>
-            ))}
-          </ul>
-        </div>
-        <div className='right'>
-          <img className='productImage2' src={URL.createObjectURL(files[0])} />
-          <Heading className='title2'>{productName}</Heading>
-        </div>
-      </Pane>
-
-      <Button onClick={() => getImage(ref2)}>Download</Button>
-      </Pane>
       </>
       }
 

@@ -1,17 +1,15 @@
 import styled from 'styled-components';
 
-const AiPocWrapper = styled.div`
+const PostTemplatesWrapper = styled.div``;
+
+export const PostTemplateWrapper1 = styled.div`
+    margin-bottom: 5vh;
 
     .productImageWrapper {
         min-height: 600px;
         /* shades of black radial gradient towards right */
-        background: hsla(354, 95%, 24%, 1);
-
-        background: linear-gradient(90deg, hsla(354, 95%, 24%, 1) 0%, hsla(234, 70%, 24%, 1) 100%);
-
-        background: -moz-linear-gradient(90deg, hsla(354, 95%, 24%, 1) 0%, hsla(234, 70%, 24%, 1) 100%);
-
-        background: -webkit-linear-gradient(90deg, hsla(354, 95%, 24%, 1) 0%, hsla(234, 70%, 24%, 1) 100%);
+        /* background: hsla(354, 95%, 24%, 1); */
+        border: 8px solid black;
 
         position: relative;
 
@@ -35,11 +33,15 @@ const AiPocWrapper = styled.div`
             margin-top: 5vh;
         }
     }
+`;
 
+export const PostTemplateWrapper2 = styled.div`
     .productImageWrapper2 {
         height: 600px;
         margin: 0 auto;
         margin-top: 5vh;
+
+        border: 8px solid black;
         
 
         display: flex;
@@ -72,10 +74,7 @@ const AiPocWrapper = styled.div`
         .right {
             width: 70%;
             height: 100%;
-            position: relative;
-            
-            background: linear-gradient(105deg, white 25%, yellow 25%);
-            
+            position: relative;            
             
             .productImage2 {
                 /* background-clip: content-box; */
@@ -83,6 +82,8 @@ const AiPocWrapper = styled.div`
                 /* float: right; */
                 display: block;
                 height: 80%;
+                width: 100%;
+                object-fit: contain;
                 margin-top: 5vh;
             }
             .title2 {
@@ -93,6 +94,6 @@ const AiPocWrapper = styled.div`
             }
         }
     }
-`;
+`
 
-export default AiPocWrapper;
+export default PostTemplatesWrapper;

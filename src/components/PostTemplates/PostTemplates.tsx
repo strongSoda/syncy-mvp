@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import PostTemplatesWrapper, { PostTemplateWrapper1, PostTemplateWrapper2 } from './PostTemplates.styles';
+import PostTemplatesWrapper, { PostTemplateWrapper1, PostTemplateWrapper2, PostTemplateWrapper3, PostTemplateWrapper4 } from './PostTemplates.styles';
 import { Button, Heading, Pane, Paragraph } from 'evergreen-ui';
 
 declare interface IPostTemplatesProps {
@@ -31,6 +31,14 @@ const PostTemplates: React.FC<IPostTemplatesProps> =
 
 
     <PostTemplate2 post={posts[1]} productName={productName} 
+      productDescription={productDescription} productType={productType}
+      file={file} getImage={getImage} />
+    
+    <PostTemplate3 post={posts[2]} productName={productName} 
+      productDescription={productDescription} productType={productType}
+      file={file} getImage={getImage} />
+
+    <PostTemplate4 post={posts[3]} productName={productName} 
       productDescription={productDescription} productType={productType}
       file={file} getImage={getImage} />
   </PostTemplatesWrapper>
@@ -98,6 +106,60 @@ export const PostTemplate2: React.FC<IPostTemplateProps> = ({post, productName, 
 
       </Pane>
     </PostTemplateWrapper2>
+  )
+}
+
+export const PostTemplate3: React.FC<IPostTemplateProps> = ({post, productName, productDescription, productType, file, getImage}) => {
+  const ref = useRef(null);
+
+  return (
+    <PostTemplateWrapper3>
+      <Pane background='#fff' width={900} style={{margin: "0 auto"}} padding={20}>
+        <Paragraph>{post?.text}</Paragraph>
+
+        <Pane ref={ref} width={800} padding={20} className='productImageWrapper'>
+          <img className='productImage' alt="post 3" src={URL.createObjectURL(file)} />
+          <div className="overlay" style={{background: post?.backgroundGradientCss}}>
+            <Heading className='title' fontFamily={post?.font} color={post?.textColor}>{productName}</Heading>
+            <Heading className='tagline' fontFamily={post?.font} color={post?.textColor}>{post?.tagline}</Heading>
+          </div>
+
+        </Pane>
+      
+        <Button onClick={() => getImage(ref)}>Download</Button>
+      </Pane>
+    </PostTemplateWrapper3>
+  )
+}
+
+export const PostTemplate4: React.FC<IPostTemplateProps> = ({post, productName, productDescription, productType, file, getImage}) => {
+  const ref = useRef(null);
+
+  return (
+    <PostTemplateWrapper4>
+      <Pane background='#fff' width={900} style={{margin: "0 auto"}} padding={20}>
+        <Paragraph>{post?.text}</Paragraph>
+        
+        <Pane ref={ref} width={800} padding={20} className='productImageWrapper'>
+          <div className='details'>
+            <Heading className='tagline' fontFamily={post?.font}>{post?.tagline}</Heading>
+            <Heading className='title' fontFamily={post?.font}>{productName}</Heading>
+
+            <ul className='benefits' style={{fontFamily: post?.font}}>
+              {post?.benefits?.map((benefit: string) => (
+                <li className='benefit'  key={benefit}>&#10004; {benefit}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className='blob' style={{background: post?.backgroundGradientCss }}>
+            <img className='productImage' alt="post 1" src={URL.createObjectURL(file)} />
+          </div>
+        </Pane>
+
+        <Button onClick={() => getImage(ref)}>Download</Button>
+      </Pane>
+    </PostTemplateWrapper4>
   )
 }
 

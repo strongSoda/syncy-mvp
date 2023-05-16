@@ -68,7 +68,7 @@ const AiPoc: React.FC = () => {
     const res = await query(`
     You are an expert social media content creator responsible for creating content to promote any brand's products on social media.
 
-    Given the product details below the line generate a valid json array for 2 social media posts for the product. If you cant return a valid json array return an empty array.
+    Given the product details below the line generate a valid json array for 4 social media posts for the product. If you cant return a valid json array return an empty array.
 
     Return the posts in JSON format with the following keys:
 
@@ -85,6 +85,21 @@ const AiPoc: React.FC = () => {
       "tagline": "The tagline goes here",
       "benefits": ["benefit 1", "benefit 2", "benefit 3"],
       "backgroundGradientCss": "linear-gradient(105deg, white 25%, yellow 25%)",
+      "textColor": "white",
+      "font": ""
+    },
+    {
+      "text": "The post text goes here",
+      "tagline": "The tagline goes here",
+      "backgroundGradientCss": "linear-gradient(rgb(72,0,72,0.8), rgb(192,72,72,0.8))",
+      "textColor": "white",
+      "font": ""
+    },
+    {
+      "text": "The post text goes here",
+      "tagline": "The tagline goes here",
+      "benefits": ["benefit 1", "benefit 2", "benefit 3", "benefit 4", "benefit 5"],
+      "backgroundGradientCss": "linear-gradient(to top, #30cfd0 0%, #330867 100%)",
       "textColor": "white",
       "font": ""
     }
@@ -106,6 +121,7 @@ const AiPoc: React.FC = () => {
      For the second post the pecentage of the gradient and the first color(white) should be same as provided but randomize the second color.
     5. The text-color should be white or black depending on the background gradient.
     6. The font should be a random font from the list of fonts provided below. Different for each post.
+    7. The background gradient for the 3rd post should have opacity of 0.8. Randomly generated colors.
 
     Fonts:
       1. 'Montez'
@@ -113,7 +129,7 @@ const AiPoc: React.FC = () => {
       3. 'Raleway'
       4. 'Permanent Marker'
 
-    `, 400);
+    `, 500);
 
     console.log(res);
     const processed = splitOnce(res as string, '[')[1];

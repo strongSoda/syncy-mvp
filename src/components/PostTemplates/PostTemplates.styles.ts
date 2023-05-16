@@ -23,7 +23,7 @@ export const PostTemplateWrapper1 = styled.div`
             padding-top: 4rem;
             text-align: center;
             font-size: 2.5rem;
-            font-family: 'Montez', cursive;
+            /* font-family: 'Montez', cursive; */
         }
         .productImage {
             background: transparent;
@@ -59,11 +59,11 @@ export const PostTemplateWrapper2 = styled.div`
                 text-align: center;
                 font-size: 3.5rem;
                 line-height: 1.2;
-                font-family: 'Montez', cursive;
+                /* font-family: 'Montez', cursive; */
             }
             .benefits {
                 font-size: 1.5rem;
-                font-family: 'Montserrat', sans-serif;
+                /* font-family: 'Montserrat', sans-serif; */
 
                 .benefit {
                     list-style: none;

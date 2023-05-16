@@ -77,14 +77,16 @@ const AiPoc: React.FC = () => {
       "text": "The post text goes here",
       "tagline": "The tagline goes here",
       "backgroundGradientCss": "linear-gradient(to top, #30cfd0 0%, #330867 100%)",
-      "textColor": "white"
+      "textColor": "white",
+      "font": ""
     },
     {
       "text": "The post text goes here",  
       "tagline": "The tagline goes here",
       "benefits": ["benefit 1", "benefit 2", "benefit 3"],
       "backgroundGradientCss": "linear-gradient(105deg, white 25%, yellow 25%)",
-      "textColor": "white"
+      "textColor": "white",
+      "font": ""
     }
     ]
     
@@ -97,12 +99,19 @@ const AiPoc: React.FC = () => {
     Make each post witty and catchy.
     The sentiment of the all posts should be positive. The posts should be written to be viral. Do not include any hashtags or links in the posts.
 
-    1. Each post is at most 50 words and should be written in the style of the brand's social media posts.
+    1. Each post's text is at most 50 words and should be written in the style of the brand's social media posts.
     2. Tagline for the product banner. At most 5 words.
     3. 5 Adjectives of the product. Each adjective with at most 3 words. Each is cool and catchy. Return as the benfits only in the second post.
     4. The background gradient for the product banner. Return as a css string. Different for each post. Randomly generated colors.
      For the second post the pecentage of the gradient and the first color(white) should be same as provided but randomize the second color.
     5. The text-color should be white or black depending on the background gradient.
+    6. The font should be a random font from the list of fonts provided below. Different for each post.
+
+    Fonts:
+      1. 'Montez'
+      2. 'Montserrat'
+      3. 'Raleway'
+      4. 'Permanent Marker'
 
     `, 400);
 

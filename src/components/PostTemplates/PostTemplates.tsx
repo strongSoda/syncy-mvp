@@ -56,9 +56,9 @@ export const PostTemplate1: React.FC<IPostTemplateProps> = ({post, productName, 
         
         <Pane ref={ref} width={800} padding={20} style={{background: post?.backgroundGradientCss }} className='productImageWrapper'>
           <div style={{width: '100%'}}>
-            <Heading className='tagline' color={post?.textColor}>{post?.tagline}</Heading>
+            <Heading className='tagline' fontFamily={post?.font} color={post?.textColor}>{post?.tagline}</Heading>
           </div>
-          <Heading className='title' color={post?.textColor}>{productName}</Heading>
+          <Heading className='title' fontFamily={post?.font} color={post?.textColor}>{productName}</Heading>
 
           <img className='productImage' alt="post 1" src={URL.createObjectURL(file)} />
         </Pane>
@@ -80,16 +80,16 @@ export const PostTemplate2: React.FC<IPostTemplateProps> = ({post, productName, 
         <Pane width={800} marginRight="auto" marginLeft="auto">
           <Pane ref={ref} width={800} padding={0} backgroundColor={post?.backgroundGradientCss} className='productImageWrapper2' background='#fff'>
             <div className='left'>
-              <Heading className='tagline2'>{post?.tagline}</Heading>
-              <ul className='benefits'>
+              <Heading className='tagline2' fontFamily={post?.font}>{post?.tagline}</Heading>
+              <ul className='benefits' style={{fontFamily: post?.font}}>
                 {post?.benefits?.map((benefit: string) => (
-                  <li className='benefit' key={benefit}>&#10004; {benefit}</li>
+                  <li className='benefit'  key={benefit}>&#10004; {benefit}</li>
                 ))}
               </ul>
             </div>
             <div style={{background: post?.backgroundGradientCss}} className='right'>
               <img className='productImage2' alt="post 2" src={URL.createObjectURL(file)} />
-              <Heading className='title2' color={post?.textColor}>{productName}</Heading>
+              <Heading className='title2' fontFamily={post?.font} color={post?.textColor}>{productName}</Heading>
             </div>
           </Pane>
 

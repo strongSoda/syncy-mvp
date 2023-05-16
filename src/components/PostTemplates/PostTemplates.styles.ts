@@ -146,6 +146,11 @@ export const PostTemplateWrapper3 = styled.div`
     }
 `
 
+const random = (list: number[]) => {
+    return list[Math.floor((Math.random()*list.length))];
+}
+
+
 export const PostTemplateWrapper4 = styled.div`
     margin-bottom: 5vh;
 
@@ -186,10 +191,12 @@ export const PostTemplateWrapper4 = styled.div`
         }
 
         .details {
+            order: ${random([1, 2])};
             position: relative;
             .title {
                 position: absolute;
                 bottom: 10%;
+                ${random([1, 2]) === 1 ? 'left: 3%;' : 'right: 3%;'}
                 font-size: 2rem;
             }
             .tagline {
@@ -198,7 +205,7 @@ export const PostTemplateWrapper4 = styled.div`
                     left: 50%;
                     transform: translate(-50%, -50%);
 
-                    font-size: 2.5rem;
+                    font-size: 2.2rem;
                     line-height: 1.2;
                     text-align: center;
 

@@ -152,7 +152,7 @@ export const PostTemplate4: React.FC<IPostTemplateProps> = ({post, productName, 
             </ul>
           </div>
 
-          <div className='blob' style={{background: post?.backgroundGradientCss }}>
+          <div className='blob' style={{background: post?.backgroundGradientCss, borderRadius: post?.borderRadius }}>
             <img className='productImage' alt="post 1" src={URL.createObjectURL(file)} />
           </div>
         </Pane>

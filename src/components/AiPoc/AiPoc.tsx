@@ -101,6 +101,7 @@ const AiPoc: React.FC = () => {
       "benefits": ["benefit 1", "benefit 2", "benefit 3", "benefit 4", "benefit 5"],
       "backgroundGradientCss": "linear-gradient(to top, #30cfd0 0%, #330867 100%)",
       "textColor": "white",
+      "borderRadius": "28% 72% 65% 35% / 37% 70% 30% 63%",
       "font": ""
     }
     ]
@@ -122,6 +123,7 @@ const AiPoc: React.FC = () => {
     5. The text-color should be white or black depending on the background gradient.
     6. The font should be a random font from the list of fonts provided below. Different for each post.
     7. The background gradient for the 3rd post should have opacity of 0.8. Randomly generated colors.
+    8. For the borderRadius of the 4th post use the same format as provided. Randomize the percentages.
 
     Fonts:
       1. 'Montez'
@@ -129,7 +131,7 @@ const AiPoc: React.FC = () => {
       3. 'Raleway'
       4. 'Permanent Marker'
 
-    `, 500);
+    `, 600);
 
     console.log(res);
     const processed = splitOnce(res as string, '[')[1];

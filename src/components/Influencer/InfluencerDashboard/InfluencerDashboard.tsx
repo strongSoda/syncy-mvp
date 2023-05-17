@@ -111,7 +111,7 @@ const InfluencerDashboard: React.FC = () => {
           campaign: campaignName,
           to_email: email,
           name: influencerProfile?.first_name + ' ' + influencerProfile?.last_name,
-          instagram: 'https://www.instagram.com/' + influencerProfile?.instagram_username,
+          instagram: 'https://www.instagram.com/' + influencerProfile?.instagram_username?.replace('@', ''),
           followers: influencerProfile?.followers_count,
         };
 

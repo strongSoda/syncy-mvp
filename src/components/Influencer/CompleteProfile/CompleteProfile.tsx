@@ -278,6 +278,10 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
         values.followersCount = Number(values.followersCount.replace(/,/g, ''));
       }
 
+      if(values?.instagramUsername) {
+        values.instagramUsername = values.instagramUsername.replace('@', '');
+      }
+
       const res = await fetch(`${API}/influencer-profile-personal`, {
         method: 'POST',
         headers: {

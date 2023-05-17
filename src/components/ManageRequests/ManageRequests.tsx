@@ -281,7 +281,7 @@ const InfluencerProfile: React.FC<IInfluencerProfileProps> = ({influencer, setSh
         <iframe title={influencer?.fullName ? influencer?.fullName : influencer?.first_name} 
           src={`${influencer?.profileUrl ? (influencer?.profileUrl[influencer?.profileUrl.length-1]==="/" ? influencer?.profileUrl 
                   : (influencer?.profileUrl + '/')) : (`https://www.instagram.com/${encodeURI(influencer?.instagram_username 
-                  ? influencer?.instagram_username.trim() : influencer?.instagramUsername.trim())}/`)}embed`} name="myiFrame" 
+                  ? influencer?.instagram_username.trim().replace('@', '') : influencer?.instagramUsername.trim().replace('@', ''))}/`)}embed`} name="myiFrame" 
                   scrolling="yes" frameBorder="0" height="900" width="100%" allowFullScreen={true}></iframe>
         
       </>

@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import * as Yup from "yup";
 import SignupWrapper from './Signup.styles';
+import emailjs from '@emailjs/browser';
 
 // declare interface ISignupProps {}
 
@@ -64,6 +65,14 @@ const Signup: React.FC = () => {
 
       dispatch(login());
       logUsage('INFLUENCER SIGNUP', {user: values?.email}); 
+
+      // send email with emailjs
+      const templateParams = {
+        email: values?.email,
+        type: 'INFLUENCER'
+      };
+      await emailjs.send('service_5qbdzev', 'template_8lv9uek', templateParams, 'Wpls9Y0SfcmtgJKO5')
+
       history.push(ROUTES.INFLUENCER.COMPLETE_PROFILE);
 
     } catch (error: any) {

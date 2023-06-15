@@ -78,6 +78,7 @@ const Signup: React.FC = () => {
       // send email with emailjs
       const templateParams = {
         email: values?.email,
+        type: 'BRAND'
       };
       await emailjs.send('service_5qbdzev', 'template_8lv9uek', templateParams, 'Wpls9Y0SfcmtgJKO5')
 

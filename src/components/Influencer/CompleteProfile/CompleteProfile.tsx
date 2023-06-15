@@ -173,6 +173,8 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
   const [paymentMethod, setPaymentMethod] = useState(profile?.payment_method || '');
   const [paymentDetails, setPaymentDetails] = useState(profile?.payment_method_details || '');
 
+  const [portfolioUrl, setPortfolioUrl] = useState(profile?.portfolio_url || '');
+
   const [files, setFiles] = React.useState<any>([])
   const [fileRejections, setFileRejections] = React.useState<any>([])
   const handleChange = React.useCallback((files) => setFiles([files[0]]), [])
@@ -198,6 +200,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       category: category,
       paymentMethod: paymentMethod,
       paymentDetails: paymentDetails,
+      portfolioUrl: portfolioUrl,
     },
     validationSchema: Yup.object({
       firstName: Yup.string().required('Required'),
@@ -212,6 +215,7 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
       category: Yup.string(),
       paymentMethod: Yup.string(),
       paymentDetails: Yup.string(),
+      portfolioUrl: Yup.string(),
     }),
 
     onSubmit: async (values: any) => {
@@ -346,6 +350,18 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
           value={formik.values.bio}
           onChange={(e: any) => formik.setFieldValue('bio', e.target.value)}
           validationMessage={formik?.touched?.bio && formik?.errors?.bio ? ( <div className="error">{formik?.errors?.bio}</div> ) : null}
+        />
+      </FormField>
+
+      <FormField>
+        <TextInputField
+          name='portfolioUrl'
+          label="Portfolio URL"
+          required
+          // description="This is a description."
+          value={formik.values.portfolioUrl}
+          onChange={(e: any) => formik.setFieldValue('portfolioUrl', e.target.value)}
+          validationMessage={formik?.touched?.portfolioUrl && formik?.errors?.portfolioUrl ? ( <div className="error">{formik?.errors?.portfolioUrl}</div> ) : null}
         />
       </FormField>
 

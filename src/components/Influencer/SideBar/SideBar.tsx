@@ -22,12 +22,12 @@ declare interface ISideBarProps {
 }
 
 const Links = [
-  {
-    icon: Shop,
-    text: 'Dashboard',
-    id: 1,
-    path: ROUTES.INFLUENCER.DASHBOARD,
-  },
+  // {
+  //   icon: Shop,
+  //   text: 'Dashboard',
+  //   id: 1,
+  //   path: ROUTES.INFLUENCER.DASHBOARD,
+  // },
   {
     icon: ProfileIcon,
     text: 'My Deliverables',

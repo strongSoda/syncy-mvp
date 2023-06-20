@@ -18,7 +18,7 @@ const UnAuthenticatedRoute:  React.FC<IUnAuthenticatedRouteProps> = (props: IUnA
 
   return (
     <UnAuthenticatedRouteWrapper data-testid="AuthenticatedRoute">
-      <Route {...componentProps} render={() => (isAuthenticated ? <Redirect to={ROUTES.INFLUENCER.DASHBOARD} /> : <C {...props} {...componentProps} />)} />
+      <Route {...componentProps} render={() => (isAuthenticated ? <Redirect to={ROUTES.INFLUENCER.CONTENT_PACKS} /> : <C {...props} {...componentProps} />)} />
     </UnAuthenticatedRouteWrapper>
   );
 };

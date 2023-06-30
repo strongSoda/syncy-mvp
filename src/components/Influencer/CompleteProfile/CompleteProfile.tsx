@@ -357,7 +357,6 @@ const PersonalDetails: React.FC<IProfileDetailsProps> = ({setSelectedIndex, prof
         <TextInputField
           name='portfolioUrl'
           label="Portfolio URL"
-          required
           // description="This is a description."
           value={formik.values.portfolioUrl}
           onChange={(e: any) => formik.setFieldValue('portfolioUrl', e.target.value)}
